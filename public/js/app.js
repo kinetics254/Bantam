@@ -10448,7 +10448,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   computed: {
     user: function user() {
-      return "test user";
+      return this.$auth.user().name;
     }
   }
 });
@@ -55550,7 +55550,7 @@ var render = function() {
           }
         }
       },
-      [_vm._v("\n        LSK\n    ")]
+      [_vm._v("\n        ESS\n    ")]
     )
   ])
 }

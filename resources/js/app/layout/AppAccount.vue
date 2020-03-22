@@ -22,7 +22,7 @@
             style="cursor: pointer"
             @click="$router.push('/')"
         >
-            LSK
+            ESS
         </div>
     </li>
 </template>
@@ -40,7 +40,7 @@ export default {
     },
     computed: {
         user() {
-            return "test user";
+            return this.$auth.user().name;
         }
     }
 };
