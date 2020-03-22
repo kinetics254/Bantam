@@ -1,0 +1,6 @@
+.print-hide {
+    visibility: hidden!important;
+}
+.print-show{
+    visibility: visible!important;
+}
