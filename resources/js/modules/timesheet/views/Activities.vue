@@ -5,7 +5,7 @@
 <script>
 import ComponentPlaceholder from "../../../components/ComponentPlaceholder";
 export default {
-    name: "TimesheetCard",
+    name: "Activities",
     components: { ComponentPlaceholder }
 };
 </script>

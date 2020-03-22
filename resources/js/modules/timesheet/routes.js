@@ -1,7 +1,11 @@
 import AppDashboard from "../../app/layout/AppDashboard";
 import Auth from "../../router/middleware/Auth";
 import TimesheetList from "./views/TimesheetList";
-import TimesheetCard from "./views/TimesheetCard";
+import Employees from "./views/Employees";
+import Projects from "./views/Projects";
+import Activities from "./views/Activities";
+import Tasks from "./views/Tasks";
+import Locations from "./views/Locations";
 
 export default [
     {
@@ -10,17 +14,49 @@ export default [
         children: [
             {
                 path: "",
+                redirect: "/time-sheet/sheet"
+            },
+            {
+                path: "sheet",
                 components: {
                     view: TimesheetList
                 },
                 meta: { middleware: Auth, breadcrumb: "Time Sheets" }
             },
             {
-                path: ":id",
+                path: "employees",
                 components: {
-                    view: TimesheetCard
+                    view: Employees
                 },
-                meta: { middleware: Auth, breadcrumb: "Time Sheet" }
+                meta: { middleware: Auth, breadcrumb: "Time Sheets" }
+            },
+            {
+                path: "projects",
+                components: {
+                    view: Projects
+                },
+                meta: { middleware: Auth, breadcrumb: "Time Sheets" }
+            },
+            {
+                path: "activities",
+                components: {
+                    view: Activities
+                },
+                meta: { middleware: Auth, breadcrumb: "Time Sheets" }
+            },
+            {
+                path: "tasks",
+                components: {
+                    view: Tasks
+                },
+                meta: { middleware: Auth, breadcrumb: "Time Sheets" }
+            },
+            {
+                path: "locations",
+                components: {
+                    view: Locations
+                },
+                meta: { middleware: Auth, breadcrumb: "Time Sheets" }
             }
         ]
     }
