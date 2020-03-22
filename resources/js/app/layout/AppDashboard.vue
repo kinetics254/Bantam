@@ -12,15 +12,9 @@
 <script>
 import Side from "./AppSide";
 import Page from "./AppPage";
-import AppStore from "../AppStore";
 export default {
     name: "AppDashboard",
-    components: { Page, Side },
-    beforeCreate() {
-        if (!this.$store._modules.root._children[`app`]) {
-            this.$store.registerModule("app", AppStore);
-        }
-    }
+    components: { Page, Side }
 };
 </script>
 
