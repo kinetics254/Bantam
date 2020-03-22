@@ -10511,6 +10511,9 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "AppFooter"
 });
@@ -55913,26 +55916,35 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _vm._m(0)
+  return _c("div", { staticClass: "footer" }, [
+    _vm._m(0),
+    _vm._v(" "),
+    _c("div", [
+      _c("strong", [_vm._v("Copyright")]),
+      _vm._v(
+        " " +
+          _vm._s(_vm._f("capitalize")(_vm.appName)) +
+          " ©\n        " +
+          _vm._s(new Date().getFullYear()) +
+          "\n    "
+      )
+    ])
+  ])
 }
 var staticRenderFns = [
   function() {
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "footer" }, [
-      _c("div", { staticClass: "pull-right" }, [
-        _vm._v("\n        Made with "),
-        _c("i", { staticClass: "fa fa-heart text-danger" }),
-        _vm._v(" "),
-        _c(
-          "a",
-          { attrs: { href: "https://kinetics.co.ke/", target: "_blank" } },
-          [_vm._v("\n            Kinetic Technology")]
-        )
-      ]),
-      _vm._v(" "),
-      _c("div", [_c("strong", [_vm._v("Copyright")]), _vm._v(" bantam © 2019")])
+    return _c("div", { staticClass: "pull-right" }, [
+      _vm._v("\n        Made with "),
+      _c("i", { staticClass: "fa fa-heart text-danger" }),
+      _vm._v(" by\n        "),
+      _c(
+        "a",
+        { attrs: { href: "https://kinetics.co.ke/", target: "_blank" } },
+        [_vm._v("\n            Kinetic Technology")]
+      )
     ])
   }
 ]
