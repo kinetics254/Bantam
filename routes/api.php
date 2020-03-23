@@ -23,3 +23,10 @@ Route::group(['prefix' => 'auth'], function (){
    Route::post('/login', 'SanctumAuthController@login');
    Route::middleware('auth:sanctum')->post('/logout', 'SanctumAuthController@logout');
 });
+
+Route::group(['namespace' => 'Timesheet', 'prefix' => 'time-sheet', 'middleware' => 'auth:sanctum'], function (){
+    Route::get('/', 'TimeSheetController@index');
+    Route::get('/projects', 'ProjectController@index');
+    Route::get('/activities', 'ActivityController@index');
+    Route::get('/tasks', 'TaskController@index');
+});

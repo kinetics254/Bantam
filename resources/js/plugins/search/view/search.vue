@@ -3,17 +3,17 @@
         <div class="col-sm-12">
             <div class="input-group">
                 <input
-                    type="search"
                     v-model="term"
+                    type="search"
                     class="form-control"
                     aria-label="Search"
                     placeholder="Search"
                 />
                 <div class="input-group-btn">
                     <button
-                        @click="term = ''"
                         type="button"
                         class="btn btn-white"
+                        @click="term = ''"
                     >
                         <i class="fa fa-times" />
                     </button>

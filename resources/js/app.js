@@ -8,6 +8,9 @@ import profile from "./modules/profile/";
 import leave from "./modules/leave";
 import payslip from "./modules/payslip";
 import timesheet from "./modules/timesheet";
+import statusFilter from "./plugins/status-filter";
+import search from "./plugins/search";
+import pagination from "./plugins/paginator";
 import { filters } from "./utilities";
 import { listener, status } from "./mixins";
 import * as Sentry from "@sentry/browser";
@@ -29,6 +32,9 @@ Vue.use(profile, options);
 Vue.use(leave, options);
 Vue.use(payslip, options);
 Vue.use(timesheet, options);
+Vue.use(statusFilter);
+Vue.use(search);
+Vue.use(pagination);
 Vue.use(breadCrumb, {
     template: ` <ol class="breadcrumb m-t" style="cursor: pointer" v-if="$breadcrumbs.length"><li v-for="(crumb, key) in $breadcrumbs"><small class="text-muted"><a  :key="key">{{ crumb | crumbText | capitalize }}</a></small></li></ol>`
 });

@@ -1,4 +1,4 @@
-import Paginator from "@/plugins/paginate";
+import Paginator from "./index";
 
 const PaginationMixin = {
     data: function() {

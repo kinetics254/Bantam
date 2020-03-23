@@ -8709,3 +8709,7 @@ body.md-skin {
 .rtl table tr td:last-child {
     text-align: left;
 }
+
+.leave-form .form-control[readonly] {
+    background: white !important;
+}
