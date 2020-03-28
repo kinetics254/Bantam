@@ -16,7 +16,7 @@ class SanctumAuthController extends Controller
             'device_name' => 'required',
         ]);
 
-        $user = User::whereEmail($request->email)->first();
+       $user = User::whereEmail($request->email)->first();
 
         if (! $user || ! Hash::check($request->password, $user->password)){
             throw ValidationException::withMessages([

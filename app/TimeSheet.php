@@ -2,9 +2,8 @@
 
 namespace App;
 
-use Illuminate\Database\Eloquent\Model;
 
-class TimeSheet extends Model
+class TimeSheet extends BaseModel
 {
-    //
+    protected $guarded = [];
 }

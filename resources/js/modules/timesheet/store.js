@@ -1,35 +1,40 @@
 import call from "../../service/http";
 import constants from "./constants";
+import _ from "lodash";
 
 export default {
     namespaced: true,
     state: {
-        timesheets: [],
-        projects: [],
-        activities: [],
-        task: []
+        timesheets: []
     },
     mutations: {
         SET_TIMESHEET: (state, payload) => {
             state.timesheets = payload;
         },
-        SET_PROJECTS: (state, payload) => {
-            state.projects = payload;
+        ADD_TIMESHEET: (state, payload) => {
+            state.timesheets.data.unshift(payload);
         },
-        SET_ACTIVITIES: (state, payload) => {
-            state.activities = payload;
+        EDIT_TIMESHEET: (state, sheet) => {
+            let index = _.findIndex(state.timesheets.data, sheet);
+            state.timesheets.data.splice(index, 1);
         },
-        SET_TASKS: (state, payload) => {
-            state.tasks = payload;
+        REMOVE_TIMESHEET: (state, sheet) => {
+            let index = _.findIndex(state.timesheets.data, sheet);
+            state.timesheets.data[index].deleted = true;
         }
     },
     getters: {
         timesheets: state => state.timesheets
     },
     actions: {
-        getTimeSheet: (context, url) => {
-            call("get", url || constants.timesheet).then(res => {
+        getTimeSheets: (context, url) => {
+            call("get", url || constants.timesheets).then(res => {
                 context.commit("SET_TIMESHEET", res.data);
+            });
+        },
+        saveSheets: ({ dispatch }, data) => {
+            call("post", constants.timesheets, data).then(() => {
+                dispatch("getTimeSheets", null);
             });
         }
     }

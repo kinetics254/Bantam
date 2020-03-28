@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Timesheet;
+namespace App\Http\Controllers\Setup;
 
 use App\Http\Controllers\BaseController;
 use App\Project;

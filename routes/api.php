@@ -24,9 +24,20 @@ Route::group(['prefix' => 'auth'], function (){
    Route::middleware('auth:sanctum')->post('/logout', 'SanctumAuthController@logout');
 });
 
-Route::group(['namespace' => 'Timesheet', 'prefix' => 'time-sheet', 'middleware' => 'auth:sanctum'], function (){
+Route::group(['namespace' => 'Timesheet', 'prefix' => 'time-sheets', 'middleware' => 'auth:sanctum'], function (){
     Route::get('/', 'TimeSheetController@index');
+    Route::post('/', 'TimeSheetController@store');
+});
+
+Route::group(['namespace' => 'Employee', 'prefix' => 'employee', 'middleware' => 'auth:sanctum'], function (){
+    Route::get('/employees', 'EmployeeController@index');
+});
+
+
+
+Route::group(['namespace' => 'Setup', 'prefix' => 'setup', 'middleware' => 'auth:sanctum'], function (){
     Route::get('/projects', 'ProjectController@index');
     Route::get('/activities', 'ActivityController@index');
     Route::get('/tasks', 'TaskController@index');
+    Route::get('/locations', 'LocationController@index');
 });

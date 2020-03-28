@@ -2,20 +2,27 @@ import moment from "moment/moment";
 
 class Helper {
     isEmpty(obj) {
-        for (const prop in obj) {
+        for (var prop in obj) {
             // eslint-disable-next-line no-prototype-builtins
             if (obj.hasOwnProperty(prop)) return false;
         }
         return true;
     }
-
     prepareFormData(formData) {
-        const data = new FormData();
-        for (const key in formData) {
+        let data = new FormData();
+        for (let key in formData) {
             if (formData[key] === null) formData[key] = "";
             data.append(key, formData[key]);
         }
         return data;
+    }
+
+    stringify(object) {
+        for (let key in object) {
+            if (typeof object[key] === "object")
+                object[key] = JSON.stringify(object[key]);
+        }
+        return object;
     }
 
     dateFix(date) {
@@ -24,28 +31,41 @@ class Helper {
                 moment(date, "YYYY-MM-DD HH:mm:ss").format(
                     "YYYY-MM-DD HH:mm:ss"
                 ) === date
-            ) {
-                // return date;
+            )
+                return date;
+            return moment(date).format("Do MMMM YYYY");
+        }
+        return "";
+    }
+    changeToHumanReadable(date) {
+        if (date) {
+            if (
+                moment(date, "YYYY-MM-DD HH:mm:ss").format(
+                    "YYYY-MM-DD HH:mm:ss"
+                ) === date
+            )
                 return moment(date).format("Do MMMM YYYY");
-            }
-            const d = new Date(
-                Date.UTC(
-                    date.getFullYear(),
-                    date.getMonth(),
-                    date.getDate(),
-                    date.getHours() - 3,
-                    date.getMinutes(),
-                    date.getSeconds()
-                )
-            );
-            return moment(d).format("YYYY-MM-DD HH:mm:ss");
         }
         return "";
     }
 
+    prepareDate(date) {
+        return date
+            ? moment(date)
+                  .format()
+                  .substr(0, 10)
+            : "";
+    }
+
+    sanitizeDate(date) {
+        return moment(date)
+            .format()
+            .substr(0, 10);
+    }
+
     getFileIconColor(fileName) {
         if (!fileName) return "#727071";
-        const fileExtension = fileName.split(".").pop();
+        let fileExtension = fileName.split(".").pop();
         switch (fileExtension) {
             case "docx":
                 return "#0276c0";
@@ -65,10 +85,9 @@ class Helper {
                 return "#727071";
         }
     }
-
     getFileIcon(fileName) {
         if (!fileName) return "fa fa-file-o";
-        const fileExtension = fileName.split(".").pop();
+        let fileExtension = fileName.split(".").pop();
         switch (fileExtension) {
             case "docx":
                 return "fa fa-file-word";

@@ -20,6 +20,18 @@ const listener = {
                 closeOnSwipe: true
             });
         });
+
+        Event.$on("duplicate", () => {
+            this.$toasted.show("Cannot add duplicate timesheet", {
+                position: "top-center",
+                keepOnHover: true,
+                iconPack: "fontawesome",
+                duration: 7000,
+                type: "error",
+                icon: "exclamation-circle",
+                closeOnSwipe: true
+            });
+        });
     }
 };
 export default listener;

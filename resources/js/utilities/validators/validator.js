@@ -66,7 +66,7 @@ class Validator {
             case "required":
                 if (!this.field(field)) {
                     return {
-                        status: "is-danger",
+                        status: "has-error",
                         message: "must have a value"
                     };
                 }
@@ -127,10 +127,10 @@ class Validator {
                 return res;
             case "gt":
                 if (!field) return res;
-                if (field <= value) {
+                if (field < value) {
                     return {
                         status: "has-error",
-                        message: `cannot be less than or equal to${value}`
+                        message: `cannot be less than ${value}`
                     };
                 }
                 return res;
