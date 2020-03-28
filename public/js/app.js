@@ -10949,16 +10949,78 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _components_ComponentPlaceholder__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../components/ComponentPlaceholder */ "./resources/js/components/ComponentPlaceholder.vue");
+/* harmony import */ var _mixins_loader_loader__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../mixins/loader/loader */ "./resources/js/mixins/loader/loader.js");
+/* harmony import */ var _components_Spinner__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../components/Spinner */ "./resources/js/components/Spinner.vue");
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
 //
 
+
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "Activities",
   components: {
-    ComponentPlaceholder: _components_ComponentPlaceholder__WEBPACK_IMPORTED_MODULE_0__["default"]
+    Spinner: _components_Spinner__WEBPACK_IMPORTED_MODULE_1__["default"]
+  },
+  mixins: [_mixins_loader_loader__WEBPACK_IMPORTED_MODULE_0__["default"]],
+  beforeRouteEnter: function beforeRouteEnter(to, from, next) {
+    next(function (v) {
+      v.$store.dispatch("setup/getActivities");
+    });
+  },
+  computed: {
+    activities: function activities() {
+      return this.$store.getters["setup/activities"];
+    }
   }
 });
 
@@ -10973,16 +11035,83 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _components_ComponentPlaceholder__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../components/ComponentPlaceholder */ "./resources/js/components/ComponentPlaceholder.vue");
+/* harmony import */ var _mixins_loader_loader__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../mixins/loader/loader */ "./resources/js/mixins/loader/loader.js");
+/* harmony import */ var _components_Spinner__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../components/Spinner */ "./resources/js/components/Spinner.vue");
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
 //
 
+
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "Employees",
   components: {
-    ComponentPlaceholder: _components_ComponentPlaceholder__WEBPACK_IMPORTED_MODULE_0__["default"]
+    Spinner: _components_Spinner__WEBPACK_IMPORTED_MODULE_1__["default"]
+  },
+  mixins: [_mixins_loader_loader__WEBPACK_IMPORTED_MODULE_0__["default"]],
+  beforeRouteEnter: function beforeRouteEnter(to, from, next) {
+    next(function (v) {
+      v.$store.dispatch("setup/getEmployees");
+    });
+  },
+  computed: {
+    employees: function employees() {
+      return this.$store.getters["setup/employees"];
+    }
   }
 });
 
@@ -10997,16 +11126,74 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _components_ComponentPlaceholder__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../components/ComponentPlaceholder */ "./resources/js/components/ComponentPlaceholder.vue");
+/* harmony import */ var _mixins_loader_loader__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../mixins/loader/loader */ "./resources/js/mixins/loader/loader.js");
+/* harmony import */ var _components_Spinner__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../components/Spinner */ "./resources/js/components/Spinner.vue");
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
 //
 
+
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "Locations",
   components: {
-    ComponentPlaceholder: _components_ComponentPlaceholder__WEBPACK_IMPORTED_MODULE_0__["default"]
+    Spinner: _components_Spinner__WEBPACK_IMPORTED_MODULE_1__["default"]
+  },
+  mixins: [_mixins_loader_loader__WEBPACK_IMPORTED_MODULE_0__["default"]],
+  beforeRouteEnter: function beforeRouteEnter(to, from, next) {
+    next(function (v) {
+      v.$store.dispatch("setup/getLocation");
+    });
+  },
+  computed: {
+    locations: function locations() {
+      return this.$store.getters["setup/locations"];
+    }
   }
 });
 
@@ -11021,16 +11208,75 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _components_ComponentPlaceholder__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../components/ComponentPlaceholder */ "./resources/js/components/ComponentPlaceholder.vue");
+/* harmony import */ var _mixins_loader_loader__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../mixins/loader/loader */ "./resources/js/mixins/loader/loader.js");
+/* harmony import */ var _components_Spinner__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../components/Spinner */ "./resources/js/components/Spinner.vue");
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
 //
 
+
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "Projects",
   components: {
-    ComponentPlaceholder: _components_ComponentPlaceholder__WEBPACK_IMPORTED_MODULE_0__["default"]
+    Spinner: _components_Spinner__WEBPACK_IMPORTED_MODULE_1__["default"]
+  },
+  mixins: [_mixins_loader_loader__WEBPACK_IMPORTED_MODULE_0__["default"]],
+  beforeRouteEnter: function beforeRouteEnter(to, from, next) {
+    next(function (v) {
+      v.$store.dispatch("setup/getProjects");
+    });
+  },
+  computed: {
+    projects: function projects() {
+      return this.$store.getters["setup/projects"];
+    }
   }
 });
 
@@ -11045,16 +11291,71 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _components_ComponentPlaceholder__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../components/ComponentPlaceholder */ "./resources/js/components/ComponentPlaceholder.vue");
+/* harmony import */ var _mixins_loader_loader__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../mixins/loader/loader */ "./resources/js/mixins/loader/loader.js");
+/* harmony import */ var _components_Spinner__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../components/Spinner */ "./resources/js/components/Spinner.vue");
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
 //
 
+
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "Tasks",
   components: {
-    ComponentPlaceholder: _components_ComponentPlaceholder__WEBPACK_IMPORTED_MODULE_0__["default"]
+    Spinner: _components_Spinner__WEBPACK_IMPORTED_MODULE_1__["default"]
+  },
+  mixins: [_mixins_loader_loader__WEBPACK_IMPORTED_MODULE_0__["default"]],
+  beforeRouteEnter: function beforeRouteEnter(to, from, next) {
+    next(function (v) {
+      v.$store.dispatch("setup/getTasks");
+    });
+  },
+  computed: {
+    tasks: function tasks() {
+      return this.$store.getters["setup/tasks"];
+    }
   }
 });
 
@@ -11584,6 +11885,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         }
       });
       next(false);
+    } else {
+      next();
     }
   },
   computed: {
@@ -57561,9 +57864,109 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("component-placeholder")
+  return _c("div", { staticClass: "row" }, [
+    _c("div", { staticClass: "col-lg-12" }, [
+      _c("div", { staticClass: "ibox float-e-margins" }, [
+        _vm._m(0),
+        _vm._v(" "),
+        _c(
+          "div",
+          {
+            staticClass: "ibox-content ",
+            class: { "sk-loading": _vm.loading }
+          },
+          [
+            _vm.loading ? _c("spinner") : _vm._e(),
+            _vm._v(" "),
+            _c("div", { staticClass: "table-responsive m-b-md" }, [
+              _c(
+                "table",
+                { staticClass: "table table-hover table-condensed" },
+                [
+                  _vm._m(1),
+                  _vm._v(" "),
+                  _c(
+                    "tbody",
+                    [
+                      _vm._l(_vm.activities, function(activity, index) {
+                        return _c("tr", { key: index }, [
+                          _c("td", [
+                            _vm._v(
+                              "\n                                    " +
+                                _vm._s(parseInt(index) + 1) +
+                                "\n                                "
+                            )
+                          ]),
+                          _vm._v(" "),
+                          _c("td", [_vm._v(_vm._s(activity.Code))]),
+                          _vm._v(" "),
+                          _c("td", [_vm._v(_vm._s(activity.Description))]),
+                          _vm._v(" "),
+                          _c("td", [_vm._v(_vm._s(activity.Min_hours))]),
+                          _vm._v(" "),
+                          _c("td", [_vm._v(_vm._s(activity.Max_hours))])
+                        ])
+                      }),
+                      _vm._v(" "),
+                      _c("tr", [
+                        _vm.activities.length === 0
+                          ? _c(
+                              "td",
+                              {
+                                staticClass: "text-center",
+                                attrs: { colspan: "6" }
+                              },
+                              [
+                                _vm._v(
+                                  "\n                                    No activity found\n                                "
+                                )
+                              ]
+                            )
+                          : _vm._e()
+                      ])
+                    ],
+                    2
+                  )
+                ]
+              )
+            ])
+          ],
+          1
+        )
+      ])
+    ])
+  ])
 }
-var staticRenderFns = []
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "ibox-title" }, [
+      _c("h5", [_vm._v("Activities")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("thead", [
+      _c("tr", [
+        _c("th", [_vm._v("#")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Code")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Description")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Min hours")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Max hours")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Max hours")])
+      ])
+    ])
+  }
+]
 render._withStripped = true
 
 
@@ -57585,9 +57988,124 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("component-placeholder")
+  return _c("div", { staticClass: "row" }, [
+    _c("div", { staticClass: "col-lg-12" }, [
+      _c("div", { staticClass: "ibox float-e-margins" }, [
+        _vm._m(0),
+        _vm._v(" "),
+        _c(
+          "div",
+          {
+            staticClass: "ibox-content ",
+            class: { "sk-loading": _vm.loading }
+          },
+          [
+            _vm.loading ? _c("spinner") : _vm._e(),
+            _vm._v(" "),
+            _c("div", { staticClass: "table-responsive m-b-md" }, [
+              _c(
+                "table",
+                { staticClass: "table table-hover table-condensed" },
+                [
+                  _vm._m(1),
+                  _vm._v(" "),
+                  _c(
+                    "tbody",
+                    [
+                      _vm._l(_vm.employees, function(employee, index) {
+                        return _c("tr", { key: index }, [
+                          _c("td", [
+                            _vm._v(
+                              "\n                                    " +
+                                _vm._s(parseInt(index) + 1) +
+                                "\n                                "
+                            )
+                          ]),
+                          _vm._v(" "),
+                          _c("td", [_vm._v(_vm._s(employee.No))]),
+                          _vm._v(" "),
+                          _c("td", [
+                            _vm._v(
+                              "\n                                    " +
+                                _vm._s(
+                                  employee.First_Name +
+                                    " " +
+                                    employee.Middle_Name +
+                                    " " +
+                                    employee.Last_Name +
+                                    " "
+                                ) +
+                                "\n                                "
+                            )
+                          ]),
+                          _vm._v(" "),
+                          _c("td", [_vm._v(_vm._s(employee.Gender))]),
+                          _vm._v(" "),
+                          _c("td", [_vm._v(_vm._s(employee.Phone_No))]),
+                          _vm._v(" "),
+                          _c("td", [_vm._v(_vm._s(employee.E_Mail))])
+                        ])
+                      }),
+                      _vm._v(" "),
+                      _c("tr", [
+                        _vm.employees.length === 0
+                          ? _c(
+                              "td",
+                              {
+                                staticClass: "text-center",
+                                attrs: { colspan: "6" }
+                              },
+                              [
+                                _vm._v(
+                                  "\n                                    No employee found\n                                "
+                                )
+                              ]
+                            )
+                          : _vm._e()
+                      ])
+                    ],
+                    2
+                  )
+                ]
+              )
+            ])
+          ],
+          1
+        )
+      ])
+    ])
+  ])
 }
-var staticRenderFns = []
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "ibox-title" }, [
+      _c("h5", [_vm._v("Activities")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("thead", [
+      _c("tr", [
+        _c("th", [_vm._v("#")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("No")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Name")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Gender")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Phone")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Email")])
+      ])
+    ])
+  }
+]
 render._withStripped = true
 
 
@@ -57609,9 +58127,99 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("component-placeholder")
+  return _c("div", { staticClass: "row" }, [
+    _c("div", { staticClass: "col-lg-12" }, [
+      _c("div", { staticClass: "ibox float-e-margins" }, [
+        _vm._m(0),
+        _vm._v(" "),
+        _c(
+          "div",
+          {
+            staticClass: "ibox-content ",
+            class: { "sk-loading": _vm.loading }
+          },
+          [
+            _vm.loading ? _c("spinner") : _vm._e(),
+            _vm._v(" "),
+            _c("div", { staticClass: "table-responsive m-b-md" }, [
+              _c(
+                "table",
+                { staticClass: "table table-hover table-condensed" },
+                [
+                  _vm._m(1),
+                  _vm._v(" "),
+                  _c(
+                    "tbody",
+                    [
+                      _vm._l(_vm.locations, function(location, index) {
+                        return _c("tr", { key: index }, [
+                          _c("td", [
+                            _vm._v(
+                              "\n                                    " +
+                                _vm._s(parseInt(index) + 1) +
+                                "\n                                "
+                            )
+                          ]),
+                          _vm._v(" "),
+                          _c("td", [_vm._v(_vm._s(location.Code))]),
+                          _vm._v(" "),
+                          _c("td", [_vm._v(_vm._s(location.Name))])
+                        ])
+                      }),
+                      _vm._v(" "),
+                      _c("tr", [
+                        _vm.locations.length === 0
+                          ? _c(
+                              "td",
+                              {
+                                staticClass: "text-center",
+                                attrs: { colspan: "6" }
+                              },
+                              [
+                                _vm._v(
+                                  "\n                                    No location found\n                                "
+                                )
+                              ]
+                            )
+                          : _vm._e()
+                      ])
+                    ],
+                    2
+                  )
+                ]
+              )
+            ])
+          ],
+          1
+        )
+      ])
+    ])
+  ])
 }
-var staticRenderFns = []
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "ibox-title" }, [
+      _c("h5", [_vm._v("Activities")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("thead", [
+      _c("tr", [
+        _c("th", [_vm._v("#")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Code")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Name")])
+      ])
+    ])
+  }
+]
 render._withStripped = true
 
 
@@ -57633,9 +58241,101 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("component-placeholder")
+  return _c("div", { staticClass: "row" }, [
+    _c("div", { staticClass: "col-lg-12" }, [
+      _c("div", { staticClass: "ibox float-e-margins" }, [
+        _vm._m(0),
+        _vm._v(" "),
+        _c(
+          "div",
+          {
+            staticClass: "ibox-content ",
+            class: { "sk-loading": _vm.loading }
+          },
+          [
+            _vm.loading ? _c("spinner") : _vm._e(),
+            _vm._v(" "),
+            _c("div", { staticClass: "table-responsive m-b-md" }, [
+              _c(
+                "table",
+                { staticClass: "table table-hover table-condensed" },
+                [
+                  _vm._m(1),
+                  _vm._v(" "),
+                  _c(
+                    "tbody",
+                    [
+                      _vm._l(_vm.projects, function(project, index) {
+                        return _c("tr", { key: index }, [
+                          _c("td", [
+                            _vm._v(
+                              "\n                                    " +
+                                _vm._s(parseInt(index) + 1) +
+                                "\n                                "
+                            )
+                          ]),
+                          _vm._v(" "),
+                          _c("td", [_vm._v(_vm._s(project.Code))]),
+                          _vm._v(" "),
+                          _c("td", [_vm._v(_vm._s(project.Name))]),
+                          _vm._v(" "),
+                          _c("td", [_vm._v(_vm._s(project.Description))])
+                        ])
+                      }),
+                      _vm._v(" "),
+                      _c("tr", [
+                        _vm.projects.length === 0
+                          ? _c(
+                              "td",
+                              {
+                                staticClass: "text-center",
+                                attrs: { colspan: "6" }
+                              },
+                              [
+                                _vm._v(
+                                  "\n                                    No project found\n                                "
+                                )
+                              ]
+                            )
+                          : _vm._e()
+                      ])
+                    ],
+                    2
+                  )
+                ]
+              )
+            ])
+          ],
+          1
+        )
+      ])
+    ])
+  ])
 }
-var staticRenderFns = []
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "ibox-title" }, [
+      _c("h5", [_vm._v("Activities")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("thead", [
+      _c("tr", [
+        _c("th", [_vm._v("#")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Code")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Name")])
+      ])
+    ])
+  }
+]
 render._withStripped = true
 
 
@@ -57657,9 +58357,99 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("component-placeholder")
+  return _c("div", { staticClass: "row" }, [
+    _c("div", { staticClass: "col-lg-12" }, [
+      _c("div", { staticClass: "ibox float-e-margins" }, [
+        _vm._m(0),
+        _vm._v(" "),
+        _c(
+          "div",
+          {
+            staticClass: "ibox-content ",
+            class: { "sk-loading": _vm.loading }
+          },
+          [
+            _vm.loading ? _c("spinner") : _vm._e(),
+            _vm._v(" "),
+            _c("div", { staticClass: "table-responsive m-b-md" }, [
+              _c(
+                "table",
+                { staticClass: "table table-hover table-condensed" },
+                [
+                  _vm._m(1),
+                  _vm._v(" "),
+                  _c(
+                    "tbody",
+                    [
+                      _vm._l(_vm.tasks, function(task, index) {
+                        return _c("tr", { key: index }, [
+                          _c("td", [
+                            _vm._v(
+                              "\n                                    " +
+                                _vm._s(parseInt(index) + 1) +
+                                "\n                                "
+                            )
+                          ]),
+                          _vm._v(" "),
+                          _c("td", [_vm._v(_vm._s(task.Code))]),
+                          _vm._v(" "),
+                          _c("td", [_vm._v(_vm._s(task.Description))])
+                        ])
+                      }),
+                      _vm._v(" "),
+                      _c("tr", [
+                        _vm.tasks.length === 0
+                          ? _c(
+                              "td",
+                              {
+                                staticClass: "text-center",
+                                attrs: { colspan: "6" }
+                              },
+                              [
+                                _vm._v(
+                                  "\n                                    No task found\n                                "
+                                )
+                              ]
+                            )
+                          : _vm._e()
+                      ])
+                    ],
+                    2
+                  )
+                ]
+              )
+            ])
+          ],
+          1
+        )
+      ])
+    ])
+  ])
 }
-var staticRenderFns = []
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "ibox-title" }, [
+      _c("h5", [_vm._v("Activities")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("thead", [
+      _c("tr", [
+        _c("th", [_vm._v("#")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Code")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Name")])
+      ])
+    ])
+  }
+]
 render._withStripped = true
 
 

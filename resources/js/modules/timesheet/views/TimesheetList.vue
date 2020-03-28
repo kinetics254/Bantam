@@ -476,6 +476,8 @@ export default {
                 }
             });
             next(false);
+        } else {
+            next();
         }
     },
     computed: {
