@@ -1,1 +1,3 @@
-export default {};
+export default {
+    employee: id => `users/${id}/employee`
+};

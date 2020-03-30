@@ -16,6 +16,7 @@ class CreateEmployeesTable extends Migration
         Schema::create('employees', function (Blueprint $table) {
             $table->id();
             $table->string('No',50)->unique();
+            $table->unsignedBigInteger('user_id');
             $table->string('First_Name',30)->nullable();
             $table->string('Last_Name',30)->nullable();
             $table->string('Middle_Name',30)->nullable();
@@ -79,8 +80,9 @@ class CreateEmployeesTable extends Migration
             $table->boolean("Hold_Payment")->default(false);
             $table->boolean("Use_Daily_Rate")->default(false);
             $table->audits();
-            $table->foreignId("user_id")->constrained();
+            $table->foreign("user_id")->references('id')->on('users');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

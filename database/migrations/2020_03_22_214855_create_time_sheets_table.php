@@ -16,7 +16,7 @@ class CreateTimeSheetsTable extends Migration
         Schema::create('time_sheets', function (Blueprint $table) {
             $table->id();
             $table->string('Entry_No')->unique()->nullable();
-            $table->string('Employee');
+            $table->string('Employee', 50);
             $table->string('Project');
             $table->string('Activity');
             $table->string('Task');

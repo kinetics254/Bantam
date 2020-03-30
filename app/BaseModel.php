@@ -9,6 +9,27 @@ class BaseModel extends Model
 {
     use SoftDeletes;
 
+    public $timestamps = true;
+
+    protected $appends = ['creator', 'modifier', 'remover'];
+
+    public function getCreatorAttribute()
+    {
+        return $this->Created_By ? User::find($this->Created_By)->name : '';
+    }
+
+    public function getModifierAttribute()
+    {
+        return $this->Modified_By ? User::find($this->Modified_By)->name : '';
+    }
+
+    public function getRemoverAttribute()
+    {
+        return $this->Modified_By ? User::find($this->Modified_By)->name : '';
+    }
+
+
+
     protected $guarded = [
         'Created_By',
         'Modified_By',
