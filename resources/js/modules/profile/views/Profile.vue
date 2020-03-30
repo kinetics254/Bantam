@@ -4,11 +4,7 @@
             <div class="col-md-6">
                 <div class="profile-image">
                     <img
-                        :src="
-                            $store.getters[
-                                ('profile/profilePicture', $auth.user().id)
-                            ]
-                        "
+                        :src="employee.avatar || '/img/user.svg'"
                         class="img-circle circle-border m-b-md"
                         alt="Profile Picture"
                     />
@@ -18,7 +14,9 @@
                         <div>
                             <h1 class="no-margins">
                                 {{
-                                    `${employee.First_name} ${employee.Last_Name} ${employee.Middle_Name}`
+                                    `${employee.First_name ||
+                                        ""} ${employee.Last_Name ||
+                                        ""} ${employee.Middle_Name || ""}`
                                 }}
                             </h1>
                             <h4>Initials: {{ employee.Initials }}</h4>

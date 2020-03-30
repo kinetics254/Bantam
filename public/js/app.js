@@ -11428,8 +11428,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "Profile",
   beforeRouteEnter: function beforeRouteEnter(to, from, next) {
@@ -74861,10 +74859,7 @@ var render = function() {
           _c("img", {
             staticClass: "img-circle circle-border m-b-md",
             attrs: {
-              src:
-                _vm.$store.getters[
-                  ("profile/profilePicture", _vm.$auth.user().id)
-                ],
+              src: _vm.employee.avatar || "/img/user.svg",
               alt: "Profile Picture"
             }
           })
@@ -74877,11 +74872,11 @@ var render = function() {
                 _vm._v(
                   "\n                            " +
                     _vm._s(
-                      _vm.employee.First_name +
+                      (_vm.employee.First_name || "") +
                         " " +
-                        _vm.employee.Last_Name +
+                        (_vm.employee.Last_Name || "") +
                         " " +
-                        _vm.employee.Middle_Name
+                        (_vm.employee.Middle_Name || "")
                     ) +
                     "\n                        "
                 )
@@ -98780,7 +98775,7 @@ __webpack_require__.r(__webpack_exports__);
   state: {
     employee: {}
   },
-  mutation: {
+  mutations: {
     SET_EMPLOYEE: function SET_EMPLOYEE(state, payload) {
       state.employee = payload;
     }
@@ -98791,9 +98786,9 @@ __webpack_require__.r(__webpack_exports__);
     }
   },
   actions: {
-    getEmployee: function getEmployee(context, id) {
+    getEmployee: function getEmployee(conext, id) {
       Object(_service_http__WEBPACK_IMPORTED_MODULE_0__["default"])("get", _constants__WEBPACK_IMPORTED_MODULE_1__["default"].employee(id)).then(function (res) {
-        context.commit("SET_EMPLOYEE", res.data.data);
+        conext.commit("SET_EMPLOYEE", res.data.data);
       });
     }
   }

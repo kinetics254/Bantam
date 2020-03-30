@@ -13,8 +13,8 @@ class EmployeePolicy
     /**
      * Determine whether the user can view the employee.
      *
-     * @param User $user
-     * @param Employee $employee
+     * @param  \App\User  $user
+     * @param  \App\Employee  $employee
      * @return mixed
      */
     public function view(User $user, Employee $employee)
@@ -32,7 +32,7 @@ class EmployeePolicy
     /**
      * Determine whether the user can create employees.
      *
-     * @param User $user
+     * @param  \App\User  $user
      * @return mixed
      */
     public function create(User $user)
@@ -43,8 +43,8 @@ class EmployeePolicy
     /**
      * Determine whether the user can update the employee.
      *
-     * @param User $user
-     * @param Employee $employee
+     * @param  \App\User  $user
+     * @param  \App\Employee  $employee
      * @return mixed
      */
     public function update(User $user, Employee $employee)
@@ -55,8 +55,8 @@ class EmployeePolicy
     /**
      * Determine whether the user can delete the employee.
      *
-     * @param User $user
-     * @param Employee $employee
+     * @param  \App\User  $user
+     * @param  \App\Employee  $employee
      * @return mixed
      */
     public function delete(User $user, Employee $employee)
@@ -67,7 +67,7 @@ class EmployeePolicy
     /**
      * Determine whether the user can delete the employee.
      *
-     * @param User $user
+     * @param  \App\User $user
      * @return mixed
      */
     public function index(User $user)

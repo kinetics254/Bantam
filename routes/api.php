@@ -29,7 +29,7 @@ Route::group(['namespace' => 'Timesheet', 'prefix' => 'time-sheets', 'middleware
     Route::post('/', 'TimeSheetController@store');
 });
 
-Route::group(['namespace' => 'User', 'prefix' => 'users', 'middleware' => 'auth:sanctum'], function (){
+Route::group(['prefix' => 'users', 'middleware' => 'auth:sanctum'], function (){
     Route::get('{user}/employee', 'UserController@employee');
     Route::get('notification', 'Notification@index');
     Route::get('notification/unread', 'Notification@UnreadNotifications');
@@ -41,6 +41,22 @@ Route::group(['namespace' => 'User', 'prefix' => 'users', 'middleware' => 'auth:
 
 Route::group(['namespace' => 'Employee', 'prefix' => 'employee', 'middleware' => 'auth:sanctum'], function (){
     Route::get('/employees', 'EmployeeController@index');
+    Route::get('/leave_applications', 'LeaveApplicationController@leave_applications');
+    Route::put('/leave_application/{appCode}/cancel', 'LeaveApplicationController@update');
+    Route::get('/approvals', 'ApprovalEntryController@current_employee_approvals');
+    Route::get('/approvers', 'EmployeeApproverController@approvers');
+    Route::get('/payslip', 'EmployeeController@payslip');
+    Route::get('/leave_types', 'LeaveAllocationController@current_employee_leave_types');
+
+    Route::get('{employee}/user', 'EmployeeController@user');
+    Route::get('{employee}/picture', 'EmployeeController@picture');
+    Route::get('{employee}/leave_allocations', 'LeaveAllocationController@EmployeeLeaveAllocations');
+    Route::get('{employee}/leave_applications', 'LeaveApplicationController@EmployeeLeaveApplications');
+    Route::get('{employee}/leave_types', 'LeaveTypeController@LeaveTypes');
+    Route::post('{employee}/payslip', 'EmployeeController@employee_payslip');
+    Route::get('{employee}/approvers', 'EmployeeApproverController@employee_approvers');
+    Route::post('{employee}/calculate_dates', 'EmployeeController@calculate_dates');
+    Route::get('{employee}/changelog', 'EmployeeController@changelog');
 });
 
 
@@ -63,24 +79,7 @@ Route::prefix('users')->group(function () {
 });
 
 Route::resource('users', 'UserController')->only(['index', 'show']);
-Route::prefix('employees')->group(function () {
-    Route::get('/leave_applications', 'LeaveApplicationController@leave_applications');
-    Route::put('/leave_application/{appCode}/cancel', 'LeaveApplicationController@update');
-    Route::get('/approvals', 'ApprovalEntryController@current_employee_approvals');
-    Route::get('/approvers', 'EmployeeApproverController@approvers');
-    Route::get('/payslip', 'EmployeeController@payslip');
-    Route::get('/leave_types', 'LeaveAllocationController@current_employee_leave_types');
 
-    Route::get('{employee}/user', 'EmployeeController@user');
-    Route::get('{employee}/picture', 'EmployeeController@picture');
-    Route::get('{employee}/leave_allocations', 'LeaveAllocationController@EmployeeLeaveAllocations');
-    Route::get('{employee}/leave_applications', 'LeaveApplicationController@EmployeeLeaveApplications');
-    Route::get('{employee}/leave_types', 'LeaveTypeController@LeaveTypes');
-    Route::post('{employee}/payslip', 'EmployeeController@employee_payslip');
-    Route::get('{employee}/approvers', 'EmployeeApproverController@employee_approvers');
-    Route::post('{employee}/calculate_dates', 'EmployeeController@calculate_dates');
-    Route::get('{employee}/changelog', 'EmployeeController@changelog');
-});
 Route::resource('employees', 'EmployeeController')->only(['index', 'show']);
 
 Route::prefix('leave_applications')->group(function () {

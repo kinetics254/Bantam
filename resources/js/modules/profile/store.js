@@ -6,7 +6,7 @@ export default {
     state: {
         employee: {}
     },
-    mutation: {
+    mutations: {
         SET_EMPLOYEE: (state, payload) => {
             state.employee = payload;
         }
@@ -15,9 +15,9 @@ export default {
         employee: state => state.employee
     },
     actions: {
-        getEmployee: (context, id) => {
+        getEmployee: (conext, id) => {
             call("get", constants.employee(id)).then(res => {
-                context.commit("SET_EMPLOYEE", res.data.data);
+                conext.commit("SET_EMPLOYEE", res.data.data);
             });
         }
     }

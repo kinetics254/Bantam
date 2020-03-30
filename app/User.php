@@ -2,6 +2,8 @@
 
 namespace App;
 
+use App\Notifications\SetPassword;
+use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -37,4 +39,24 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    //Get employee record of the user
+    public function Employee_Record(){
+        return $this->hasOne("App\Employee");
+    }
+
+    // Notification  recipient
+    public function routeNotificationForMail($notification)
+    {
+        return $this->email;
+    }
+
+    public function sendPasswordResetNotification($token)
+    {
+        if($this->activation_link_sent){
+            $this->notify(new ResetPassword($token));
+        }
+        else $this->notify(new SetPassword($token));
+
+    }
 }
