@@ -283,7 +283,7 @@
                             <tbody>
                                 <tr
                                     v-for="(sheet, index) in timesheets"
-                                    v-show="!sheet.deleted"
+                                    v-show="sheet.deleted === undefined"
                                     :key="index"
                                 >
                                     <td>{{ sheet.Entry_No || "pending" }}</td>
@@ -530,6 +530,10 @@ export default {
         },
         remove: function(sheet) {
             this.$store.commit("timesheet/REMOVE_TIMESHEET", sheet);
+
+            /* hack to hide deleted items*/
+            this.filter = "Pending";
+            this.filter = "";
         },
         resetRecFilter: function() {
             for (const key in this.recFilter) this.recFilter[key] = "";
@@ -597,10 +601,6 @@ export default {
                 "timesheet/timesheets"
             ].data.filter(s => {
                 return s.set === true || s.deleted === true;
-            });
-
-            sheets.forEach(s => {
-                delete s.set;
             });
 
             this.$store.dispatch("timesheet/saveSheets", sheets);

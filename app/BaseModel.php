@@ -58,6 +58,7 @@ class BaseModel extends Model implements Auditable
         });
 
         static::updated(function ($model){
+            $model->refresh();
             if ($model->getConnection()->getSchemaBuilder()->hasColumn($model->getTable(), 'Modified_By')) {
 
                 if (Auth()->check())

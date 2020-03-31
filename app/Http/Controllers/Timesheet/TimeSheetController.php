@@ -32,7 +32,7 @@ class TimeSheetController extends BaseController
 
             foreach ($sheets as $sheet){
                 $sheet = (object)$sheet;
-                $timesheet = (isset($sheet->id) && !isset($sheet->set)) ? TimeSheet::find($sheet->id) : new TimeSheet();
+                $timesheet = (isset($sheet->id) && (isset($sheet->set) || isset($sheet->deleted))) ? TimeSheet::find($sheet->id) : new TimeSheet();
 
                 if (isset($sheet->deleted))
                     $timesheet->delete();

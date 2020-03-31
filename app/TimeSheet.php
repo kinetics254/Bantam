@@ -5,5 +5,15 @@ namespace App;
 
 class TimeSheet extends BaseModel
 {
-    protected $guarded = [];
+    protected $fillable = [
+        "Employee",
+        "Project",
+        "Activity",
+        "Task",
+        "Location",
+        "Hours",
+        "Date",
+        "Comments",
+        "Status",
+    ];
 }

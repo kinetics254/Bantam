@@ -13384,6 +13384,10 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     },
     remove: function remove(sheet) {
       this.$store.commit("timesheet/REMOVE_TIMESHEET", sheet);
+      /* hack to hide deleted items*/
+
+      this.filter = "Pending";
+      this.filter = "";
     },
     resetRecFilter: function resetRecFilter() {
       for (var key in this.recFilter) {
@@ -13442,9 +13446,6 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     saveSheets: function saveSheets() {
       var sheets = this.$store.getters["timesheet/timesheets"].data.filter(function (s) {
         return s.set === true || s.deleted === true;
-      });
-      sheets.forEach(function (s) {
-        delete s.set;
       });
       this.$store.dispatch("timesheet/saveSheets", sheets);
     }
@@ -78627,8 +78628,8 @@ var render = function() {
                                 {
                                   name: "show",
                                   rawName: "v-show",
-                                  value: !sheet.deleted,
-                                  expression: "!sheet.deleted"
+                                  value: sheet.deleted === undefined,
+                                  expression: "sheet.deleted === undefined"
                                 }
                               ],
                               key: index
