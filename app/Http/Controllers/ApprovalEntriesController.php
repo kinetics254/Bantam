@@ -3,83 +3,95 @@
 namespace App\Http\Controllers;
 
 use App\ApprovalEntries;
+use App\Employee;
+use App\EmployeeLeaveApplication;
+use App\Http\Resources\ApprovalEntryCollection;
+use App\Http\Resources\ApprovalEntryResource;
+use App\Http\Resources\ChangelogResource;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ApprovalEntriesController extends Controller
 {
+    use Filterable;
+    use CalculateDates;
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         //
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
+    public function show(Request $request, ApprovalEntries $entry)
     {
-        //
+        if($request->is('api*')){
+            return new ApprovalEntryResource($entry);
+        }
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
+    public function status(  $id, Request $request)
     {
-        //
+        $entry = ApprovalEntries::find($id);
+
+        if($entry->Approver_ID != Auth::user()->Employee_Record->No){
+            abort(401);
+        }
+
+        $validatedData = $request->validate([
+            'status' => "required|in:Rejected,Approved",
+            'Approved_Start_Date' => 'sometimes|date',
+            'Approved_End_Date' => 'sometimes|date',
+            'comment' => 'sometimes',
+        ]);
+
+        if($validatedData['status'] == "Approved"){
+            $res = $this->calculateEmployeeLeaveDates([
+                'start_date'=> $validatedData['Approved_Start_Date'],
+                'end_date'=> $validatedData['Approved_End_Date'],
+                'leave_code'=> $entry->leave_application->Leave_Code
+            ], $entry->employee, $entry->leave_application);
+        }
+
+        $entry->Status = $validatedData['status'];
+        $entry->Web_Sync = 1;
+        if(isset($validatedData['comment'])) $entry->comment = $validatedData['comment'];
+        $entry->save();
+
+        $application = $entry->leave_application;
+        $application->Approved_Start_Date =  isset($validatedData['Approved_Start_Date']) ? $validatedData['Approved_Start_Date'] : null;
+        $application->Approved_End_Date = isset($validatedData['Approved_End_Date']) ? $validatedData['Approved_End_Date']: null;
+        $application->Approved_Return_Date = isset($res)? $res->rDate : null;
+        $application->Approval_Date = Carbon::now()->format('Y-m-d');
+        $application->Web_Sync = 1;
+        $application->save();
+
+        return new ApprovalEntryResource($entry);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\ApprovalEntries  $approvalEntries
-     * @return \Illuminate\Http\Response
-     */
-    public function show(ApprovalEntries $approvalEntries)
-    {
-        //
+    public function employee_approvals(Request $request, Employee $employee){
+        return $this->getEmployeeApprovalEntries($request, $employee);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\ApprovalEntries  $approvalEntries
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(ApprovalEntries $approvalEntries)
-    {
-        //
+    public function current_employee_approvals(Request $request){
+        return $this->getEmployeeApprovalEntries($request,  Auth::user()->Employee_Record);
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\ApprovalEntries  $approvalEntries
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, ApprovalEntries $approvalEntries)
-    {
-        //
+    public function application_approvals(EmployeeLeaveApplication $leave_application, Request $request ){
+        return ApprovalEntryResource::collection($leave_application->approval_entries);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\ApprovalEntries  $approvalEntries
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(ApprovalEntries $approvalEntries)
-    {
-        //
+    private function getEmployeeApprovalEntries(Request $request, Employee $employee){
+        $approvals = $this->filter($request, ApprovalEntries::class, $employee->approvals());
+        if($request->is('api*')){
+            return new ApprovalEntryCollection($approvals->paginate());
+        }
+    }
+
+    public function changelog(ApprovalEntries $approval_entry, Request $request){
+        return ChangelogResource::collection($approval_entry->audits()->paginate());
     }
 }

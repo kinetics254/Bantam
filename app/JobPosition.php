@@ -2,9 +2,7 @@
 
 namespace App;
 
-use Illuminate\Database\Eloquent\Model;
-
-class JobPosition extends Model
+class JobPosition extends BaseModel
 {
     //
 }

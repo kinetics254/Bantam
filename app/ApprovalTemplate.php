@@ -2,9 +2,10 @@
 
 namespace App;
 
-use Illuminate\Database\Eloquent\Model;
-
-class ApprovalTemplate extends Model
+class ApprovalTemplate extends BaseModel
 {
-    //
+    //Approval entries per template type
+    public function Approval_entries(){
+        return $this->hasMany(ApprovalEntries::class,"Approval_template",'id');
+    }
 }

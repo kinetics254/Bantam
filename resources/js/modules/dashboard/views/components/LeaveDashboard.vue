@@ -32,12 +32,14 @@
 </template>
 
 <script>
-import Spinner from "../../../../components/Spinner";
 import { BarChart, DoughnutChart, LinerChart } from "../../../../charts";
-
+import LoadingMixin from "../../../../mixins/loader/loader";
+import Spinner from "../../../../components/Spinner";
+import PaginationMixin from "../../../../plugins/paginator/paginator";
 export default {
     name: "LeaveDashboard",
     components: { Spinner, BarChart, DoughnutChart, LinerChart },
+    mixins: [LoadingMixin, PaginationMixin],
     data: function() {
         return {
             datasets: [

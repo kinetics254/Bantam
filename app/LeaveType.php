@@ -2,9 +2,7 @@
 
 namespace App;
 
-use Illuminate\Database\Eloquent\Model;
-
-class LeaveType extends Model
+class LeaveType extends BaseModel
 {
-    //
+    protected $guarded = [];
 }

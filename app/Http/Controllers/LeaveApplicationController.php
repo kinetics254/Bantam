@@ -169,7 +169,6 @@ class LeaveApplicationController extends Controller
 
     public function EmployeeLeaveApplications(Employee $employee, Request $request)
     {
-
         $this->authorize('employee', [EmployeeLeaveApplication::class, $employee]);
         if ($request->is('api*')) {
             return new EmployeeLeaveApplicationCollection(

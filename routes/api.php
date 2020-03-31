@@ -29,6 +29,7 @@ Route::group(['namespace' => 'Timesheet', 'prefix' => 'time-sheets', 'middleware
     Route::post('/', 'TimeSheetController@store');
 });
 
+Route::resource('users', 'UserController')->only(['index', 'show'])->middleware('auth:sanctum');;
 Route::group(['prefix' => 'users', 'middleware' => 'auth:sanctum'], function (){
     Route::get('{user}/employee', 'UserController@employee');
     Route::get('notification', 'Notification@index');
@@ -39,11 +40,12 @@ Route::group(['prefix' => 'users', 'middleware' => 'auth:sanctum'], function (){
     Route::get('{user}/changelog', 'UserController@changelog');
 });
 
-Route::group(['namespace' => 'Employee', 'prefix' => 'employee', 'middleware' => 'auth:sanctum'], function (){
+Route::resource('employees', 'EmployeeController')->only(['index', 'show'])->middleware('auth:sanctum');
+Route::group(['prefix' => 'employee', 'middleware' => 'auth:sanctum'], function (){
     Route::get('/employees', 'EmployeeController@index');
     Route::get('/leave_applications', 'LeaveApplicationController@leave_applications');
     Route::put('/leave_application/{appCode}/cancel', 'LeaveApplicationController@update');
-    Route::get('/approvals', 'ApprovalEntryController@current_employee_approvals');
+    Route::get('/approvals', 'ApprovalEntriesController@current_employee_approvals');
     Route::get('/approvers', 'EmployeeApproverController@approvers');
     Route::get('/payslip', 'EmployeeController@payslip');
     Route::get('/leave_types', 'LeaveAllocationController@current_employee_leave_types');
@@ -60,7 +62,6 @@ Route::group(['namespace' => 'Employee', 'prefix' => 'employee', 'middleware' =>
 });
 
 
-
 Route::group(['namespace' => 'Setup', 'prefix' => 'setup', 'middleware' => 'auth:sanctum'], function (){
     Route::get('/projects', 'ProjectController@index');
     Route::get('/activities', 'ActivityController@index');
@@ -68,35 +69,22 @@ Route::group(['namespace' => 'Setup', 'prefix' => 'setup', 'middleware' => 'auth
     Route::get('/locations', 'LocationController@index');
 });
 
-Route::prefix('users')->group(function () {
-    Route::get('{user}/employee', 'UserController@employee');
-    Route::get('notification', 'Notification@index');
-    Route::get('notification/unread', 'Notification@UnreadNotifications');
-    Route::get('notification/read', 'Notification@ReadNotifications');
-    Route::get('notification/markasread', 'Notification@update');
-    Route::get('current', 'UserController@current');
-    Route::get('{user}/changelog', 'UserController@changelog');
-});
 
-Route::resource('users', 'UserController')->only(['index', 'show']);
-
-Route::resource('employees', 'EmployeeController')->only(['index', 'show']);
-
-Route::prefix('leave_applications')->group(function () {
+Route::group(['prefix' => 'leave_applications', 'middleware' => 'auth:sanctum'], function (){
     Route::post('calculate_leave_dates', 'LeaveApplicationController@calculateLeaveDates');
     Route::post('requests', 'LeaveApplicationController@requests');
     Route::post('{leave_applications}/status', 'LeaveApplicationController@status');
-    Route::get('{leave_application}/approvals', 'ApprovalEntryController@application_approvals');
+    Route::get('{leave_application}/approvals', 'ApprovalEntriesController@application_approvals');
     Route::get('disabled_days', 'LeaveApplicationController@disabled_days');
     Route::get('{leave_application}/changelog', 'LeaveApplicationController@changelog');
 });
 
 
 Route::prefix('approvals')->group(function () {
-    Route::post('{approval}/status', 'ApprovalEntryController@status');
-    Route::get('{approval_entry}/changelog', 'ApprovalEntryController@changelog');
+    Route::post('{approval}/status', 'ApprovalEntriesController@status');
+    Route::get('{approval_entry}/changelog', 'ApprovalEntriesController@changelog');
 });
-Route::resource('approvals','ApprovalEntryController');
+Route::resource('approvals','ApprovalEntriesController');
 
 Route::resource('leave_applications','LeaveApplicationController');
 Route::resource('leave_allocations','LeaveAllocationController')->only(['index', 'show']);

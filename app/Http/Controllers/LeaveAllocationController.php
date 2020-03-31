@@ -94,7 +94,7 @@ class LeaveAllocationController extends Controller
     public function EmployeeLeaveAllocations(Employee $employee, Request $request){
         $this->authorize('employee', [EmployeeLeaveAllocation::class, $employee]);
         if ($request->is('api*')) {
-            return new LeaveAllocationResource($employee->Employee_leave_allocations()->paginate());
+            return LeaveAllocationResource::collection($employee->Employee_leave_allocations()->paginate());
         }
     }
 

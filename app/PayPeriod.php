@@ -2,9 +2,7 @@
 
 namespace App;
 
-use Illuminate\Database\Eloquent\Model;
-
-class PayPeriod extends Model
+class PayPeriod extends BaseModel
 {
-    //
+    protected $guarded = [];
 }

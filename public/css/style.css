@@ -8713,3 +8713,12 @@ body.md-skin {
 .leave-form .form-control[readonly] {
     background: white !important;
 }
+
+.mx-datepicker{
+    width: 100% !important;
+}
+
+.mx-datepicker .form-control[readonly] {
+    background-color: #ffffff!important;
+    opacity: 1;
+}

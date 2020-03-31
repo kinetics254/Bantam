@@ -43,7 +43,10 @@ client.interceptors.request.use(loggerInterceptor);
 /** Adding the response interceptors */
 client.interceptors.response.use(
     response => Promise.resolve(response),
-    error => Promise.reject(error)
+    error => {
+        Event.$emit("ApiError", 500, error.response.data.message);
+        Promise.reject(error);
+    }
 );
 
 export default client;

@@ -38,10 +38,6 @@
             <router-view />
         </main>
     </div>
-    <script src="{{ asset('js/jquery.js') }}"></script>
-    <script src="{{ asset('js/app.js') .'?random='.uniqid() }}"></script>
-    <script src="{{ asset('js/plugins/metisMenu/jquery.metisMenu.js') }}"></script>
-    <script src="{{ asset('js/plugins/slimscroll/jquery.slimscroll.min.js') }}"></script>
     <script>
         window.paceOptions = {
             "ajax": {
@@ -50,6 +46,11 @@
         }
     </script>
     <script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
+    <script src="{{ asset('js/jquery.js') }}"></script>
+    <script src="{{ asset('js/app.js') .'?random='.uniqid() }}"></script>
+    <script src="{{ asset('js/plugins/metisMenu/jquery.metisMenu.js') }}"></script>
+    <script src="{{ asset('js/plugins/slimscroll/jquery.slimscroll.min.js') }}"></script>
+
     <script src="{{ asset('js/inspinia.js') }}"></script>
     </body>
 </html>

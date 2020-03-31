@@ -1,34 +1,32 @@
 <?php
 
-namespace App\Http\Controllers\Employee;
+namespace App\Http\Controllers;
 
 use App\Employee;
 use App\EmployeeLeaveApplication;
-use App\Http\Controllers\BaseController;
 use App\Http\Resources\ChangelogResource;
 use App\Http\Resources\EmployeeResource;
 use App\Http\Resources\UserResource;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Schema;
-use Illuminate\Support\Facades\Storage;
 
-class EmployeeController extends BaseController
+class EmployeeController extends Controller
 {
-    public function __construct($model = Employee::class, $resource = EmployeeResource::class)
+
+
+    public function index(Request $request)
     {
-        parent::__construct($model, $resource);
+        $this->authorize('index', Employee::class);
+        return EmployeeResource::collection($this->filter($request->all())->paginate());
     }
 
-    public function index()
-    {
-        $this->authorize('index', $this->model);
-        return parent::index();
-    }
-
-    public function show($employee)
+    public function show(Request $request, Employee $employee)
     {
         $this->authorize('view', $employee);
-        return new EmployeeResource($employee);
+        if($request->is('api*')){
+            return new EmployeeResource($employee);
+        }
     }
 
     public function user(Request $request, Employee $employee){
