@@ -52,13 +52,11 @@
 </template>
 
 <script>
-import LoadingMixin from "../../../mixins/loader/loader";
-import Spinner from "../../../components/Spinner";
+import Spinner from "../../../plugins/loader/views/Spinner";
 
 export default {
     name: "Activities",
     components: { Spinner },
-    mixins: [LoadingMixin],
     beforeRouteEnter(to, from, next) {
         next(v => {
             v.$store.dispatch("setup/getActivities");

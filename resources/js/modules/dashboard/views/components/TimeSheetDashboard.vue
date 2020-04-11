@@ -29,14 +29,13 @@
 
 <script>
 import PaginationMixin from "../../../../plugins/paginator/paginator";
-import LoadingMixin from "../../../../mixins/loader/loader";
-import Spinner from "../../../../components/Spinner";
 import { BarChart } from "../../../../charts";
+import Spinner from "../../../../plugins/loader/views/Spinner";
 
 export default {
     name: "TimeSheetDashboard",
     components: { Spinner, BarChart },
-    mixins: [LoadingMixin, PaginationMixin],
+    mixins: [PaginationMixin],
     data: function() {
         return {
             datasets: [

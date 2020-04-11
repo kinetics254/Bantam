@@ -98,8376 +98,6 @@ module.exports = __webpack_require__(/*! regenerator-runtime */ "./node_modules/
 
 /***/ }),
 
-/***/ "./node_modules/@sentry/browser/esm/backend.js":
-/*!*****************************************************!*\
-  !*** ./node_modules/@sentry/browser/esm/backend.js ***!
-  \*****************************************************/
-/*! exports provided: BrowserBackend */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "BrowserBackend", function() { return BrowserBackend; });
-/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
-/* harmony import */ var _sentry_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @sentry/core */ "./node_modules/@sentry/core/esm/index.js");
-/* harmony import */ var _sentry_types__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @sentry/types */ "./node_modules/@sentry/types/esm/index.js");
-/* harmony import */ var _sentry_utils__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @sentry/utils */ "./node_modules/@sentry/utils/esm/index.js");
-/* harmony import */ var _eventbuilder__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./eventbuilder */ "./node_modules/@sentry/browser/esm/eventbuilder.js");
-/* harmony import */ var _transports__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./transports */ "./node_modules/@sentry/browser/esm/transports/index.js");
-
-
-
-
-
-
-/**
- * The Sentry Browser SDK Backend.
- * @hidden
- */
-var BrowserBackend = /** @class */ (function (_super) {
-    tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"](BrowserBackend, _super);
-    function BrowserBackend() {
-        return _super !== null && _super.apply(this, arguments) || this;
-    }
-    /**
-     * @inheritDoc
-     */
-    BrowserBackend.prototype._setupTransport = function () {
-        if (!this._options.dsn) {
-            // We return the noop transport here in case there is no Dsn.
-            return _super.prototype._setupTransport.call(this);
-        }
-        var transportOptions = tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"]({}, this._options.transportOptions, { dsn: this._options.dsn });
-        if (this._options.transport) {
-            return new this._options.transport(transportOptions);
-        }
-        if (Object(_sentry_utils__WEBPACK_IMPORTED_MODULE_3__["supportsFetch"])()) {
-            return new _transports__WEBPACK_IMPORTED_MODULE_5__["FetchTransport"](transportOptions);
-        }
-        return new _transports__WEBPACK_IMPORTED_MODULE_5__["XHRTransport"](transportOptions);
-    };
-    /**
-     * @inheritDoc
-     */
-    BrowserBackend.prototype.eventFromException = function (exception, hint) {
-        var syntheticException = (hint && hint.syntheticException) || undefined;
-        var event = Object(_eventbuilder__WEBPACK_IMPORTED_MODULE_4__["eventFromUnknownInput"])(exception, syntheticException, {
-            attachStacktrace: this._options.attachStacktrace,
-        });
-        Object(_sentry_utils__WEBPACK_IMPORTED_MODULE_3__["addExceptionMechanism"])(event, {
-            handled: true,
-            type: 'generic',
-        });
-        event.level = _sentry_types__WEBPACK_IMPORTED_MODULE_2__["Severity"].Error;
-        if (hint && hint.event_id) {
-            event.event_id = hint.event_id;
-        }
-        return _sentry_utils__WEBPACK_IMPORTED_MODULE_3__["SyncPromise"].resolve(event);
-    };
-    /**
-     * @inheritDoc
-     */
-    BrowserBackend.prototype.eventFromMessage = function (message, level, hint) {
-        if (level === void 0) { level = _sentry_types__WEBPACK_IMPORTED_MODULE_2__["Severity"].Info; }
-        var syntheticException = (hint && hint.syntheticException) || undefined;
-        var event = Object(_eventbuilder__WEBPACK_IMPORTED_MODULE_4__["eventFromString"])(message, syntheticException, {
-            attachStacktrace: this._options.attachStacktrace,
-        });
-        event.level = level;
-        if (hint && hint.event_id) {
-            event.event_id = hint.event_id;
-        }
-        return _sentry_utils__WEBPACK_IMPORTED_MODULE_3__["SyncPromise"].resolve(event);
-    };
-    return BrowserBackend;
-}(_sentry_core__WEBPACK_IMPORTED_MODULE_1__["BaseBackend"]));
-
-//# sourceMappingURL=backend.js.map
-
-/***/ }),
-
-/***/ "./node_modules/@sentry/browser/esm/client.js":
-/*!****************************************************!*\
-  !*** ./node_modules/@sentry/browser/esm/client.js ***!
-  \****************************************************/
-/*! exports provided: BrowserClient */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "BrowserClient", function() { return BrowserClient; });
-/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
-/* harmony import */ var _sentry_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @sentry/core */ "./node_modules/@sentry/core/esm/index.js");
-/* harmony import */ var _sentry_utils__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @sentry/utils */ "./node_modules/@sentry/utils/esm/index.js");
-/* harmony import */ var _backend__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./backend */ "./node_modules/@sentry/browser/esm/backend.js");
-/* harmony import */ var _version__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./version */ "./node_modules/@sentry/browser/esm/version.js");
-
-
-
-
-
-/**
- * The Sentry Browser SDK Client.
- *
- * @see BrowserOptions for documentation on configuration options.
- * @see SentryClient for usage documentation.
- */
-var BrowserClient = /** @class */ (function (_super) {
-    tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"](BrowserClient, _super);
-    /**
-     * Creates a new Browser SDK instance.
-     *
-     * @param options Configuration options for this SDK.
-     */
-    function BrowserClient(options) {
-        if (options === void 0) { options = {}; }
-        return _super.call(this, _backend__WEBPACK_IMPORTED_MODULE_3__["BrowserBackend"], options) || this;
-    }
-    /**
-     * @inheritDoc
-     */
-    BrowserClient.prototype._prepareEvent = function (event, scope, hint) {
-        event.platform = event.platform || 'javascript';
-        event.sdk = tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"]({}, event.sdk, { name: _version__WEBPACK_IMPORTED_MODULE_4__["SDK_NAME"], packages: tslib__WEBPACK_IMPORTED_MODULE_0__["__spread"](((event.sdk && event.sdk.packages) || []), [
-                {
-                    name: 'npm:@sentry/browser',
-                    version: _version__WEBPACK_IMPORTED_MODULE_4__["SDK_VERSION"],
-                },
-            ]), version: _version__WEBPACK_IMPORTED_MODULE_4__["SDK_VERSION"] });
-        return _super.prototype._prepareEvent.call(this, event, scope, hint);
-    };
-    /**
-     * Show a report dialog to the user to send feedback to a specific event.
-     *
-     * @param options Set individual options for the dialog
-     */
-    BrowserClient.prototype.showReportDialog = function (options) {
-        if (options === void 0) { options = {}; }
-        // doesn't work without a document (React Native)
-        var document = Object(_sentry_utils__WEBPACK_IMPORTED_MODULE_2__["getGlobalObject"])().document;
-        if (!document) {
-            return;
-        }
-        if (!this._isEnabled()) {
-            _sentry_utils__WEBPACK_IMPORTED_MODULE_2__["logger"].error('Trying to call showReportDialog with Sentry Client is disabled');
-            return;
-        }
-        var dsn = options.dsn || this.getDsn();
-        if (!options.eventId) {
-            _sentry_utils__WEBPACK_IMPORTED_MODULE_2__["logger"].error('Missing `eventId` option in showReportDialog call');
-            return;
-        }
-        if (!dsn) {
-            _sentry_utils__WEBPACK_IMPORTED_MODULE_2__["logger"].error('Missing `Dsn` option in showReportDialog call');
-            return;
-        }
-        var script = document.createElement('script');
-        script.async = true;
-        script.src = new _sentry_core__WEBPACK_IMPORTED_MODULE_1__["API"](dsn).getReportDialogEndpoint(options);
-        if (options.onLoad) {
-            script.onload = options.onLoad;
-        }
-        (document.head || document.body).appendChild(script);
-    };
-    return BrowserClient;
-}(_sentry_core__WEBPACK_IMPORTED_MODULE_1__["BaseClient"]));
-
-//# sourceMappingURL=client.js.map
-
-/***/ }),
-
-/***/ "./node_modules/@sentry/browser/esm/eventbuilder.js":
-/*!**********************************************************!*\
-  !*** ./node_modules/@sentry/browser/esm/eventbuilder.js ***!
-  \**********************************************************/
-/*! exports provided: eventFromUnknownInput, eventFromString */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "eventFromUnknownInput", function() { return eventFromUnknownInput; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "eventFromString", function() { return eventFromString; });
-/* harmony import */ var _sentry_utils__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @sentry/utils */ "./node_modules/@sentry/utils/esm/index.js");
-/* harmony import */ var _parsers__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./parsers */ "./node_modules/@sentry/browser/esm/parsers.js");
-/* harmony import */ var _tracekit__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./tracekit */ "./node_modules/@sentry/browser/esm/tracekit.js");
-
-
-
-/** JSDoc */
-function eventFromUnknownInput(exception, syntheticException, options) {
-    if (options === void 0) { options = {}; }
-    var event;
-    if (Object(_sentry_utils__WEBPACK_IMPORTED_MODULE_0__["isErrorEvent"])(exception) && exception.error) {
-        // If it is an ErrorEvent with `error` property, extract it to get actual Error
-        var errorEvent = exception;
-        exception = errorEvent.error; // tslint:disable-line:no-parameter-reassignment
-        event = Object(_parsers__WEBPACK_IMPORTED_MODULE_1__["eventFromStacktrace"])(Object(_tracekit__WEBPACK_IMPORTED_MODULE_2__["computeStackTrace"])(exception));
-        return event;
-    }
-    if (Object(_sentry_utils__WEBPACK_IMPORTED_MODULE_0__["isDOMError"])(exception) || Object(_sentry_utils__WEBPACK_IMPORTED_MODULE_0__["isDOMException"])(exception)) {
-        // If it is a DOMError or DOMException (which are legacy APIs, but still supported in some browsers)
-        // then we just extract the name and message, as they don't provide anything else
-        // https://developer.mozilla.org/en-US/docs/Web/API/DOMError
-        // https://developer.mozilla.org/en-US/docs/Web/API/DOMException
-        var domException = exception;
-        var name_1 = domException.name || (Object(_sentry_utils__WEBPACK_IMPORTED_MODULE_0__["isDOMError"])(domException) ? 'DOMError' : 'DOMException');
-        var message = domException.message ? name_1 + ": " + domException.message : name_1;
-        event = eventFromString(message, syntheticException, options);
-        Object(_sentry_utils__WEBPACK_IMPORTED_MODULE_0__["addExceptionTypeValue"])(event, message);
-        return event;
-    }
-    if (Object(_sentry_utils__WEBPACK_IMPORTED_MODULE_0__["isError"])(exception)) {
-        // we have a real Error object, do nothing
-        event = Object(_parsers__WEBPACK_IMPORTED_MODULE_1__["eventFromStacktrace"])(Object(_tracekit__WEBPACK_IMPORTED_MODULE_2__["computeStackTrace"])(exception));
-        return event;
-    }
-    if (Object(_sentry_utils__WEBPACK_IMPORTED_MODULE_0__["isPlainObject"])(exception) || Object(_sentry_utils__WEBPACK_IMPORTED_MODULE_0__["isEvent"])(exception)) {
-        // If it is plain Object or Event, serialize it manually and extract options
-        // This will allow us to group events based on top-level keys
-        // which is much better than creating new group when any key/value change
-        var objectException = exception;
-        event = Object(_parsers__WEBPACK_IMPORTED_MODULE_1__["eventFromPlainObject"])(objectException, syntheticException, options.rejection);
-        Object(_sentry_utils__WEBPACK_IMPORTED_MODULE_0__["addExceptionMechanism"])(event, {
-            synthetic: true,
-        });
-        return event;
-    }
-    // If none of previous checks were valid, then it means that it's not:
-    // - an instance of DOMError
-    // - an instance of DOMException
-    // - an instance of Event
-    // - an instance of Error
-    // - a valid ErrorEvent (one with an error property)
-    // - a plain Object
-    //
-    // So bail out and capture it as a simple message:
-    event = eventFromString(exception, syntheticException, options);
-    Object(_sentry_utils__WEBPACK_IMPORTED_MODULE_0__["addExceptionTypeValue"])(event, "" + exception, undefined);
-    Object(_sentry_utils__WEBPACK_IMPORTED_MODULE_0__["addExceptionMechanism"])(event, {
-        synthetic: true,
-    });
-    return event;
-}
-// this._options.attachStacktrace
-/** JSDoc */
-function eventFromString(input, syntheticException, options) {
-    if (options === void 0) { options = {}; }
-    var event = {
-        message: input,
-    };
-    if (options.attachStacktrace && syntheticException) {
-        var stacktrace = Object(_tracekit__WEBPACK_IMPORTED_MODULE_2__["computeStackTrace"])(syntheticException);
-        var frames_1 = Object(_parsers__WEBPACK_IMPORTED_MODULE_1__["prepareFramesForEvent"])(stacktrace.stack);
-        event.stacktrace = {
-            frames: frames_1,
-        };
-    }
-    return event;
-}
-//# sourceMappingURL=eventbuilder.js.map
-
-/***/ }),
-
-/***/ "./node_modules/@sentry/browser/esm/exports.js":
-/*!*****************************************************!*\
-  !*** ./node_modules/@sentry/browser/esm/exports.js ***!
-  \*****************************************************/
-/*! exports provided: Severity, Status, addGlobalEventProcessor, addBreadcrumb, captureException, captureEvent, captureMessage, configureScope, getHubFromCarrier, getCurrentHub, Hub, Scope, setContext, setExtra, setExtras, setTag, setTags, setUser, withScope, BrowserClient, defaultIntegrations, forceLoad, init, lastEventId, onLoad, showReportDialog, flush, close, wrap, SDK_NAME, SDK_VERSION */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _sentry_types__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @sentry/types */ "./node_modules/@sentry/types/esm/index.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Severity", function() { return _sentry_types__WEBPACK_IMPORTED_MODULE_0__["Severity"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Status", function() { return _sentry_types__WEBPACK_IMPORTED_MODULE_0__["Status"]; });
-
-/* harmony import */ var _sentry_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @sentry/core */ "./node_modules/@sentry/core/esm/index.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "addGlobalEventProcessor", function() { return _sentry_core__WEBPACK_IMPORTED_MODULE_1__["addGlobalEventProcessor"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "addBreadcrumb", function() { return _sentry_core__WEBPACK_IMPORTED_MODULE_1__["addBreadcrumb"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "captureException", function() { return _sentry_core__WEBPACK_IMPORTED_MODULE_1__["captureException"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "captureEvent", function() { return _sentry_core__WEBPACK_IMPORTED_MODULE_1__["captureEvent"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "captureMessage", function() { return _sentry_core__WEBPACK_IMPORTED_MODULE_1__["captureMessage"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "configureScope", function() { return _sentry_core__WEBPACK_IMPORTED_MODULE_1__["configureScope"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "getHubFromCarrier", function() { return _sentry_core__WEBPACK_IMPORTED_MODULE_1__["getHubFromCarrier"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "getCurrentHub", function() { return _sentry_core__WEBPACK_IMPORTED_MODULE_1__["getCurrentHub"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Hub", function() { return _sentry_core__WEBPACK_IMPORTED_MODULE_1__["Hub"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Scope", function() { return _sentry_core__WEBPACK_IMPORTED_MODULE_1__["Scope"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "setContext", function() { return _sentry_core__WEBPACK_IMPORTED_MODULE_1__["setContext"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "setExtra", function() { return _sentry_core__WEBPACK_IMPORTED_MODULE_1__["setExtra"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "setExtras", function() { return _sentry_core__WEBPACK_IMPORTED_MODULE_1__["setExtras"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "setTag", function() { return _sentry_core__WEBPACK_IMPORTED_MODULE_1__["setTag"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "setTags", function() { return _sentry_core__WEBPACK_IMPORTED_MODULE_1__["setTags"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "setUser", function() { return _sentry_core__WEBPACK_IMPORTED_MODULE_1__["setUser"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "withScope", function() { return _sentry_core__WEBPACK_IMPORTED_MODULE_1__["withScope"]; });
-
-/* harmony import */ var _client__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./client */ "./node_modules/@sentry/browser/esm/client.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "BrowserClient", function() { return _client__WEBPACK_IMPORTED_MODULE_2__["BrowserClient"]; });
-
-/* harmony import */ var _sdk__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./sdk */ "./node_modules/@sentry/browser/esm/sdk.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "defaultIntegrations", function() { return _sdk__WEBPACK_IMPORTED_MODULE_3__["defaultIntegrations"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "forceLoad", function() { return _sdk__WEBPACK_IMPORTED_MODULE_3__["forceLoad"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "init", function() { return _sdk__WEBPACK_IMPORTED_MODULE_3__["init"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "lastEventId", function() { return _sdk__WEBPACK_IMPORTED_MODULE_3__["lastEventId"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "onLoad", function() { return _sdk__WEBPACK_IMPORTED_MODULE_3__["onLoad"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "showReportDialog", function() { return _sdk__WEBPACK_IMPORTED_MODULE_3__["showReportDialog"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "flush", function() { return _sdk__WEBPACK_IMPORTED_MODULE_3__["flush"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "close", function() { return _sdk__WEBPACK_IMPORTED_MODULE_3__["close"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "wrap", function() { return _sdk__WEBPACK_IMPORTED_MODULE_3__["wrap"]; });
-
-/* harmony import */ var _version__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./version */ "./node_modules/@sentry/browser/esm/version.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "SDK_NAME", function() { return _version__WEBPACK_IMPORTED_MODULE_4__["SDK_NAME"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "SDK_VERSION", function() { return _version__WEBPACK_IMPORTED_MODULE_4__["SDK_VERSION"]; });
-
-
-
-
-
-
-//# sourceMappingURL=exports.js.map
-
-/***/ }),
-
-/***/ "./node_modules/@sentry/browser/esm/helpers.js":
-/*!*****************************************************!*\
-  !*** ./node_modules/@sentry/browser/esm/helpers.js ***!
-  \*****************************************************/
-/*! exports provided: shouldIgnoreOnError, ignoreNextOnError, wrap */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "shouldIgnoreOnError", function() { return shouldIgnoreOnError; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ignoreNextOnError", function() { return ignoreNextOnError; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "wrap", function() { return wrap; });
-/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
-/* harmony import */ var _sentry_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @sentry/core */ "./node_modules/@sentry/core/esm/index.js");
-/* harmony import */ var _sentry_utils__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @sentry/utils */ "./node_modules/@sentry/utils/esm/index.js");
-
-
-
-var ignoreOnError = 0;
-/**
- * @hidden
- */
-function shouldIgnoreOnError() {
-    return ignoreOnError > 0;
-}
-/**
- * @hidden
- */
-function ignoreNextOnError() {
-    // onerror should trigger before setTimeout
-    ignoreOnError += 1;
-    setTimeout(function () {
-        ignoreOnError -= 1;
-    });
-}
-/**
- * Instruments the given function and sends an event to Sentry every time the
- * function throws an exception.
- *
- * @param fn A function to wrap.
- * @returns The wrapped function.
- * @hidden
- */
-function wrap(fn, options, before) {
-    if (options === void 0) { options = {}; }
-    // tslint:disable-next-line:strict-type-predicates
-    if (typeof fn !== 'function') {
-        return fn;
-    }
-    try {
-        // We don't wanna wrap it twice
-        if (fn.__sentry__) {
-            return fn;
-        }
-        // If this has already been wrapped in the past, return that wrapped function
-        if (fn.__sentry_wrapped__) {
-            return fn.__sentry_wrapped__;
-        }
-    }
-    catch (e) {
-        // Just accessing custom props in some Selenium environments
-        // can cause a "Permission denied" exception (see raven-js#495).
-        // Bail on wrapping and return the function as-is (defers to window.onerror).
-        return fn;
-    }
-    var sentryWrapped = function () {
-        var args = Array.prototype.slice.call(arguments);
-        // tslint:disable:no-unsafe-any
-        try {
-            // tslint:disable-next-line:strict-type-predicates
-            if (before && typeof before === 'function') {
-                before.apply(this, arguments);
-            }
-            var wrappedArguments = args.map(function (arg) { return wrap(arg, options); });
-            if (fn.handleEvent) {
-                // Attempt to invoke user-land function
-                // NOTE: If you are a Sentry user, and you are seeing this stack frame, it
-                //       means the sentry.javascript SDK caught an error invoking your application code. This
-                //       is expected behavior and NOT indicative of a bug with sentry.javascript.
-                return fn.handleEvent.apply(this, wrappedArguments);
-            }
-            // Attempt to invoke user-land function
-            // NOTE: If you are a Sentry user, and you are seeing this stack frame, it
-            //       means the sentry.javascript SDK caught an error invoking your application code. This
-            //       is expected behavior and NOT indicative of a bug with sentry.javascript.
-            return fn.apply(this, wrappedArguments);
-            // tslint:enable:no-unsafe-any
-        }
-        catch (ex) {
-            ignoreNextOnError();
-            Object(_sentry_core__WEBPACK_IMPORTED_MODULE_1__["withScope"])(function (scope) {
-                scope.addEventProcessor(function (event) {
-                    var processedEvent = tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"]({}, event);
-                    if (options.mechanism) {
-                        Object(_sentry_utils__WEBPACK_IMPORTED_MODULE_2__["addExceptionTypeValue"])(processedEvent, undefined, undefined);
-                        Object(_sentry_utils__WEBPACK_IMPORTED_MODULE_2__["addExceptionMechanism"])(processedEvent, options.mechanism);
-                    }
-                    processedEvent.extra = tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"]({}, processedEvent.extra, { arguments: args });
-                    return processedEvent;
-                });
-                Object(_sentry_core__WEBPACK_IMPORTED_MODULE_1__["captureException"])(ex);
-            });
-            throw ex;
-        }
-    };
-    // Accessing some objects may throw
-    // ref: https://github.com/getsentry/sentry-javascript/issues/1168
-    try {
-        for (var property in fn) {
-            if (Object.prototype.hasOwnProperty.call(fn, property)) {
-                sentryWrapped[property] = fn[property];
-            }
-        }
-    }
-    catch (_oO) { } // tslint:disable-line:no-empty
-    fn.prototype = fn.prototype || {};
-    sentryWrapped.prototype = fn.prototype;
-    Object.defineProperty(fn, '__sentry_wrapped__', {
-        enumerable: false,
-        value: sentryWrapped,
-    });
-    // Signal that this function has been wrapped/filled already
-    // for both debugging and to prevent it to being wrapped/filled twice
-    Object.defineProperties(sentryWrapped, {
-        __sentry__: {
-            enumerable: false,
-            value: true,
-        },
-        __sentry_original__: {
-            enumerable: false,
-            value: fn,
-        },
-    });
-    // Restore original function name (not all browsers allow that)
-    try {
-        var descriptor = Object.getOwnPropertyDescriptor(sentryWrapped, 'name');
-        if (descriptor.configurable) {
-            Object.defineProperty(sentryWrapped, 'name', {
-                get: function () {
-                    return fn.name;
-                },
-            });
-        }
-    }
-    catch (_oO) {
-        /*no-empty*/
-    }
-    return sentryWrapped;
-}
-//# sourceMappingURL=helpers.js.map
-
-/***/ }),
-
-/***/ "./node_modules/@sentry/browser/esm/index.js":
-/*!***************************************************!*\
-  !*** ./node_modules/@sentry/browser/esm/index.js ***!
-  \***************************************************/
-/*! exports provided: Severity, Status, addGlobalEventProcessor, addBreadcrumb, captureException, captureEvent, captureMessage, configureScope, getHubFromCarrier, getCurrentHub, Hub, Scope, setContext, setExtra, setExtras, setTag, setTags, setUser, withScope, BrowserClient, defaultIntegrations, forceLoad, init, lastEventId, onLoad, showReportDialog, flush, close, wrap, SDK_NAME, SDK_VERSION, Integrations, Transports */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Integrations", function() { return INTEGRATIONS; });
-/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
-/* harmony import */ var _exports__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./exports */ "./node_modules/@sentry/browser/esm/exports.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Severity", function() { return _exports__WEBPACK_IMPORTED_MODULE_1__["Severity"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Status", function() { return _exports__WEBPACK_IMPORTED_MODULE_1__["Status"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "addGlobalEventProcessor", function() { return _exports__WEBPACK_IMPORTED_MODULE_1__["addGlobalEventProcessor"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "addBreadcrumb", function() { return _exports__WEBPACK_IMPORTED_MODULE_1__["addBreadcrumb"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "captureException", function() { return _exports__WEBPACK_IMPORTED_MODULE_1__["captureException"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "captureEvent", function() { return _exports__WEBPACK_IMPORTED_MODULE_1__["captureEvent"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "captureMessage", function() { return _exports__WEBPACK_IMPORTED_MODULE_1__["captureMessage"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "configureScope", function() { return _exports__WEBPACK_IMPORTED_MODULE_1__["configureScope"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "getHubFromCarrier", function() { return _exports__WEBPACK_IMPORTED_MODULE_1__["getHubFromCarrier"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "getCurrentHub", function() { return _exports__WEBPACK_IMPORTED_MODULE_1__["getCurrentHub"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Hub", function() { return _exports__WEBPACK_IMPORTED_MODULE_1__["Hub"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Scope", function() { return _exports__WEBPACK_IMPORTED_MODULE_1__["Scope"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "setContext", function() { return _exports__WEBPACK_IMPORTED_MODULE_1__["setContext"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "setExtra", function() { return _exports__WEBPACK_IMPORTED_MODULE_1__["setExtra"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "setExtras", function() { return _exports__WEBPACK_IMPORTED_MODULE_1__["setExtras"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "setTag", function() { return _exports__WEBPACK_IMPORTED_MODULE_1__["setTag"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "setTags", function() { return _exports__WEBPACK_IMPORTED_MODULE_1__["setTags"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "setUser", function() { return _exports__WEBPACK_IMPORTED_MODULE_1__["setUser"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "withScope", function() { return _exports__WEBPACK_IMPORTED_MODULE_1__["withScope"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "BrowserClient", function() { return _exports__WEBPACK_IMPORTED_MODULE_1__["BrowserClient"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "defaultIntegrations", function() { return _exports__WEBPACK_IMPORTED_MODULE_1__["defaultIntegrations"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "forceLoad", function() { return _exports__WEBPACK_IMPORTED_MODULE_1__["forceLoad"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "init", function() { return _exports__WEBPACK_IMPORTED_MODULE_1__["init"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "lastEventId", function() { return _exports__WEBPACK_IMPORTED_MODULE_1__["lastEventId"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "onLoad", function() { return _exports__WEBPACK_IMPORTED_MODULE_1__["onLoad"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "showReportDialog", function() { return _exports__WEBPACK_IMPORTED_MODULE_1__["showReportDialog"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "flush", function() { return _exports__WEBPACK_IMPORTED_MODULE_1__["flush"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "close", function() { return _exports__WEBPACK_IMPORTED_MODULE_1__["close"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "wrap", function() { return _exports__WEBPACK_IMPORTED_MODULE_1__["wrap"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "SDK_NAME", function() { return _exports__WEBPACK_IMPORTED_MODULE_1__["SDK_NAME"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "SDK_VERSION", function() { return _exports__WEBPACK_IMPORTED_MODULE_1__["SDK_VERSION"]; });
-
-/* harmony import */ var _sentry_core__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @sentry/core */ "./node_modules/@sentry/core/esm/index.js");
-/* harmony import */ var _sentry_utils__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @sentry/utils */ "./node_modules/@sentry/utils/esm/index.js");
-/* harmony import */ var _integrations__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./integrations */ "./node_modules/@sentry/browser/esm/integrations/index.js");
-/* harmony import */ var _transports__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./transports */ "./node_modules/@sentry/browser/esm/transports/index.js");
-/* harmony reexport (module object) */ __webpack_require__.d(__webpack_exports__, "Transports", function() { return _transports__WEBPACK_IMPORTED_MODULE_5__; });
-
-
-
-
-
-
-var windowIntegrations = {};
-// This block is needed to add compatibility with the integrations packages when used with a CDN
-// tslint:disable: no-unsafe-any
-var _window = Object(_sentry_utils__WEBPACK_IMPORTED_MODULE_3__["getGlobalObject"])();
-if (_window.Sentry && _window.Sentry.Integrations) {
-    windowIntegrations = _window.Sentry.Integrations;
-}
-// tslint:enable: no-unsafe-any
-var INTEGRATIONS = tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"]({}, windowIntegrations, _sentry_core__WEBPACK_IMPORTED_MODULE_2__["Integrations"], _integrations__WEBPACK_IMPORTED_MODULE_4__);
-
-//# sourceMappingURL=index.js.map
-
-/***/ }),
-
-/***/ "./node_modules/@sentry/browser/esm/integrations/breadcrumbs.js":
-/*!**********************************************************************!*\
-  !*** ./node_modules/@sentry/browser/esm/integrations/breadcrumbs.js ***!
-  \**********************************************************************/
-/*! exports provided: Breadcrumbs */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Breadcrumbs", function() { return Breadcrumbs; });
-/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
-/* harmony import */ var _sentry_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @sentry/core */ "./node_modules/@sentry/core/esm/index.js");
-/* harmony import */ var _sentry_types__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @sentry/types */ "./node_modules/@sentry/types/esm/index.js");
-/* harmony import */ var _sentry_utils__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @sentry/utils */ "./node_modules/@sentry/utils/esm/index.js");
-
-
-
-
-/**
- * Default Breadcrumbs instrumentations
- * TODO: Deprecated - with v6, this will be renamed to `Instrument`
- */
-var Breadcrumbs = /** @class */ (function () {
-    /**
-     * @inheritDoc
-     */
-    function Breadcrumbs(options) {
-        /**
-         * @inheritDoc
-         */
-        this.name = Breadcrumbs.id;
-        this._options = tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"]({ console: true, dom: true, fetch: true, history: true, sentry: true, xhr: true }, options);
-    }
-    /**
-     * Creates breadcrumbs from console API calls
-     */
-    Breadcrumbs.prototype._consoleBreadcrumb = function (handlerData) {
-        var breadcrumb = {
-            category: 'console',
-            data: {
-                arguments: handlerData.args,
-                logger: 'console',
-            },
-            level: _sentry_types__WEBPACK_IMPORTED_MODULE_2__["Severity"].fromString(handlerData.level),
-            message: Object(_sentry_utils__WEBPACK_IMPORTED_MODULE_3__["safeJoin"])(handlerData.args, ' '),
-        };
-        if (handlerData.level === 'assert') {
-            if (handlerData.args[0] === false) {
-                breadcrumb.message = "Assertion failed: " + (Object(_sentry_utils__WEBPACK_IMPORTED_MODULE_3__["safeJoin"])(handlerData.args.slice(1), ' ') || 'console.assert');
-                breadcrumb.data.arguments = handlerData.args.slice(1);
-            }
-            else {
-                // Don't capture a breadcrumb for passed assertions
-                return;
-            }
-        }
-        Object(_sentry_core__WEBPACK_IMPORTED_MODULE_1__["getCurrentHub"])().addBreadcrumb(breadcrumb, {
-            input: handlerData.args,
-            level: handlerData.level,
-        });
-    };
-    /**
-     * Creates breadcrumbs from DOM API calls
-     */
-    Breadcrumbs.prototype._domBreadcrumb = function (handlerData) {
-        var target;
-        // Accessing event.target can throw (see getsentry/raven-js#838, #768)
-        try {
-            target = handlerData.event.target
-                ? Object(_sentry_utils__WEBPACK_IMPORTED_MODULE_3__["htmlTreeAsString"])(handlerData.event.target)
-                : Object(_sentry_utils__WEBPACK_IMPORTED_MODULE_3__["htmlTreeAsString"])(handlerData.event);
-        }
-        catch (e) {
-            target = '<unknown>';
-        }
-        if (target.length === 0) {
-            return;
-        }
-        Object(_sentry_core__WEBPACK_IMPORTED_MODULE_1__["getCurrentHub"])().addBreadcrumb({
-            category: "ui." + handlerData.name,
-            message: target,
-        }, {
-            event: handlerData.event,
-            name: handlerData.name,
-        });
-    };
-    /**
-     * Creates breadcrumbs from XHR API calls
-     */
-    Breadcrumbs.prototype._xhrBreadcrumb = function (handlerData) {
-        if (handlerData.endTimestamp) {
-            // We only capture complete, non-sentry requests
-            if (handlerData.xhr.__sentry_own_request__) {
-                return;
-            }
-            Object(_sentry_core__WEBPACK_IMPORTED_MODULE_1__["getCurrentHub"])().addBreadcrumb({
-                category: 'xhr',
-                data: handlerData.xhr.__sentry_xhr__,
-                type: 'http',
-            }, {
-                xhr: handlerData.xhr,
-            });
-            return;
-        }
-        // We only capture issued sentry requests
-        if (this._options.sentry && handlerData.xhr.__sentry_own_request__) {
-            addSentryBreadcrumb(handlerData.args[0]);
-        }
-    };
-    /**
-     * Creates breadcrumbs from fetch API calls
-     */
-    Breadcrumbs.prototype._fetchBreadcrumb = function (handlerData) {
-        // We only capture complete fetch requests
-        if (!handlerData.endTimestamp) {
-            return;
-        }
-        var client = Object(_sentry_core__WEBPACK_IMPORTED_MODULE_1__["getCurrentHub"])().getClient();
-        var dsn = client && client.getDsn();
-        if (this._options.sentry && dsn) {
-            var filterUrl = new _sentry_core__WEBPACK_IMPORTED_MODULE_1__["API"](dsn).getStoreEndpoint();
-            // if Sentry key appears in URL, don't capture it as a request
-            // but rather as our own 'sentry' type breadcrumb
-            if (filterUrl &&
-                handlerData.fetchData.url.indexOf(filterUrl) !== -1 &&
-                handlerData.fetchData.method === 'POST' &&
-                handlerData.args[1] &&
-                handlerData.args[1].body) {
-                addSentryBreadcrumb(handlerData.args[1].body);
-                return;
-            }
-        }
-        if (handlerData.error) {
-            Object(_sentry_core__WEBPACK_IMPORTED_MODULE_1__["getCurrentHub"])().addBreadcrumb({
-                category: 'fetch',
-                data: tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"]({}, handlerData.fetchData, { status_code: handlerData.response.status }),
-                level: _sentry_types__WEBPACK_IMPORTED_MODULE_2__["Severity"].Error,
-                type: 'http',
-            }, {
-                data: handlerData.error,
-                input: handlerData.args,
-            });
-        }
-        else {
-            Object(_sentry_core__WEBPACK_IMPORTED_MODULE_1__["getCurrentHub"])().addBreadcrumb({
-                category: 'fetch',
-                data: tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"]({}, handlerData.fetchData, { status_code: handlerData.response.status }),
-                type: 'http',
-            }, {
-                input: handlerData.args,
-                response: handlerData.response,
-            });
-        }
-    };
-    /**
-     * Creates breadcrumbs from history API calls
-     */
-    Breadcrumbs.prototype._historyBreadcrumb = function (handlerData) {
-        var global = Object(_sentry_utils__WEBPACK_IMPORTED_MODULE_3__["getGlobalObject"])();
-        var from = handlerData.from;
-        var to = handlerData.to;
-        var parsedLoc = Object(_sentry_utils__WEBPACK_IMPORTED_MODULE_3__["parseUrl"])(global.location.href);
-        var parsedFrom = Object(_sentry_utils__WEBPACK_IMPORTED_MODULE_3__["parseUrl"])(from);
-        var parsedTo = Object(_sentry_utils__WEBPACK_IMPORTED_MODULE_3__["parseUrl"])(to);
-        // Initial pushState doesn't provide `from` information
-        if (!parsedFrom.path) {
-            parsedFrom = parsedLoc;
-        }
-        // Use only the path component of the URL if the URL matches the current
-        // document (almost all the time when using pushState)
-        if (parsedLoc.protocol === parsedTo.protocol && parsedLoc.host === parsedTo.host) {
-            // tslint:disable-next-line:no-parameter-reassignment
-            to = parsedTo.relative;
-        }
-        if (parsedLoc.protocol === parsedFrom.protocol && parsedLoc.host === parsedFrom.host) {
-            // tslint:disable-next-line:no-parameter-reassignment
-            from = parsedFrom.relative;
-        }
-        Object(_sentry_core__WEBPACK_IMPORTED_MODULE_1__["getCurrentHub"])().addBreadcrumb({
-            category: 'navigation',
-            data: {
-                from: from,
-                to: to,
-            },
-        });
-    };
-    /**
-     * Instrument browser built-ins w/ breadcrumb capturing
-     *  - Console API
-     *  - DOM API (click/typing)
-     *  - XMLHttpRequest API
-     *  - Fetch API
-     *  - History API
-     */
-    Breadcrumbs.prototype.setupOnce = function () {
-        var _this = this;
-        if (this._options.console) {
-            Object(_sentry_utils__WEBPACK_IMPORTED_MODULE_3__["addInstrumentationHandler"])({
-                callback: function () {
-                    var args = [];
-                    for (var _i = 0; _i < arguments.length; _i++) {
-                        args[_i] = arguments[_i];
-                    }
-                    _this._consoleBreadcrumb.apply(_this, tslib__WEBPACK_IMPORTED_MODULE_0__["__spread"](args));
-                },
-                type: 'console',
-            });
-        }
-        if (this._options.dom) {
-            Object(_sentry_utils__WEBPACK_IMPORTED_MODULE_3__["addInstrumentationHandler"])({
-                callback: function () {
-                    var args = [];
-                    for (var _i = 0; _i < arguments.length; _i++) {
-                        args[_i] = arguments[_i];
-                    }
-                    _this._domBreadcrumb.apply(_this, tslib__WEBPACK_IMPORTED_MODULE_0__["__spread"](args));
-                },
-                type: 'dom',
-            });
-        }
-        if (this._options.xhr) {
-            Object(_sentry_utils__WEBPACK_IMPORTED_MODULE_3__["addInstrumentationHandler"])({
-                callback: function () {
-                    var args = [];
-                    for (var _i = 0; _i < arguments.length; _i++) {
-                        args[_i] = arguments[_i];
-                    }
-                    _this._xhrBreadcrumb.apply(_this, tslib__WEBPACK_IMPORTED_MODULE_0__["__spread"](args));
-                },
-                type: 'xhr',
-            });
-        }
-        if (this._options.fetch) {
-            Object(_sentry_utils__WEBPACK_IMPORTED_MODULE_3__["addInstrumentationHandler"])({
-                callback: function () {
-                    var args = [];
-                    for (var _i = 0; _i < arguments.length; _i++) {
-                        args[_i] = arguments[_i];
-                    }
-                    _this._fetchBreadcrumb.apply(_this, tslib__WEBPACK_IMPORTED_MODULE_0__["__spread"](args));
-                },
-                type: 'fetch',
-            });
-        }
-        if (this._options.history) {
-            Object(_sentry_utils__WEBPACK_IMPORTED_MODULE_3__["addInstrumentationHandler"])({
-                callback: function () {
-                    var args = [];
-                    for (var _i = 0; _i < arguments.length; _i++) {
-                        args[_i] = arguments[_i];
-                    }
-                    _this._historyBreadcrumb.apply(_this, tslib__WEBPACK_IMPORTED_MODULE_0__["__spread"](args));
-                },
-                type: 'history',
-            });
-        }
-    };
-    /**
-     * @inheritDoc
-     */
-    Breadcrumbs.id = 'Breadcrumbs';
-    return Breadcrumbs;
-}());
-
-/**
- * Create a breadcrumb of `sentry` from the events themselves
- */
-function addSentryBreadcrumb(serializedData) {
-    // There's always something that can go wrong with deserialization...
-    try {
-        var event_1 = JSON.parse(serializedData);
-        Object(_sentry_core__WEBPACK_IMPORTED_MODULE_1__["getCurrentHub"])().addBreadcrumb({
-            category: "sentry." + (event_1.type === 'transaction' ? 'transaction' : 'event'),
-            event_id: event_1.event_id,
-            level: event_1.level || _sentry_types__WEBPACK_IMPORTED_MODULE_2__["Severity"].fromString('error'),
-            message: Object(_sentry_utils__WEBPACK_IMPORTED_MODULE_3__["getEventDescription"])(event_1),
-        }, {
-            event: event_1,
-        });
-    }
-    catch (_oO) {
-        _sentry_utils__WEBPACK_IMPORTED_MODULE_3__["logger"].error('Error while adding sentry type breadcrumb');
-    }
-}
-//# sourceMappingURL=breadcrumbs.js.map
-
-/***/ }),
-
-/***/ "./node_modules/@sentry/browser/esm/integrations/globalhandlers.js":
-/*!*************************************************************************!*\
-  !*** ./node_modules/@sentry/browser/esm/integrations/globalhandlers.js ***!
-  \*************************************************************************/
-/*! exports provided: GlobalHandlers */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "GlobalHandlers", function() { return GlobalHandlers; });
-/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
-/* harmony import */ var _sentry_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @sentry/core */ "./node_modules/@sentry/core/esm/index.js");
-/* harmony import */ var _sentry_types__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @sentry/types */ "./node_modules/@sentry/types/esm/index.js");
-/* harmony import */ var _sentry_utils__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @sentry/utils */ "./node_modules/@sentry/utils/esm/index.js");
-/* harmony import */ var _eventbuilder__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../eventbuilder */ "./node_modules/@sentry/browser/esm/eventbuilder.js");
-/* harmony import */ var _helpers__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../helpers */ "./node_modules/@sentry/browser/esm/helpers.js");
-
-
-
-
-
-
-/** Global handlers */
-var GlobalHandlers = /** @class */ (function () {
-    /** JSDoc */
-    function GlobalHandlers(options) {
-        /**
-         * @inheritDoc
-         */
-        this.name = GlobalHandlers.id;
-        /** JSDoc */
-        this._onErrorHandlerInstalled = false;
-        /** JSDoc */
-        this._onUnhandledRejectionHandlerInstalled = false;
-        this._options = tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"]({ onerror: true, onunhandledrejection: true }, options);
-    }
-    /**
-     * @inheritDoc
-     */
-    GlobalHandlers.prototype.setupOnce = function () {
-        Error.stackTraceLimit = 50;
-        if (this._options.onerror) {
-            _sentry_utils__WEBPACK_IMPORTED_MODULE_3__["logger"].log('Global Handler attached: onerror');
-            this._installGlobalOnErrorHandler();
-        }
-        if (this._options.onunhandledrejection) {
-            _sentry_utils__WEBPACK_IMPORTED_MODULE_3__["logger"].log('Global Handler attached: onunhandledrejection');
-            this._installGlobalOnUnhandledRejectionHandler();
-        }
-    };
-    /** JSDoc */
-    GlobalHandlers.prototype._installGlobalOnErrorHandler = function () {
-        var _this = this;
-        if (this._onErrorHandlerInstalled) {
-            return;
-        }
-        Object(_sentry_utils__WEBPACK_IMPORTED_MODULE_3__["addInstrumentationHandler"])({
-            callback: function (data) {
-                var error = data.error;
-                var currentHub = Object(_sentry_core__WEBPACK_IMPORTED_MODULE_1__["getCurrentHub"])();
-                var hasIntegration = currentHub.getIntegration(GlobalHandlers);
-                var isFailedOwnDelivery = error && error.__sentry_own_request__ === true;
-                if (!hasIntegration || Object(_helpers__WEBPACK_IMPORTED_MODULE_5__["shouldIgnoreOnError"])() || isFailedOwnDelivery) {
-                    return;
-                }
-                var client = currentHub.getClient();
-                var event = Object(_sentry_utils__WEBPACK_IMPORTED_MODULE_3__["isPrimitive"])(error)
-                    ? _this._eventFromIncompleteOnError(data.msg, data.url, data.line, data.column)
-                    : _this._enhanceEventWithInitialFrame(Object(_eventbuilder__WEBPACK_IMPORTED_MODULE_4__["eventFromUnknownInput"])(error, undefined, {
-                        attachStacktrace: client && client.getOptions().attachStacktrace,
-                        rejection: false,
-                    }), data.url, data.line, data.column);
-                Object(_sentry_utils__WEBPACK_IMPORTED_MODULE_3__["addExceptionMechanism"])(event, {
-                    handled: false,
-                    type: 'onerror',
-                });
-                currentHub.captureEvent(event, {
-                    originalException: error,
-                });
-            },
-            type: 'error',
-        });
-        this._onErrorHandlerInstalled = true;
-    };
-    /** JSDoc */
-    GlobalHandlers.prototype._installGlobalOnUnhandledRejectionHandler = function () {
-        var _this = this;
-        if (this._onUnhandledRejectionHandlerInstalled) {
-            return;
-        }
-        Object(_sentry_utils__WEBPACK_IMPORTED_MODULE_3__["addInstrumentationHandler"])({
-            callback: function (e) {
-                var error = e;
-                // dig the object of the rejection out of known event types
-                try {
-                    // PromiseRejectionEvents store the object of the rejection under 'reason'
-                    // see https://developer.mozilla.org/en-US/docs/Web/API/PromiseRejectionEvent
-                    if ('reason' in e) {
-                        error = e.reason;
-                    }
-                    // something, somewhere, (likely a browser extension) effectively casts PromiseRejectionEvents
-                    // to CustomEvents, moving the `promise` and `reason` attributes of the PRE into
-                    // the CustomEvent's `detail` attribute, since they're not part of CustomEvent's spec
-                    // see https://developer.mozilla.org/en-US/docs/Web/API/CustomEvent and
-                    // https://github.com/getsentry/sentry-javascript/issues/2380
-                    else if ('detail' in e && 'reason' in e.detail) {
-                        error = e.detail.reason;
-                    }
-                }
-                catch (_oO) {
-                    // no-empty
-                }
-                var currentHub = Object(_sentry_core__WEBPACK_IMPORTED_MODULE_1__["getCurrentHub"])();
-                var hasIntegration = currentHub.getIntegration(GlobalHandlers);
-                var isFailedOwnDelivery = error && error.__sentry_own_request__ === true;
-                if (!hasIntegration || Object(_helpers__WEBPACK_IMPORTED_MODULE_5__["shouldIgnoreOnError"])() || isFailedOwnDelivery) {
-                    return true;
-                }
-                var client = currentHub.getClient();
-                var event = Object(_sentry_utils__WEBPACK_IMPORTED_MODULE_3__["isPrimitive"])(error)
-                    ? _this._eventFromIncompleteRejection(error)
-                    : Object(_eventbuilder__WEBPACK_IMPORTED_MODULE_4__["eventFromUnknownInput"])(error, undefined, {
-                        attachStacktrace: client && client.getOptions().attachStacktrace,
-                        rejection: true,
-                    });
-                event.level = _sentry_types__WEBPACK_IMPORTED_MODULE_2__["Severity"].Error;
-                Object(_sentry_utils__WEBPACK_IMPORTED_MODULE_3__["addExceptionMechanism"])(event, {
-                    handled: false,
-                    type: 'onunhandledrejection',
-                });
-                currentHub.captureEvent(event, {
-                    originalException: error,
-                });
-                return;
-            },
-            type: 'unhandledrejection',
-        });
-        this._onUnhandledRejectionHandlerInstalled = true;
-    };
-    /**
-     * This function creates a stack from an old, error-less onerror handler.
-     */
-    GlobalHandlers.prototype._eventFromIncompleteOnError = function (msg, url, line, column) {
-        var ERROR_TYPES_RE = /^(?:[Uu]ncaught (?:exception: )?)?(?:((?:Eval|Internal|Range|Reference|Syntax|Type|URI|)Error): )?(.*)$/i;
-        // If 'message' is ErrorEvent, get real message from inside
-        var message = Object(_sentry_utils__WEBPACK_IMPORTED_MODULE_3__["isErrorEvent"])(msg) ? msg.message : msg;
-        var name;
-        if (Object(_sentry_utils__WEBPACK_IMPORTED_MODULE_3__["isString"])(message)) {
-            var groups = message.match(ERROR_TYPES_RE);
-            if (groups) {
-                name = groups[1];
-                message = groups[2];
-            }
-        }
-        var event = {
-            exception: {
-                values: [
-                    {
-                        type: name || 'Error',
-                        value: message,
-                    },
-                ],
-            },
-        };
-        return this._enhanceEventWithInitialFrame(event, url, line, column);
-    };
-    /**
-     * This function creates an Event from an TraceKitStackTrace that has part of it missing.
-     */
-    GlobalHandlers.prototype._eventFromIncompleteRejection = function (error) {
-        return {
-            exception: {
-                values: [
-                    {
-                        type: 'UnhandledRejection',
-                        value: "Non-Error promise rejection captured with value: " + error,
-                    },
-                ],
-            },
-        };
-    };
-    /** JSDoc */
-    GlobalHandlers.prototype._enhanceEventWithInitialFrame = function (event, url, line, column) {
-        event.exception = event.exception || {};
-        event.exception.values = event.exception.values || [];
-        event.exception.values[0] = event.exception.values[0] || {};
-        event.exception.values[0].stacktrace = event.exception.values[0].stacktrace || {};
-        event.exception.values[0].stacktrace.frames = event.exception.values[0].stacktrace.frames || [];
-        var colno = isNaN(parseInt(column, 10)) ? undefined : column;
-        var lineno = isNaN(parseInt(line, 10)) ? undefined : line;
-        var filename = Object(_sentry_utils__WEBPACK_IMPORTED_MODULE_3__["isString"])(url) && url.length > 0 ? url : Object(_sentry_utils__WEBPACK_IMPORTED_MODULE_3__["getLocationHref"])();
-        if (event.exception.values[0].stacktrace.frames.length === 0) {
-            event.exception.values[0].stacktrace.frames.push({
-                colno: colno,
-                filename: filename,
-                function: '?',
-                in_app: true,
-                lineno: lineno,
-            });
-        }
-        return event;
-    };
-    /**
-     * @inheritDoc
-     */
-    GlobalHandlers.id = 'GlobalHandlers';
-    return GlobalHandlers;
-}());
-
-//# sourceMappingURL=globalhandlers.js.map
-
-/***/ }),
-
-/***/ "./node_modules/@sentry/browser/esm/integrations/index.js":
-/*!****************************************************************!*\
-  !*** ./node_modules/@sentry/browser/esm/integrations/index.js ***!
-  \****************************************************************/
-/*! exports provided: GlobalHandlers, TryCatch, Breadcrumbs, LinkedErrors, UserAgent */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _globalhandlers__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./globalhandlers */ "./node_modules/@sentry/browser/esm/integrations/globalhandlers.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "GlobalHandlers", function() { return _globalhandlers__WEBPACK_IMPORTED_MODULE_0__["GlobalHandlers"]; });
-
-/* harmony import */ var _trycatch__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./trycatch */ "./node_modules/@sentry/browser/esm/integrations/trycatch.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "TryCatch", function() { return _trycatch__WEBPACK_IMPORTED_MODULE_1__["TryCatch"]; });
-
-/* harmony import */ var _breadcrumbs__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./breadcrumbs */ "./node_modules/@sentry/browser/esm/integrations/breadcrumbs.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Breadcrumbs", function() { return _breadcrumbs__WEBPACK_IMPORTED_MODULE_2__["Breadcrumbs"]; });
-
-/* harmony import */ var _linkederrors__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./linkederrors */ "./node_modules/@sentry/browser/esm/integrations/linkederrors.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "LinkedErrors", function() { return _linkederrors__WEBPACK_IMPORTED_MODULE_3__["LinkedErrors"]; });
-
-/* harmony import */ var _useragent__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./useragent */ "./node_modules/@sentry/browser/esm/integrations/useragent.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "UserAgent", function() { return _useragent__WEBPACK_IMPORTED_MODULE_4__["UserAgent"]; });
-
-
-
-
-
-
-//# sourceMappingURL=index.js.map
-
-/***/ }),
-
-/***/ "./node_modules/@sentry/browser/esm/integrations/linkederrors.js":
-/*!***********************************************************************!*\
-  !*** ./node_modules/@sentry/browser/esm/integrations/linkederrors.js ***!
-  \***********************************************************************/
-/*! exports provided: LinkedErrors */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "LinkedErrors", function() { return LinkedErrors; });
-/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
-/* harmony import */ var _sentry_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @sentry/core */ "./node_modules/@sentry/core/esm/index.js");
-/* harmony import */ var _sentry_utils__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @sentry/utils */ "./node_modules/@sentry/utils/esm/index.js");
-/* harmony import */ var _parsers__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../parsers */ "./node_modules/@sentry/browser/esm/parsers.js");
-/* harmony import */ var _tracekit__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../tracekit */ "./node_modules/@sentry/browser/esm/tracekit.js");
-
-
-
-
-
-var DEFAULT_KEY = 'cause';
-var DEFAULT_LIMIT = 5;
-/** Adds SDK info to an event. */
-var LinkedErrors = /** @class */ (function () {
-    /**
-     * @inheritDoc
-     */
-    function LinkedErrors(options) {
-        if (options === void 0) { options = {}; }
-        /**
-         * @inheritDoc
-         */
-        this.name = LinkedErrors.id;
-        this._key = options.key || DEFAULT_KEY;
-        this._limit = options.limit || DEFAULT_LIMIT;
-    }
-    /**
-     * @inheritDoc
-     */
-    LinkedErrors.prototype.setupOnce = function () {
-        Object(_sentry_core__WEBPACK_IMPORTED_MODULE_1__["addGlobalEventProcessor"])(function (event, hint) {
-            var self = Object(_sentry_core__WEBPACK_IMPORTED_MODULE_1__["getCurrentHub"])().getIntegration(LinkedErrors);
-            if (self) {
-                return self._handler(event, hint);
-            }
-            return event;
-        });
-    };
-    /**
-     * @inheritDoc
-     */
-    LinkedErrors.prototype._handler = function (event, hint) {
-        if (!event.exception || !event.exception.values || !hint || !Object(_sentry_utils__WEBPACK_IMPORTED_MODULE_2__["isInstanceOf"])(hint.originalException, Error)) {
-            return event;
-        }
-        var linkedErrors = this._walkErrorTree(hint.originalException, this._key);
-        event.exception.values = tslib__WEBPACK_IMPORTED_MODULE_0__["__spread"](linkedErrors, event.exception.values);
-        return event;
-    };
-    /**
-     * @inheritDoc
-     */
-    LinkedErrors.prototype._walkErrorTree = function (error, key, stack) {
-        if (stack === void 0) { stack = []; }
-        if (!Object(_sentry_utils__WEBPACK_IMPORTED_MODULE_2__["isInstanceOf"])(error[key], Error) || stack.length + 1 >= this._limit) {
-            return stack;
-        }
-        var stacktrace = Object(_tracekit__WEBPACK_IMPORTED_MODULE_4__["computeStackTrace"])(error[key]);
-        var exception = Object(_parsers__WEBPACK_IMPORTED_MODULE_3__["exceptionFromStacktrace"])(stacktrace);
-        return this._walkErrorTree(error[key], key, tslib__WEBPACK_IMPORTED_MODULE_0__["__spread"]([exception], stack));
-    };
-    /**
-     * @inheritDoc
-     */
-    LinkedErrors.id = 'LinkedErrors';
-    return LinkedErrors;
-}());
-
-//# sourceMappingURL=linkederrors.js.map
-
-/***/ }),
-
-/***/ "./node_modules/@sentry/browser/esm/integrations/trycatch.js":
-/*!*******************************************************************!*\
-  !*** ./node_modules/@sentry/browser/esm/integrations/trycatch.js ***!
-  \*******************************************************************/
-/*! exports provided: TryCatch */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "TryCatch", function() { return TryCatch; });
-/* harmony import */ var _sentry_utils__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @sentry/utils */ "./node_modules/@sentry/utils/esm/index.js");
-/* harmony import */ var _helpers__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../helpers */ "./node_modules/@sentry/browser/esm/helpers.js");
-
-
-/** Wrap timer functions and event targets to catch errors and provide better meta data */
-var TryCatch = /** @class */ (function () {
-    function TryCatch() {
-        /** JSDoc */
-        this._ignoreOnError = 0;
-        /**
-         * @inheritDoc
-         */
-        this.name = TryCatch.id;
-    }
-    /** JSDoc */
-    TryCatch.prototype._wrapTimeFunction = function (original) {
-        return function () {
-            var args = [];
-            for (var _i = 0; _i < arguments.length; _i++) {
-                args[_i] = arguments[_i];
-            }
-            var originalCallback = args[0];
-            args[0] = Object(_helpers__WEBPACK_IMPORTED_MODULE_1__["wrap"])(originalCallback, {
-                mechanism: {
-                    data: { function: Object(_sentry_utils__WEBPACK_IMPORTED_MODULE_0__["getFunctionName"])(original) },
-                    handled: true,
-                    type: 'instrument',
-                },
-            });
-            return original.apply(this, args);
-        };
-    };
-    /** JSDoc */
-    TryCatch.prototype._wrapRAF = function (original) {
-        return function (callback) {
-            return original(Object(_helpers__WEBPACK_IMPORTED_MODULE_1__["wrap"])(callback, {
-                mechanism: {
-                    data: {
-                        function: 'requestAnimationFrame',
-                        handler: Object(_sentry_utils__WEBPACK_IMPORTED_MODULE_0__["getFunctionName"])(original),
-                    },
-                    handled: true,
-                    type: 'instrument',
-                },
-            }));
-        };
-    };
-    /** JSDoc */
-    TryCatch.prototype._wrapEventTarget = function (target) {
-        var global = Object(_sentry_utils__WEBPACK_IMPORTED_MODULE_0__["getGlobalObject"])();
-        var proto = global[target] && global[target].prototype;
-        if (!proto || !proto.hasOwnProperty || !proto.hasOwnProperty('addEventListener')) {
-            return;
-        }
-        Object(_sentry_utils__WEBPACK_IMPORTED_MODULE_0__["fill"])(proto, 'addEventListener', function (original) {
-            return function (eventName, fn, options) {
-                try {
-                    // tslint:disable-next-line:no-unbound-method strict-type-predicates
-                    if (typeof fn.handleEvent === 'function') {
-                        fn.handleEvent = Object(_helpers__WEBPACK_IMPORTED_MODULE_1__["wrap"])(fn.handleEvent.bind(fn), {
-                            mechanism: {
-                                data: {
-                                    function: 'handleEvent',
-                                    handler: Object(_sentry_utils__WEBPACK_IMPORTED_MODULE_0__["getFunctionName"])(fn),
-                                    target: target,
-                                },
-                                handled: true,
-                                type: 'instrument',
-                            },
-                        });
-                    }
-                }
-                catch (err) {
-                    // can sometimes get 'Permission denied to access property "handle Event'
-                }
-                return original.call(this, eventName, Object(_helpers__WEBPACK_IMPORTED_MODULE_1__["wrap"])(fn, {
-                    mechanism: {
-                        data: {
-                            function: 'addEventListener',
-                            handler: Object(_sentry_utils__WEBPACK_IMPORTED_MODULE_0__["getFunctionName"])(fn),
-                            target: target,
-                        },
-                        handled: true,
-                        type: 'instrument',
-                    },
-                }), options);
-            };
-        });
-        Object(_sentry_utils__WEBPACK_IMPORTED_MODULE_0__["fill"])(proto, 'removeEventListener', function (original) {
-            return function (eventName, fn, options) {
-                var callback = fn;
-                try {
-                    callback = callback && (callback.__sentry_wrapped__ || callback);
-                }
-                catch (e) {
-                    // ignore, accessing __sentry_wrapped__ will throw in some Selenium environments
-                }
-                return original.call(this, eventName, callback, options);
-            };
-        });
-    };
-    /** JSDoc */
-    TryCatch.prototype._wrapXHR = function (originalSend) {
-        return function () {
-            var args = [];
-            for (var _i = 0; _i < arguments.length; _i++) {
-                args[_i] = arguments[_i];
-            }
-            var xhr = this; // tslint:disable-line:no-this-assignment
-            var xmlHttpRequestProps = ['onload', 'onerror', 'onprogress', 'onreadystatechange'];
-            xmlHttpRequestProps.forEach(function (prop) {
-                if (prop in xhr && typeof xhr[prop] === 'function') {
-                    Object(_sentry_utils__WEBPACK_IMPORTED_MODULE_0__["fill"])(xhr, prop, function (original) {
-                        var wrapOptions = {
-                            mechanism: {
-                                data: {
-                                    function: prop,
-                                    handler: Object(_sentry_utils__WEBPACK_IMPORTED_MODULE_0__["getFunctionName"])(original),
-                                },
-                                handled: true,
-                                type: 'instrument',
-                            },
-                        };
-                        // If Instrument integration has been called before TryCatch, get the name of original function
-                        if (original.__sentry_original__) {
-                            wrapOptions.mechanism.data.handler = Object(_sentry_utils__WEBPACK_IMPORTED_MODULE_0__["getFunctionName"])(original.__sentry_original__);
-                        }
-                        // Otherwise wrap directly
-                        return Object(_helpers__WEBPACK_IMPORTED_MODULE_1__["wrap"])(original, wrapOptions);
-                    });
-                }
-            });
-            return originalSend.apply(this, args);
-        };
-    };
-    /**
-     * Wrap timer functions and event targets to catch errors
-     * and provide better metadata.
-     */
-    TryCatch.prototype.setupOnce = function () {
-        this._ignoreOnError = this._ignoreOnError;
-        var global = Object(_sentry_utils__WEBPACK_IMPORTED_MODULE_0__["getGlobalObject"])();
-        Object(_sentry_utils__WEBPACK_IMPORTED_MODULE_0__["fill"])(global, 'setTimeout', this._wrapTimeFunction.bind(this));
-        Object(_sentry_utils__WEBPACK_IMPORTED_MODULE_0__["fill"])(global, 'setInterval', this._wrapTimeFunction.bind(this));
-        Object(_sentry_utils__WEBPACK_IMPORTED_MODULE_0__["fill"])(global, 'requestAnimationFrame', this._wrapRAF.bind(this));
-        if ('XMLHttpRequest' in global) {
-            Object(_sentry_utils__WEBPACK_IMPORTED_MODULE_0__["fill"])(XMLHttpRequest.prototype, 'send', this._wrapXHR.bind(this));
-        }
-        [
-            'EventTarget',
-            'Window',
-            'Node',
-            'ApplicationCache',
-            'AudioTrackList',
-            'ChannelMergerNode',
-            'CryptoOperation',
-            'EventSource',
-            'FileReader',
-            'HTMLUnknownElement',
-            'IDBDatabase',
-            'IDBRequest',
-            'IDBTransaction',
-            'KeyOperation',
-            'MediaController',
-            'MessagePort',
-            'ModalWindow',
-            'Notification',
-            'SVGElementInstance',
-            'Screen',
-            'TextTrack',
-            'TextTrackCue',
-            'TextTrackList',
-            'WebSocket',
-            'WebSocketWorker',
-            'Worker',
-            'XMLHttpRequest',
-            'XMLHttpRequestEventTarget',
-            'XMLHttpRequestUpload',
-        ].forEach(this._wrapEventTarget.bind(this));
-    };
-    /**
-     * @inheritDoc
-     */
-    TryCatch.id = 'TryCatch';
-    return TryCatch;
-}());
-
-//# sourceMappingURL=trycatch.js.map
-
-/***/ }),
-
-/***/ "./node_modules/@sentry/browser/esm/integrations/useragent.js":
-/*!********************************************************************!*\
-  !*** ./node_modules/@sentry/browser/esm/integrations/useragent.js ***!
-  \********************************************************************/
-/*! exports provided: UserAgent */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "UserAgent", function() { return UserAgent; });
-/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
-/* harmony import */ var _sentry_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @sentry/core */ "./node_modules/@sentry/core/esm/index.js");
-/* harmony import */ var _sentry_utils__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @sentry/utils */ "./node_modules/@sentry/utils/esm/index.js");
-
-
-
-var global = Object(_sentry_utils__WEBPACK_IMPORTED_MODULE_2__["getGlobalObject"])();
-/** UserAgent */
-var UserAgent = /** @class */ (function () {
-    function UserAgent() {
-        /**
-         * @inheritDoc
-         */
-        this.name = UserAgent.id;
-    }
-    /**
-     * @inheritDoc
-     */
-    UserAgent.prototype.setupOnce = function () {
-        Object(_sentry_core__WEBPACK_IMPORTED_MODULE_1__["addGlobalEventProcessor"])(function (event) {
-            if (Object(_sentry_core__WEBPACK_IMPORTED_MODULE_1__["getCurrentHub"])().getIntegration(UserAgent)) {
-                if (!global.navigator || !global.location) {
-                    return event;
-                }
-                // Request Interface: https://docs.sentry.io/development/sdk-dev/event-payloads/request/
-                var request = event.request || {};
-                request.url = request.url || global.location.href;
-                request.headers = request.headers || {};
-                request.headers['User-Agent'] = global.navigator.userAgent;
-                return tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"]({}, event, { request: request });
-            }
-            return event;
-        });
-    };
-    /**
-     * @inheritDoc
-     */
-    UserAgent.id = 'UserAgent';
-    return UserAgent;
-}());
-
-//# sourceMappingURL=useragent.js.map
-
-/***/ }),
-
-/***/ "./node_modules/@sentry/browser/esm/parsers.js":
-/*!*****************************************************!*\
-  !*** ./node_modules/@sentry/browser/esm/parsers.js ***!
-  \*****************************************************/
-/*! exports provided: exceptionFromStacktrace, eventFromPlainObject, eventFromStacktrace, prepareFramesForEvent */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "exceptionFromStacktrace", function() { return exceptionFromStacktrace; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "eventFromPlainObject", function() { return eventFromPlainObject; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "eventFromStacktrace", function() { return eventFromStacktrace; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "prepareFramesForEvent", function() { return prepareFramesForEvent; });
-/* harmony import */ var _sentry_utils__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @sentry/utils */ "./node_modules/@sentry/utils/esm/index.js");
-/* harmony import */ var _tracekit__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./tracekit */ "./node_modules/@sentry/browser/esm/tracekit.js");
-
-
-var STACKTRACE_LIMIT = 50;
-/**
- * This function creates an exception from an TraceKitStackTrace
- * @param stacktrace TraceKitStackTrace that will be converted to an exception
- * @hidden
- */
-function exceptionFromStacktrace(stacktrace) {
-    var frames = prepareFramesForEvent(stacktrace.stack);
-    var exception = {
-        type: stacktrace.name,
-        value: stacktrace.message,
-    };
-    if (frames && frames.length) {
-        exception.stacktrace = { frames: frames };
-    }
-    // tslint:disable-next-line:strict-type-predicates
-    if (exception.type === undefined && exception.value === '') {
-        exception.value = 'Unrecoverable error caught';
-    }
-    return exception;
-}
-/**
- * @hidden
- */
-function eventFromPlainObject(exception, syntheticException, rejection) {
-    var event = {
-        exception: {
-            values: [
-                {
-                    type: Object(_sentry_utils__WEBPACK_IMPORTED_MODULE_0__["isEvent"])(exception) ? exception.constructor.name : rejection ? 'UnhandledRejection' : 'Error',
-                    value: "Non-Error " + (rejection ? 'promise rejection' : 'exception') + " captured with keys: " + Object(_sentry_utils__WEBPACK_IMPORTED_MODULE_0__["extractExceptionKeysForMessage"])(exception),
-                },
-            ],
-        },
-        extra: {
-            __serialized__: Object(_sentry_utils__WEBPACK_IMPORTED_MODULE_0__["normalizeToSize"])(exception),
-        },
-    };
-    if (syntheticException) {
-        var stacktrace = Object(_tracekit__WEBPACK_IMPORTED_MODULE_1__["computeStackTrace"])(syntheticException);
-        var frames_1 = prepareFramesForEvent(stacktrace.stack);
-        event.stacktrace = {
-            frames: frames_1,
-        };
-    }
-    return event;
-}
-/**
- * @hidden
- */
-function eventFromStacktrace(stacktrace) {
-    var exception = exceptionFromStacktrace(stacktrace);
-    return {
-        exception: {
-            values: [exception],
-        },
-    };
-}
-/**
- * @hidden
- */
-function prepareFramesForEvent(stack) {
-    if (!stack || !stack.length) {
-        return [];
-    }
-    var localStack = stack;
-    var firstFrameFunction = localStack[0].func || '';
-    var lastFrameFunction = localStack[localStack.length - 1].func || '';
-    // If stack starts with one of our API calls, remove it (starts, meaning it's the top of the stack - aka last call)
-    if (firstFrameFunction.indexOf('captureMessage') !== -1 || firstFrameFunction.indexOf('captureException') !== -1) {
-        localStack = localStack.slice(1);
-    }
-    // If stack ends with one of our internal API calls, remove it (ends, meaning it's the bottom of the stack - aka top-most call)
-    if (lastFrameFunction.indexOf('sentryWrapped') !== -1) {
-        localStack = localStack.slice(0, -1);
-    }
-    // The frame where the crash happened, should be the last entry in the array
-    return localStack
-        .map(function (frame) { return ({
-        colno: frame.column === null ? undefined : frame.column,
-        filename: frame.url || localStack[0].url,
-        function: frame.func || '?',
-        in_app: true,
-        lineno: frame.line === null ? undefined : frame.line,
-    }); })
-        .slice(0, STACKTRACE_LIMIT)
-        .reverse();
-}
-//# sourceMappingURL=parsers.js.map
-
-/***/ }),
-
-/***/ "./node_modules/@sentry/browser/esm/sdk.js":
-/*!*************************************************!*\
-  !*** ./node_modules/@sentry/browser/esm/sdk.js ***!
-  \*************************************************/
-/*! exports provided: defaultIntegrations, init, showReportDialog, lastEventId, forceLoad, onLoad, flush, close, wrap */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "defaultIntegrations", function() { return defaultIntegrations; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "init", function() { return init; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "showReportDialog", function() { return showReportDialog; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "lastEventId", function() { return lastEventId; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "forceLoad", function() { return forceLoad; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "onLoad", function() { return onLoad; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "flush", function() { return flush; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "close", function() { return close; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "wrap", function() { return wrap; });
-/* harmony import */ var _sentry_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @sentry/core */ "./node_modules/@sentry/core/esm/index.js");
-/* harmony import */ var _sentry_utils__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @sentry/utils */ "./node_modules/@sentry/utils/esm/index.js");
-/* harmony import */ var _client__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./client */ "./node_modules/@sentry/browser/esm/client.js");
-/* harmony import */ var _helpers__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./helpers */ "./node_modules/@sentry/browser/esm/helpers.js");
-/* harmony import */ var _integrations__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./integrations */ "./node_modules/@sentry/browser/esm/integrations/index.js");
-
-
-
-
-
-var defaultIntegrations = [
-    new _sentry_core__WEBPACK_IMPORTED_MODULE_0__["Integrations"].InboundFilters(),
-    new _sentry_core__WEBPACK_IMPORTED_MODULE_0__["Integrations"].FunctionToString(),
-    new _integrations__WEBPACK_IMPORTED_MODULE_4__["TryCatch"](),
-    new _integrations__WEBPACK_IMPORTED_MODULE_4__["Breadcrumbs"](),
-    new _integrations__WEBPACK_IMPORTED_MODULE_4__["GlobalHandlers"](),
-    new _integrations__WEBPACK_IMPORTED_MODULE_4__["LinkedErrors"](),
-    new _integrations__WEBPACK_IMPORTED_MODULE_4__["UserAgent"](),
-];
-/**
- * The Sentry Browser SDK Client.
- *
- * To use this SDK, call the {@link init} function as early as possible when
- * loading the web page. To set context information or send manual events, use
- * the provided methods.
- *
- * @example
- *
- * ```
- *
- * import { init } from '@sentry/browser';
- *
- * init({
- *   dsn: '__DSN__',
- *   // ...
- * });
- * ```
- *
- * @example
- * ```
- *
- * import { configureScope } from '@sentry/browser';
- * configureScope((scope: Scope) => {
- *   scope.setExtra({ battery: 0.7 });
- *   scope.setTag({ user_mode: 'admin' });
- *   scope.setUser({ id: '4711' });
- * });
- * ```
- *
- * @example
- * ```
- *
- * import { addBreadcrumb } from '@sentry/browser';
- * addBreadcrumb({
- *   message: 'My Breadcrumb',
- *   // ...
- * });
- * ```
- *
- * @example
- *
- * ```
- *
- * import * as Sentry from '@sentry/browser';
- * Sentry.captureMessage('Hello, world!');
- * Sentry.captureException(new Error('Good bye'));
- * Sentry.captureEvent({
- *   message: 'Manual',
- *   stacktrace: [
- *     // ...
- *   ],
- * });
- * ```
- *
- * @see {@link BrowserOptions} for documentation on configuration options.
- */
-function init(options) {
-    if (options === void 0) { options = {}; }
-    if (options.defaultIntegrations === undefined) {
-        options.defaultIntegrations = defaultIntegrations;
-    }
-    if (options.release === undefined) {
-        var window_1 = Object(_sentry_utils__WEBPACK_IMPORTED_MODULE_1__["getGlobalObject"])();
-        // This supports the variable that sentry-webpack-plugin injects
-        if (window_1.SENTRY_RELEASE && window_1.SENTRY_RELEASE.id) {
-            options.release = window_1.SENTRY_RELEASE.id;
-        }
-    }
-    Object(_sentry_core__WEBPACK_IMPORTED_MODULE_0__["initAndBind"])(_client__WEBPACK_IMPORTED_MODULE_2__["BrowserClient"], options);
-}
-/**
- * Present the user with a report dialog.
- *
- * @param options Everything is optional, we try to fetch all info need from the global scope.
- */
-function showReportDialog(options) {
-    if (options === void 0) { options = {}; }
-    if (!options.eventId) {
-        options.eventId = Object(_sentry_core__WEBPACK_IMPORTED_MODULE_0__["getCurrentHub"])().lastEventId();
-    }
-    var client = Object(_sentry_core__WEBPACK_IMPORTED_MODULE_0__["getCurrentHub"])().getClient();
-    if (client) {
-        client.showReportDialog(options);
-    }
-}
-/**
- * This is the getter for lastEventId.
- *
- * @returns The last event id of a captured event.
- */
-function lastEventId() {
-    return Object(_sentry_core__WEBPACK_IMPORTED_MODULE_0__["getCurrentHub"])().lastEventId();
-}
-/**
- * This function is here to be API compatible with the loader.
- * @hidden
- */
-function forceLoad() {
-    // Noop
-}
-/**
- * This function is here to be API compatible with the loader.
- * @hidden
- */
-function onLoad(callback) {
-    callback();
-}
-/**
- * A promise that resolves when all current events have been sent.
- * If you provide a timeout and the queue takes longer to drain the promise returns false.
- *
- * @param timeout Maximum time in ms the client should wait.
- */
-function flush(timeout) {
-    var client = Object(_sentry_core__WEBPACK_IMPORTED_MODULE_0__["getCurrentHub"])().getClient();
-    if (client) {
-        return client.flush(timeout);
-    }
-    return _sentry_utils__WEBPACK_IMPORTED_MODULE_1__["SyncPromise"].reject(false);
-}
-/**
- * A promise that resolves when all current events have been sent.
- * If you provide a timeout and the queue takes longer to drain the promise returns false.
- *
- * @param timeout Maximum time in ms the client should wait.
- */
-function close(timeout) {
-    var client = Object(_sentry_core__WEBPACK_IMPORTED_MODULE_0__["getCurrentHub"])().getClient();
-    if (client) {
-        return client.close(timeout);
-    }
-    return _sentry_utils__WEBPACK_IMPORTED_MODULE_1__["SyncPromise"].reject(false);
-}
-/**
- * Wrap code within a try/catch block so the SDK is able to capture errors.
- *
- * @param fn A function to wrap.
- *
- * @returns The result of wrapped function call.
- */
-function wrap(fn) {
-    return Object(_helpers__WEBPACK_IMPORTED_MODULE_3__["wrap"])(fn)(); // tslint:disable-line:no-unsafe-any
-}
-//# sourceMappingURL=sdk.js.map
-
-/***/ }),
-
-/***/ "./node_modules/@sentry/browser/esm/tracekit.js":
-/*!******************************************************!*\
-  !*** ./node_modules/@sentry/browser/esm/tracekit.js ***!
-  \******************************************************/
-/*! exports provided: computeStackTrace */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "computeStackTrace", function() { return computeStackTrace; });
-/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
-// tslint:disable:object-literal-sort-keys
-
-// global reference to slice
-var UNKNOWN_FUNCTION = '?';
-// Chromium based browsers: Chrome, Brave, new Opera, new Edge
-var chrome = /^\s*at (?:(.*?) ?\()?((?:file|https?|blob|chrome-extension|address|native|eval|webpack|<anonymous>|[-a-z]+:|.*bundle|\/).*?)(?::(\d+))?(?::(\d+))?\)?\s*$/i;
-// gecko regex: `(?:bundle|\d+\.js)`: `bundle` is for react native, `\d+\.js` also but specifically for ram bundles because it
-// generates filenames without a prefix like `file://` the filenames in the stacktrace are just 42.js
-// We need this specific case for now because we want no other regex to match.
-var gecko = /^\s*(.*?)(?:\((.*?)\))?(?:^|@)?((?:file|https?|blob|chrome|webpack|resource|moz-extension).*?:\/.*?|\[native code\]|[^@]*(?:bundle|\d+\.js))(?::(\d+))?(?::(\d+))?\s*$/i;
-var winjs = /^\s*at (?:((?:\[object object\])?.+) )?\(?((?:file|ms-appx|https?|webpack|blob):.*?):(\d+)(?::(\d+))?\)?\s*$/i;
-var geckoEval = /(\S+) line (\d+)(?: > eval line \d+)* > eval/i;
-var chromeEval = /\((\S*)(?::(\d+))(?::(\d+))\)/;
-/** JSDoc */
-function computeStackTrace(ex) {
-    // tslint:disable:no-unsafe-any
-    var stack = null;
-    var popSize = ex && ex.framesToPop;
-    try {
-        // This must be tried first because Opera 10 *destroys*
-        // its stacktrace property if you try to access the stack
-        // property first!!
-        stack = computeStackTraceFromStacktraceProp(ex);
-        if (stack) {
-            return popFrames(stack, popSize);
-        }
-    }
-    catch (e) {
-        // no-empty
-    }
-    try {
-        stack = computeStackTraceFromStackProp(ex);
-        if (stack) {
-            return popFrames(stack, popSize);
-        }
-    }
-    catch (e) {
-        // no-empty
-    }
-    return {
-        message: extractMessage(ex),
-        name: ex && ex.name,
-        stack: [],
-        failed: true,
-    };
-}
-/** JSDoc */
-// tslint:disable-next-line:cyclomatic-complexity
-function computeStackTraceFromStackProp(ex) {
-    // tslint:disable:no-conditional-assignment
-    if (!ex || !ex.stack) {
-        return null;
-    }
-    var stack = [];
-    var lines = ex.stack.split('\n');
-    var isEval;
-    var submatch;
-    var parts;
-    var element;
-    for (var i = 0; i < lines.length; ++i) {
-        if ((parts = chrome.exec(lines[i]))) {
-            var isNative = parts[2] && parts[2].indexOf('native') === 0; // start of line
-            isEval = parts[2] && parts[2].indexOf('eval') === 0; // start of line
-            if (isEval && (submatch = chromeEval.exec(parts[2]))) {
-                // throw out eval line/column and use top-most line/column number
-                parts[2] = submatch[1]; // url
-                parts[3] = submatch[2]; // line
-                parts[4] = submatch[3]; // column
-            }
-            element = {
-                // working with the regexp above is super painful. it is quite a hack, but just stripping the `address at `
-                // prefix here seems like the quickest solution for now.
-                url: parts[2] && parts[2].indexOf('address at ') === 0 ? parts[2].substr('address at '.length) : parts[2],
-                func: parts[1] || UNKNOWN_FUNCTION,
-                args: isNative ? [parts[2]] : [],
-                line: parts[3] ? +parts[3] : null,
-                column: parts[4] ? +parts[4] : null,
-            };
-        }
-        else if ((parts = winjs.exec(lines[i]))) {
-            element = {
-                url: parts[2],
-                func: parts[1] || UNKNOWN_FUNCTION,
-                args: [],
-                line: +parts[3],
-                column: parts[4] ? +parts[4] : null,
-            };
-        }
-        else if ((parts = gecko.exec(lines[i]))) {
-            isEval = parts[3] && parts[3].indexOf(' > eval') > -1;
-            if (isEval && (submatch = geckoEval.exec(parts[3]))) {
-                // throw out eval line/column and use top-most line number
-                parts[1] = parts[1] || "eval";
-                parts[3] = submatch[1];
-                parts[4] = submatch[2];
-                parts[5] = ''; // no column when eval
-            }
-            else if (i === 0 && !parts[5] && ex.columnNumber !== void 0) {
-                // FireFox uses this awesome columnNumber property for its top frame
-                // Also note, Firefox's column number is 0-based and everything else expects 1-based,
-                // so adding 1
-                // NOTE: this hack doesn't work if top-most frame is eval
-                stack[0].column = ex.columnNumber + 1;
-            }
-            element = {
-                url: parts[3],
-                func: parts[1] || UNKNOWN_FUNCTION,
-                args: parts[2] ? parts[2].split(',') : [],
-                line: parts[4] ? +parts[4] : null,
-                column: parts[5] ? +parts[5] : null,
-            };
-        }
-        else {
-            continue;
-        }
-        if (!element.func && element.line) {
-            element.func = UNKNOWN_FUNCTION;
-        }
-        stack.push(element);
-    }
-    if (!stack.length) {
-        return null;
-    }
-    return {
-        message: extractMessage(ex),
-        name: ex.name,
-        stack: stack,
-    };
-}
-/** JSDoc */
-function computeStackTraceFromStacktraceProp(ex) {
-    if (!ex || !ex.stacktrace) {
-        return null;
-    }
-    // Access and store the stacktrace property before doing ANYTHING
-    // else to it because Opera is not very good at providing it
-    // reliably in other circumstances.
-    var stacktrace = ex.stacktrace;
-    var opera10Regex = / line (\d+).*script (?:in )?(\S+)(?:: in function (\S+))?$/i;
-    var opera11Regex = / line (\d+), column (\d+)\s*(?:in (?:<anonymous function: ([^>]+)>|([^\)]+))\((.*)\))? in (.*):\s*$/i;
-    var lines = stacktrace.split('\n');
-    var stack = [];
-    var parts;
-    for (var line = 0; line < lines.length; line += 2) {
-        // tslint:disable:no-conditional-assignment
-        var element = null;
-        if ((parts = opera10Regex.exec(lines[line]))) {
-            element = {
-                url: parts[2],
-                func: parts[3],
-                args: [],
-                line: +parts[1],
-                column: null,
-            };
-        }
-        else if ((parts = opera11Regex.exec(lines[line]))) {
-            element = {
-                url: parts[6],
-                func: parts[3] || parts[4],
-                args: parts[5] ? parts[5].split(',') : [],
-                line: +parts[1],
-                column: +parts[2],
-            };
-        }
-        if (element) {
-            if (!element.func && element.line) {
-                element.func = UNKNOWN_FUNCTION;
-            }
-            stack.push(element);
-        }
-    }
-    if (!stack.length) {
-        return null;
-    }
-    return {
-        message: extractMessage(ex),
-        name: ex.name,
-        stack: stack,
-    };
-}
-/** Remove N number of frames from the stack */
-function popFrames(stacktrace, popSize) {
-    try {
-        return tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"]({}, stacktrace, { stack: stacktrace.stack.slice(popSize) });
-    }
-    catch (e) {
-        return stacktrace;
-    }
-}
-/**
- * There are cases where stacktrace.message is an Event object
- * https://github.com/getsentry/sentry-javascript/issues/1949
- * In this specific case we try to extract stacktrace.message.error.message
- */
-function extractMessage(ex) {
-    var message = ex && ex.message;
-    if (!message) {
-        return 'No error message';
-    }
-    if (message.error && typeof message.error.message === 'string') {
-        return message.error.message;
-    }
-    return message;
-}
-//# sourceMappingURL=tracekit.js.map
-
-/***/ }),
-
-/***/ "./node_modules/@sentry/browser/esm/transports/base.js":
-/*!*************************************************************!*\
-  !*** ./node_modules/@sentry/browser/esm/transports/base.js ***!
-  \*************************************************************/
-/*! exports provided: BaseTransport */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "BaseTransport", function() { return BaseTransport; });
-/* harmony import */ var _sentry_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @sentry/core */ "./node_modules/@sentry/core/esm/index.js");
-/* harmony import */ var _sentry_utils__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @sentry/utils */ "./node_modules/@sentry/utils/esm/index.js");
-
-
-/** Base Transport class implementation */
-var BaseTransport = /** @class */ (function () {
-    function BaseTransport(options) {
-        this.options = options;
-        /** A simple buffer holding all requests. */
-        this._buffer = new _sentry_utils__WEBPACK_IMPORTED_MODULE_1__["PromiseBuffer"](30);
-        this.url = new _sentry_core__WEBPACK_IMPORTED_MODULE_0__["API"](this.options.dsn).getStoreEndpointWithUrlEncodedAuth();
-    }
-    /**
-     * @inheritDoc
-     */
-    BaseTransport.prototype.sendEvent = function (_) {
-        throw new _sentry_utils__WEBPACK_IMPORTED_MODULE_1__["SentryError"]('Transport Class has to implement `sendEvent` method');
-    };
-    /**
-     * @inheritDoc
-     */
-    BaseTransport.prototype.close = function (timeout) {
-        return this._buffer.drain(timeout);
-    };
-    return BaseTransport;
-}());
-
-//# sourceMappingURL=base.js.map
-
-/***/ }),
-
-/***/ "./node_modules/@sentry/browser/esm/transports/fetch.js":
-/*!**************************************************************!*\
-  !*** ./node_modules/@sentry/browser/esm/transports/fetch.js ***!
-  \**************************************************************/
-/*! exports provided: FetchTransport */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "FetchTransport", function() { return FetchTransport; });
-/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
-/* harmony import */ var _sentry_types__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @sentry/types */ "./node_modules/@sentry/types/esm/index.js");
-/* harmony import */ var _sentry_utils__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @sentry/utils */ "./node_modules/@sentry/utils/esm/index.js");
-/* harmony import */ var _base__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./base */ "./node_modules/@sentry/browser/esm/transports/base.js");
-
-
-
-
-var global = Object(_sentry_utils__WEBPACK_IMPORTED_MODULE_2__["getGlobalObject"])();
-/** `fetch` based transport */
-var FetchTransport = /** @class */ (function (_super) {
-    tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"](FetchTransport, _super);
-    function FetchTransport() {
-        var _this = _super !== null && _super.apply(this, arguments) || this;
-        /** Locks transport after receiving 429 response */
-        _this._disabledUntil = new Date(Date.now());
-        return _this;
-    }
-    /**
-     * @inheritDoc
-     */
-    FetchTransport.prototype.sendEvent = function (event) {
-        var _this = this;
-        if (new Date(Date.now()) < this._disabledUntil) {
-            return Promise.reject({
-                event: event,
-                reason: "Transport locked till " + this._disabledUntil + " due to too many requests.",
-                status: 429,
-            });
-        }
-        var defaultOptions = {
-            body: JSON.stringify(event),
-            method: 'POST',
-            // Despite all stars in the sky saying that Edge supports old draft syntax, aka 'never', 'always', 'origin' and 'default
-            // https://caniuse.com/#feat=referrer-policy
-            // It doesn't. And it throw exception instead of ignoring this parameter...
-            // REF: https://github.com/getsentry/raven-js/issues/1233
-            referrerPolicy: (Object(_sentry_utils__WEBPACK_IMPORTED_MODULE_2__["supportsReferrerPolicy"])() ? 'origin' : ''),
-        };
-        if (this.options.headers !== undefined) {
-            defaultOptions.headers = this.options.headers;
-        }
-        return this._buffer.add(new _sentry_utils__WEBPACK_IMPORTED_MODULE_2__["SyncPromise"](function (resolve, reject) {
-            global
-                .fetch(_this.url, defaultOptions)
-                .then(function (response) {
-                var status = _sentry_types__WEBPACK_IMPORTED_MODULE_1__["Status"].fromHttpCode(response.status);
-                if (status === _sentry_types__WEBPACK_IMPORTED_MODULE_1__["Status"].Success) {
-                    resolve({ status: status });
-                    return;
-                }
-                if (status === _sentry_types__WEBPACK_IMPORTED_MODULE_1__["Status"].RateLimit) {
-                    var now = Date.now();
-                    _this._disabledUntil = new Date(now + Object(_sentry_utils__WEBPACK_IMPORTED_MODULE_2__["parseRetryAfterHeader"])(now, response.headers.get('Retry-After')));
-                    _sentry_utils__WEBPACK_IMPORTED_MODULE_2__["logger"].warn("Too many requests, backing off till: " + _this._disabledUntil);
-                }
-                reject(response);
-            })
-                .catch(reject);
-        }));
-    };
-    return FetchTransport;
-}(_base__WEBPACK_IMPORTED_MODULE_3__["BaseTransport"]));
-
-//# sourceMappingURL=fetch.js.map
-
-/***/ }),
-
-/***/ "./node_modules/@sentry/browser/esm/transports/index.js":
-/*!**************************************************************!*\
-  !*** ./node_modules/@sentry/browser/esm/transports/index.js ***!
-  \**************************************************************/
-/*! exports provided: BaseTransport, FetchTransport, XHRTransport */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _base__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./base */ "./node_modules/@sentry/browser/esm/transports/base.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "BaseTransport", function() { return _base__WEBPACK_IMPORTED_MODULE_0__["BaseTransport"]; });
-
-/* harmony import */ var _fetch__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./fetch */ "./node_modules/@sentry/browser/esm/transports/fetch.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "FetchTransport", function() { return _fetch__WEBPACK_IMPORTED_MODULE_1__["FetchTransport"]; });
-
-/* harmony import */ var _xhr__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./xhr */ "./node_modules/@sentry/browser/esm/transports/xhr.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "XHRTransport", function() { return _xhr__WEBPACK_IMPORTED_MODULE_2__["XHRTransport"]; });
-
-
-
-
-//# sourceMappingURL=index.js.map
-
-/***/ }),
-
-/***/ "./node_modules/@sentry/browser/esm/transports/xhr.js":
-/*!************************************************************!*\
-  !*** ./node_modules/@sentry/browser/esm/transports/xhr.js ***!
-  \************************************************************/
-/*! exports provided: XHRTransport */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "XHRTransport", function() { return XHRTransport; });
-/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
-/* harmony import */ var _sentry_types__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @sentry/types */ "./node_modules/@sentry/types/esm/index.js");
-/* harmony import */ var _sentry_utils__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @sentry/utils */ "./node_modules/@sentry/utils/esm/index.js");
-/* harmony import */ var _base__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./base */ "./node_modules/@sentry/browser/esm/transports/base.js");
-
-
-
-
-/** `XHR` based transport */
-var XHRTransport = /** @class */ (function (_super) {
-    tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"](XHRTransport, _super);
-    function XHRTransport() {
-        var _this = _super !== null && _super.apply(this, arguments) || this;
-        /** Locks transport after receiving 429 response */
-        _this._disabledUntil = new Date(Date.now());
-        return _this;
-    }
-    /**
-     * @inheritDoc
-     */
-    XHRTransport.prototype.sendEvent = function (event) {
-        var _this = this;
-        if (new Date(Date.now()) < this._disabledUntil) {
-            return Promise.reject({
-                event: event,
-                reason: "Transport locked till " + this._disabledUntil + " due to too many requests.",
-                status: 429,
-            });
-        }
-        return this._buffer.add(new _sentry_utils__WEBPACK_IMPORTED_MODULE_2__["SyncPromise"](function (resolve, reject) {
-            var request = new XMLHttpRequest();
-            request.onreadystatechange = function () {
-                if (request.readyState !== 4) {
-                    return;
-                }
-                var status = _sentry_types__WEBPACK_IMPORTED_MODULE_1__["Status"].fromHttpCode(request.status);
-                if (status === _sentry_types__WEBPACK_IMPORTED_MODULE_1__["Status"].Success) {
-                    resolve({ status: status });
-                    return;
-                }
-                if (status === _sentry_types__WEBPACK_IMPORTED_MODULE_1__["Status"].RateLimit) {
-                    var now = Date.now();
-                    _this._disabledUntil = new Date(now + Object(_sentry_utils__WEBPACK_IMPORTED_MODULE_2__["parseRetryAfterHeader"])(now, request.getResponseHeader('Retry-After')));
-                    _sentry_utils__WEBPACK_IMPORTED_MODULE_2__["logger"].warn("Too many requests, backing off till: " + _this._disabledUntil);
-                }
-                reject(request);
-            };
-            request.open('POST', _this.url);
-            for (var header in _this.options.headers) {
-                if (_this.options.headers.hasOwnProperty(header)) {
-                    request.setRequestHeader(header, _this.options.headers[header]);
-                }
-            }
-            request.send(JSON.stringify(event));
-        }));
-    };
-    return XHRTransport;
-}(_base__WEBPACK_IMPORTED_MODULE_3__["BaseTransport"]));
-
-//# sourceMappingURL=xhr.js.map
-
-/***/ }),
-
-/***/ "./node_modules/@sentry/browser/esm/version.js":
-/*!*****************************************************!*\
-  !*** ./node_modules/@sentry/browser/esm/version.js ***!
-  \*****************************************************/
-/*! exports provided: SDK_NAME, SDK_VERSION */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SDK_NAME", function() { return SDK_NAME; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SDK_VERSION", function() { return SDK_VERSION; });
-var SDK_NAME = 'sentry.javascript.browser';
-var SDK_VERSION = '5.15.0';
-//# sourceMappingURL=version.js.map
-
-/***/ }),
-
-/***/ "./node_modules/@sentry/core/esm/api.js":
-/*!**********************************************!*\
-  !*** ./node_modules/@sentry/core/esm/api.js ***!
-  \**********************************************/
-/*! exports provided: API */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "API", function() { return API; });
-/* harmony import */ var _sentry_utils__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @sentry/utils */ "./node_modules/@sentry/utils/esm/index.js");
-
-var SENTRY_API_VERSION = '7';
-/** Helper class to provide urls to different Sentry endpoints. */
-var API = /** @class */ (function () {
-    /** Create a new instance of API */
-    function API(dsn) {
-        this.dsn = dsn;
-        this._dsnObject = new _sentry_utils__WEBPACK_IMPORTED_MODULE_0__["Dsn"](dsn);
-    }
-    /** Returns the Dsn object. */
-    API.prototype.getDsn = function () {
-        return this._dsnObject;
-    };
-    /** Returns a string with auth headers in the url to the store endpoint. */
-    API.prototype.getStoreEndpoint = function () {
-        return "" + this._getBaseUrl() + this.getStoreEndpointPath();
-    };
-    /** Returns the store endpoint with auth added in url encoded. */
-    API.prototype.getStoreEndpointWithUrlEncodedAuth = function () {
-        var dsn = this._dsnObject;
-        var auth = {
-            sentry_key: dsn.user,
-            sentry_version: SENTRY_API_VERSION,
-        };
-        // Auth is intentionally sent as part of query string (NOT as custom HTTP header)
-        // to avoid preflight CORS requests
-        return this.getStoreEndpoint() + "?" + Object(_sentry_utils__WEBPACK_IMPORTED_MODULE_0__["urlEncode"])(auth);
-    };
-    /** Returns the base path of the url including the port. */
-    API.prototype._getBaseUrl = function () {
-        var dsn = this._dsnObject;
-        var protocol = dsn.protocol ? dsn.protocol + ":" : '';
-        var port = dsn.port ? ":" + dsn.port : '';
-        return protocol + "//" + dsn.host + port;
-    };
-    /** Returns only the path component for the store endpoint. */
-    API.prototype.getStoreEndpointPath = function () {
-        var dsn = this._dsnObject;
-        return (dsn.path ? "/" + dsn.path : '') + "/api/" + dsn.projectId + "/store/";
-    };
-    /** Returns an object that can be used in request headers. */
-    API.prototype.getRequestHeaders = function (clientName, clientVersion) {
-        var dsn = this._dsnObject;
-        var header = ["Sentry sentry_version=" + SENTRY_API_VERSION];
-        header.push("sentry_client=" + clientName + "/" + clientVersion);
-        header.push("sentry_key=" + dsn.user);
-        if (dsn.pass) {
-            header.push("sentry_secret=" + dsn.pass);
-        }
-        return {
-            'Content-Type': 'application/json',
-            'X-Sentry-Auth': header.join(', '),
-        };
-    };
-    /** Returns the url to the report dialog endpoint. */
-    API.prototype.getReportDialogEndpoint = function (dialogOptions) {
-        if (dialogOptions === void 0) { dialogOptions = {}; }
-        var dsn = this._dsnObject;
-        var endpoint = "" + this._getBaseUrl() + (dsn.path ? "/" + dsn.path : '') + "/api/embed/error-page/";
-        var encodedOptions = [];
-        encodedOptions.push("dsn=" + dsn.toString());
-        for (var key in dialogOptions) {
-            if (key === 'user') {
-                if (!dialogOptions.user) {
-                    continue;
-                }
-                if (dialogOptions.user.name) {
-                    encodedOptions.push("name=" + encodeURIComponent(dialogOptions.user.name));
-                }
-                if (dialogOptions.user.email) {
-                    encodedOptions.push("email=" + encodeURIComponent(dialogOptions.user.email));
-                }
-            }
-            else {
-                encodedOptions.push(encodeURIComponent(key) + "=" + encodeURIComponent(dialogOptions[key]));
-            }
-        }
-        if (encodedOptions.length) {
-            return endpoint + "?" + encodedOptions.join('&');
-        }
-        return endpoint;
-    };
-    return API;
-}());
-
-//# sourceMappingURL=api.js.map
-
-/***/ }),
-
-/***/ "./node_modules/@sentry/core/esm/basebackend.js":
-/*!******************************************************!*\
-  !*** ./node_modules/@sentry/core/esm/basebackend.js ***!
-  \******************************************************/
-/*! exports provided: BaseBackend */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "BaseBackend", function() { return BaseBackend; });
-/* harmony import */ var _sentry_utils__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @sentry/utils */ "./node_modules/@sentry/utils/esm/index.js");
-/* harmony import */ var _transports_noop__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./transports/noop */ "./node_modules/@sentry/core/esm/transports/noop.js");
-
-
-/**
- * This is the base implemention of a Backend.
- * @hidden
- */
-var BaseBackend = /** @class */ (function () {
-    /** Creates a new backend instance. */
-    function BaseBackend(options) {
-        this._options = options;
-        if (!this._options.dsn) {
-            _sentry_utils__WEBPACK_IMPORTED_MODULE_0__["logger"].warn('No DSN provided, backend will not do anything.');
-        }
-        this._transport = this._setupTransport();
-    }
-    /**
-     * Sets up the transport so it can be used later to send requests.
-     */
-    BaseBackend.prototype._setupTransport = function () {
-        return new _transports_noop__WEBPACK_IMPORTED_MODULE_1__["NoopTransport"]();
-    };
-    /**
-     * @inheritDoc
-     */
-    BaseBackend.prototype.eventFromException = function (_exception, _hint) {
-        throw new _sentry_utils__WEBPACK_IMPORTED_MODULE_0__["SentryError"]('Backend has to implement `eventFromException` method');
-    };
-    /**
-     * @inheritDoc
-     */
-    BaseBackend.prototype.eventFromMessage = function (_message, _level, _hint) {
-        throw new _sentry_utils__WEBPACK_IMPORTED_MODULE_0__["SentryError"]('Backend has to implement `eventFromMessage` method');
-    };
-    /**
-     * @inheritDoc
-     */
-    BaseBackend.prototype.sendEvent = function (event) {
-        this._transport.sendEvent(event).then(null, function (reason) {
-            _sentry_utils__WEBPACK_IMPORTED_MODULE_0__["logger"].error("Error while sending event: " + reason);
-        });
-    };
-    /**
-     * @inheritDoc
-     */
-    BaseBackend.prototype.getTransport = function () {
-        return this._transport;
-    };
-    return BaseBackend;
-}());
-
-//# sourceMappingURL=basebackend.js.map
-
-/***/ }),
-
-/***/ "./node_modules/@sentry/core/esm/baseclient.js":
-/*!*****************************************************!*\
-  !*** ./node_modules/@sentry/core/esm/baseclient.js ***!
-  \*****************************************************/
-/*! exports provided: BaseClient */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "BaseClient", function() { return BaseClient; });
-/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
-/* harmony import */ var _sentry_utils__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @sentry/utils */ "./node_modules/@sentry/utils/esm/index.js");
-/* harmony import */ var _integration__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./integration */ "./node_modules/@sentry/core/esm/integration.js");
-
-
-
-/**
- * Base implementation for all JavaScript SDK clients.
- *
- * Call the constructor with the corresponding backend constructor and options
- * specific to the client subclass. To access these options later, use
- * {@link Client.getOptions}. Also, the Backend instance is available via
- * {@link Client.getBackend}.
- *
- * If a Dsn is specified in the options, it will be parsed and stored. Use
- * {@link Client.getDsn} to retrieve the Dsn at any moment. In case the Dsn is
- * invalid, the constructor will throw a {@link SentryException}. Note that
- * without a valid Dsn, the SDK will not send any events to Sentry.
- *
- * Before sending an event via the backend, it is passed through
- * {@link BaseClient.prepareEvent} to add SDK information and scope data
- * (breadcrumbs and context). To add more custom information, override this
- * method and extend the resulting prepared event.
- *
- * To issue automatically created events (e.g. via instrumentation), use
- * {@link Client.captureEvent}. It will prepare the event and pass it through
- * the callback lifecycle. To issue auto-breadcrumbs, use
- * {@link Client.addBreadcrumb}.
- *
- * @example
- * class NodeClient extends BaseClient<NodeBackend, NodeOptions> {
- *   public constructor(options: NodeOptions) {
- *     super(NodeBackend, options);
- *   }
- *
- *   // ...
- * }
- */
-var BaseClient = /** @class */ (function () {
-    /**
-     * Initializes this client instance.
-     *
-     * @param backendClass A constructor function to create the backend.
-     * @param options Options for the client.
-     */
-    function BaseClient(backendClass, options) {
-        /** Array of used integrations. */
-        this._integrations = {};
-        /** Is the client still processing a call? */
-        this._processing = false;
-        this._backend = new backendClass(options);
-        this._options = options;
-        if (options.dsn) {
-            this._dsn = new _sentry_utils__WEBPACK_IMPORTED_MODULE_1__["Dsn"](options.dsn);
-        }
-    }
-    /**
-     * @inheritDoc
-     */
-    BaseClient.prototype.captureException = function (exception, hint, scope) {
-        var _this = this;
-        var eventId = hint && hint.event_id;
-        this._processing = true;
-        this._getBackend()
-            .eventFromException(exception, hint)
-            .then(function (event) { return _this._processEvent(event, hint, scope); })
-            .then(function (finalEvent) {
-            // We need to check for finalEvent in case beforeSend returned null
-            eventId = finalEvent && finalEvent.event_id;
-            _this._processing = false;
-        })
-            .then(null, function (reason) {
-            _sentry_utils__WEBPACK_IMPORTED_MODULE_1__["logger"].error(reason);
-            _this._processing = false;
-        });
-        return eventId;
-    };
-    /**
-     * @inheritDoc
-     */
-    BaseClient.prototype.captureMessage = function (message, level, hint, scope) {
-        var _this = this;
-        var eventId = hint && hint.event_id;
-        this._processing = true;
-        var promisedEvent = Object(_sentry_utils__WEBPACK_IMPORTED_MODULE_1__["isPrimitive"])(message)
-            ? this._getBackend().eventFromMessage("" + message, level, hint)
-            : this._getBackend().eventFromException(message, hint);
-        promisedEvent
-            .then(function (event) { return _this._processEvent(event, hint, scope); })
-            .then(function (finalEvent) {
-            // We need to check for finalEvent in case beforeSend returned null
-            eventId = finalEvent && finalEvent.event_id;
-            _this._processing = false;
-        })
-            .then(null, function (reason) {
-            _sentry_utils__WEBPACK_IMPORTED_MODULE_1__["logger"].error(reason);
-            _this._processing = false;
-        });
-        return eventId;
-    };
-    /**
-     * @inheritDoc
-     */
-    BaseClient.prototype.captureEvent = function (event, hint, scope) {
-        var _this = this;
-        var eventId = hint && hint.event_id;
-        this._processing = true;
-        this._processEvent(event, hint, scope)
-            .then(function (finalEvent) {
-            // We need to check for finalEvent in case beforeSend returned null
-            eventId = finalEvent && finalEvent.event_id;
-            _this._processing = false;
-        })
-            .then(null, function (reason) {
-            _sentry_utils__WEBPACK_IMPORTED_MODULE_1__["logger"].error(reason);
-            _this._processing = false;
-        });
-        return eventId;
-    };
-    /**
-     * @inheritDoc
-     */
-    BaseClient.prototype.getDsn = function () {
-        return this._dsn;
-    };
-    /**
-     * @inheritDoc
-     */
-    BaseClient.prototype.getOptions = function () {
-        return this._options;
-    };
-    /**
-     * @inheritDoc
-     */
-    BaseClient.prototype.flush = function (timeout) {
-        var _this = this;
-        return this._isClientProcessing(timeout).then(function (status) {
-            clearInterval(status.interval);
-            return _this._getBackend()
-                .getTransport()
-                .close(timeout)
-                .then(function (transportFlushed) { return status.ready && transportFlushed; });
-        });
-    };
-    /**
-     * @inheritDoc
-     */
-    BaseClient.prototype.close = function (timeout) {
-        var _this = this;
-        return this.flush(timeout).then(function (result) {
-            _this.getOptions().enabled = false;
-            return result;
-        });
-    };
-    /**
-     * Sets up the integrations
-     */
-    BaseClient.prototype.setupIntegrations = function () {
-        if (this._isEnabled()) {
-            this._integrations = Object(_integration__WEBPACK_IMPORTED_MODULE_2__["setupIntegrations"])(this._options);
-        }
-    };
-    /**
-     * @inheritDoc
-     */
-    BaseClient.prototype.getIntegration = function (integration) {
-        try {
-            return this._integrations[integration.id] || null;
-        }
-        catch (_oO) {
-            _sentry_utils__WEBPACK_IMPORTED_MODULE_1__["logger"].warn("Cannot retrieve integration " + integration.id + " from the current Client");
-            return null;
-        }
-    };
-    /** Waits for the client to be done with processing. */
-    BaseClient.prototype._isClientProcessing = function (timeout) {
-        var _this = this;
-        return new _sentry_utils__WEBPACK_IMPORTED_MODULE_1__["SyncPromise"](function (resolve) {
-            var ticked = 0;
-            var tick = 1;
-            var interval = 0;
-            clearInterval(interval);
-            interval = setInterval(function () {
-                if (!_this._processing) {
-                    resolve({
-                        interval: interval,
-                        ready: true,
-                    });
-                }
-                else {
-                    ticked += tick;
-                    if (timeout && ticked >= timeout) {
-                        resolve({
-                            interval: interval,
-                            ready: false,
-                        });
-                    }
-                }
-            }, tick);
-        });
-    };
-    /** Returns the current backend. */
-    BaseClient.prototype._getBackend = function () {
-        return this._backend;
-    };
-    /** Determines whether this SDK is enabled and a valid Dsn is present. */
-    BaseClient.prototype._isEnabled = function () {
-        return this.getOptions().enabled !== false && this._dsn !== undefined;
-    };
-    /**
-     * Adds common information to events.
-     *
-     * The information includes release and environment from `options`,
-     * breadcrumbs and context (extra, tags and user) from the scope.
-     *
-     * Information that is already present in the event is never overwritten. For
-     * nested objects, such as the context, keys are merged.
-     *
-     * @param event The original event.
-     * @param hint May contain additional informartion about the original exception.
-     * @param scope A scope containing event metadata.
-     * @returns A new event with more information.
-     */
-    BaseClient.prototype._prepareEvent = function (event, scope, hint) {
-        var _this = this;
-        var _a = this.getOptions(), environment = _a.environment, release = _a.release, dist = _a.dist, _b = _a.maxValueLength, maxValueLength = _b === void 0 ? 250 : _b, _c = _a.normalizeDepth, normalizeDepth = _c === void 0 ? 3 : _c;
-        var prepared = tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"]({}, event);
-        if (prepared.environment === undefined && environment !== undefined) {
-            prepared.environment = environment;
-        }
-        if (prepared.release === undefined && release !== undefined) {
-            prepared.release = release;
-        }
-        if (prepared.dist === undefined && dist !== undefined) {
-            prepared.dist = dist;
-        }
-        if (prepared.message) {
-            prepared.message = Object(_sentry_utils__WEBPACK_IMPORTED_MODULE_1__["truncate"])(prepared.message, maxValueLength);
-        }
-        var exception = prepared.exception && prepared.exception.values && prepared.exception.values[0];
-        if (exception && exception.value) {
-            exception.value = Object(_sentry_utils__WEBPACK_IMPORTED_MODULE_1__["truncate"])(exception.value, maxValueLength);
-        }
-        var request = prepared.request;
-        if (request && request.url) {
-            request.url = Object(_sentry_utils__WEBPACK_IMPORTED_MODULE_1__["truncate"])(request.url, maxValueLength);
-        }
-        if (prepared.event_id === undefined) {
-            prepared.event_id = hint && hint.event_id ? hint.event_id : Object(_sentry_utils__WEBPACK_IMPORTED_MODULE_1__["uuid4"])();
-        }
-        this._addIntegrations(prepared.sdk);
-        // We prepare the result here with a resolved Event.
-        var result = _sentry_utils__WEBPACK_IMPORTED_MODULE_1__["SyncPromise"].resolve(prepared);
-        // This should be the last thing called, since we want that
-        // {@link Hub.addEventProcessor} gets the finished prepared event.
-        if (scope) {
-            // In case we have a hub we reassign it.
-            result = scope.applyToEvent(prepared, hint);
-        }
-        return result.then(function (evt) {
-            // tslint:disable-next-line:strict-type-predicates
-            if (typeof normalizeDepth === 'number' && normalizeDepth > 0) {
-                return _this._normalizeEvent(evt, normalizeDepth);
-            }
-            return evt;
-        });
-    };
-    /**
-     * Applies `normalize` function on necessary `Event` attributes to make them safe for serialization.
-     * Normalized keys:
-     * - `breadcrumbs.data`
-     * - `user`
-     * - `contexts`
-     * - `extra`
-     * @param event Event
-     * @returns Normalized event
-     */
-    BaseClient.prototype._normalizeEvent = function (event, depth) {
-        if (!event) {
-            return null;
-        }
-        // tslint:disable:no-unsafe-any
-        return tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"]({}, event, (event.breadcrumbs && {
-            breadcrumbs: event.breadcrumbs.map(function (b) { return (tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"]({}, b, (b.data && {
-                data: Object(_sentry_utils__WEBPACK_IMPORTED_MODULE_1__["normalize"])(b.data, depth),
-            }))); }),
-        }), (event.user && {
-            user: Object(_sentry_utils__WEBPACK_IMPORTED_MODULE_1__["normalize"])(event.user, depth),
-        }), (event.contexts && {
-            contexts: Object(_sentry_utils__WEBPACK_IMPORTED_MODULE_1__["normalize"])(event.contexts, depth),
-        }), (event.extra && {
-            extra: Object(_sentry_utils__WEBPACK_IMPORTED_MODULE_1__["normalize"])(event.extra, depth),
-        }));
-    };
-    /**
-     * This function adds all used integrations to the SDK info in the event.
-     * @param sdkInfo The sdkInfo of the event that will be filled with all integrations.
-     */
-    BaseClient.prototype._addIntegrations = function (sdkInfo) {
-        var integrationsArray = Object.keys(this._integrations);
-        if (sdkInfo && integrationsArray.length > 0) {
-            sdkInfo.integrations = integrationsArray;
-        }
-    };
-    /**
-     * Processes an event (either error or message) and sends it to Sentry.
-     *
-     * This also adds breadcrumbs and context information to the event. However,
-     * platform specific meta data (such as the User's IP address) must be added
-     * by the SDK implementor.
-     *
-     *
-     * @param event The event to send to Sentry.
-     * @param hint May contain additional informartion about the original exception.
-     * @param scope A scope containing event metadata.
-     * @returns A SyncPromise that resolves with the event or rejects in case event was/will not be send.
-     */
-    BaseClient.prototype._processEvent = function (event, hint, scope) {
-        var _this = this;
-        var _a = this.getOptions(), beforeSend = _a.beforeSend, sampleRate = _a.sampleRate;
-        if (!this._isEnabled()) {
-            return _sentry_utils__WEBPACK_IMPORTED_MODULE_1__["SyncPromise"].reject('SDK not enabled, will not send event.');
-        }
-        // 1.0 === 100% events are sent
-        // 0.0 === 0% events are sent
-        if (typeof sampleRate === 'number' && Math.random() > sampleRate) {
-            return _sentry_utils__WEBPACK_IMPORTED_MODULE_1__["SyncPromise"].reject('This event has been sampled, will not send event.');
-        }
-        return new _sentry_utils__WEBPACK_IMPORTED_MODULE_1__["SyncPromise"](function (resolve, reject) {
-            _this._prepareEvent(event, scope, hint)
-                .then(function (prepared) {
-                if (prepared === null) {
-                    reject('An event processor returned null, will not send event.');
-                    return;
-                }
-                var finalEvent = prepared;
-                var isInternalException = hint && hint.data && hint.data.__sentry__ === true;
-                if (isInternalException || !beforeSend) {
-                    _this._getBackend().sendEvent(finalEvent);
-                    resolve(finalEvent);
-                    return;
-                }
-                var beforeSendResult = beforeSend(prepared, hint);
-                // tslint:disable-next-line:strict-type-predicates
-                if (typeof beforeSendResult === 'undefined') {
-                    _sentry_utils__WEBPACK_IMPORTED_MODULE_1__["logger"].error('`beforeSend` method has to return `null` or a valid event.');
-                }
-                else if (Object(_sentry_utils__WEBPACK_IMPORTED_MODULE_1__["isThenable"])(beforeSendResult)) {
-                    _this._handleAsyncBeforeSend(beforeSendResult, resolve, reject);
-                }
-                else {
-                    finalEvent = beforeSendResult;
-                    if (finalEvent === null) {
-                        _sentry_utils__WEBPACK_IMPORTED_MODULE_1__["logger"].log('`beforeSend` returned `null`, will not send event.');
-                        resolve(null);
-                        return;
-                    }
-                    // From here on we are really async
-                    _this._getBackend().sendEvent(finalEvent);
-                    resolve(finalEvent);
-                }
-            })
-                .then(null, function (reason) {
-                _this.captureException(reason, {
-                    data: {
-                        __sentry__: true,
-                    },
-                    originalException: reason,
-                });
-                reject("Event processing pipeline threw an error, original event will not be sent. Details have been sent as a new event.\nReason: " + reason);
-            });
-        });
-    };
-    /**
-     * Resolves before send Promise and calls resolve/reject on parent SyncPromise.
-     */
-    BaseClient.prototype._handleAsyncBeforeSend = function (beforeSend, resolve, reject) {
-        var _this = this;
-        beforeSend
-            .then(function (processedEvent) {
-            if (processedEvent === null) {
-                reject('`beforeSend` returned `null`, will not send event.');
-                return;
-            }
-            // From here on we are really async
-            _this._getBackend().sendEvent(processedEvent);
-            resolve(processedEvent);
-        })
-            .then(null, function (e) {
-            reject("beforeSend rejected with " + e);
-        });
-    };
-    return BaseClient;
-}());
-
-//# sourceMappingURL=baseclient.js.map
-
-/***/ }),
-
-/***/ "./node_modules/@sentry/core/esm/index.js":
-/*!************************************************!*\
-  !*** ./node_modules/@sentry/core/esm/index.js ***!
-  \************************************************/
-/*! exports provided: addBreadcrumb, captureException, captureEvent, captureMessage, configureScope, setContext, setExtra, setExtras, setTag, setTags, setUser, withScope, addGlobalEventProcessor, getCurrentHub, getHubFromCarrier, Hub, Scope, API, BaseClient, BaseBackend, initAndBind, NoopTransport, Integrations */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _sentry_minimal__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @sentry/minimal */ "./node_modules/@sentry/minimal/esm/index.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "addBreadcrumb", function() { return _sentry_minimal__WEBPACK_IMPORTED_MODULE_0__["addBreadcrumb"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "captureException", function() { return _sentry_minimal__WEBPACK_IMPORTED_MODULE_0__["captureException"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "captureEvent", function() { return _sentry_minimal__WEBPACK_IMPORTED_MODULE_0__["captureEvent"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "captureMessage", function() { return _sentry_minimal__WEBPACK_IMPORTED_MODULE_0__["captureMessage"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "configureScope", function() { return _sentry_minimal__WEBPACK_IMPORTED_MODULE_0__["configureScope"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "setContext", function() { return _sentry_minimal__WEBPACK_IMPORTED_MODULE_0__["setContext"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "setExtra", function() { return _sentry_minimal__WEBPACK_IMPORTED_MODULE_0__["setExtra"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "setExtras", function() { return _sentry_minimal__WEBPACK_IMPORTED_MODULE_0__["setExtras"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "setTag", function() { return _sentry_minimal__WEBPACK_IMPORTED_MODULE_0__["setTag"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "setTags", function() { return _sentry_minimal__WEBPACK_IMPORTED_MODULE_0__["setTags"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "setUser", function() { return _sentry_minimal__WEBPACK_IMPORTED_MODULE_0__["setUser"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "withScope", function() { return _sentry_minimal__WEBPACK_IMPORTED_MODULE_0__["withScope"]; });
-
-/* harmony import */ var _sentry_hub__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @sentry/hub */ "./node_modules/@sentry/hub/esm/index.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "addGlobalEventProcessor", function() { return _sentry_hub__WEBPACK_IMPORTED_MODULE_1__["addGlobalEventProcessor"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "getCurrentHub", function() { return _sentry_hub__WEBPACK_IMPORTED_MODULE_1__["getCurrentHub"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "getHubFromCarrier", function() { return _sentry_hub__WEBPACK_IMPORTED_MODULE_1__["getHubFromCarrier"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Hub", function() { return _sentry_hub__WEBPACK_IMPORTED_MODULE_1__["Hub"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Scope", function() { return _sentry_hub__WEBPACK_IMPORTED_MODULE_1__["Scope"]; });
-
-/* harmony import */ var _api__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./api */ "./node_modules/@sentry/core/esm/api.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "API", function() { return _api__WEBPACK_IMPORTED_MODULE_2__["API"]; });
-
-/* harmony import */ var _baseclient__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./baseclient */ "./node_modules/@sentry/core/esm/baseclient.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "BaseClient", function() { return _baseclient__WEBPACK_IMPORTED_MODULE_3__["BaseClient"]; });
-
-/* harmony import */ var _basebackend__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./basebackend */ "./node_modules/@sentry/core/esm/basebackend.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "BaseBackend", function() { return _basebackend__WEBPACK_IMPORTED_MODULE_4__["BaseBackend"]; });
-
-/* harmony import */ var _sdk__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./sdk */ "./node_modules/@sentry/core/esm/sdk.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "initAndBind", function() { return _sdk__WEBPACK_IMPORTED_MODULE_5__["initAndBind"]; });
-
-/* harmony import */ var _transports_noop__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./transports/noop */ "./node_modules/@sentry/core/esm/transports/noop.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "NoopTransport", function() { return _transports_noop__WEBPACK_IMPORTED_MODULE_6__["NoopTransport"]; });
-
-/* harmony import */ var _integrations__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./integrations */ "./node_modules/@sentry/core/esm/integrations/index.js");
-/* harmony reexport (module object) */ __webpack_require__.d(__webpack_exports__, "Integrations", function() { return _integrations__WEBPACK_IMPORTED_MODULE_7__; });
-
-
-
-
-
-
-
-
-
-//# sourceMappingURL=index.js.map
-
-/***/ }),
-
-/***/ "./node_modules/@sentry/core/esm/integration.js":
-/*!******************************************************!*\
-  !*** ./node_modules/@sentry/core/esm/integration.js ***!
-  \******************************************************/
-/*! exports provided: installedIntegrations, getIntegrationsToSetup, setupIntegration, setupIntegrations */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "installedIntegrations", function() { return installedIntegrations; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getIntegrationsToSetup", function() { return getIntegrationsToSetup; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "setupIntegration", function() { return setupIntegration; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "setupIntegrations", function() { return setupIntegrations; });
-/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
-/* harmony import */ var _sentry_hub__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @sentry/hub */ "./node_modules/@sentry/hub/esm/index.js");
-/* harmony import */ var _sentry_utils__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @sentry/utils */ "./node_modules/@sentry/utils/esm/index.js");
-
-
-
-var installedIntegrations = [];
-/** Gets integration to install */
-function getIntegrationsToSetup(options) {
-    var defaultIntegrations = (options.defaultIntegrations && tslib__WEBPACK_IMPORTED_MODULE_0__["__spread"](options.defaultIntegrations)) || [];
-    var userIntegrations = options.integrations;
-    var integrations = [];
-    if (Array.isArray(userIntegrations)) {
-        var userIntegrationsNames_1 = userIntegrations.map(function (i) { return i.name; });
-        var pickedIntegrationsNames_1 = [];
-        // Leave only unique default integrations, that were not overridden with provided user integrations
-        defaultIntegrations.forEach(function (defaultIntegration) {
-            if (userIntegrationsNames_1.indexOf(defaultIntegration.name) === -1 &&
-                pickedIntegrationsNames_1.indexOf(defaultIntegration.name) === -1) {
-                integrations.push(defaultIntegration);
-                pickedIntegrationsNames_1.push(defaultIntegration.name);
-            }
-        });
-        // Don't add same user integration twice
-        userIntegrations.forEach(function (userIntegration) {
-            if (pickedIntegrationsNames_1.indexOf(userIntegration.name) === -1) {
-                integrations.push(userIntegration);
-                pickedIntegrationsNames_1.push(userIntegration.name);
-            }
-        });
-    }
-    else if (typeof userIntegrations === 'function') {
-        integrations = userIntegrations(defaultIntegrations);
-        integrations = Array.isArray(integrations) ? integrations : [integrations];
-    }
-    else {
-        integrations = tslib__WEBPACK_IMPORTED_MODULE_0__["__spread"](defaultIntegrations);
-    }
-    // Make sure that if present, `Debug` integration will always run last
-    var integrationsNames = integrations.map(function (i) { return i.name; });
-    var alwaysLastToRun = 'Debug';
-    if (integrationsNames.indexOf(alwaysLastToRun) !== -1) {
-        integrations.push.apply(integrations, tslib__WEBPACK_IMPORTED_MODULE_0__["__spread"](integrations.splice(integrationsNames.indexOf(alwaysLastToRun), 1)));
-    }
-    return integrations;
-}
-/** Setup given integration */
-function setupIntegration(integration) {
-    if (installedIntegrations.indexOf(integration.name) !== -1) {
-        return;
-    }
-    integration.setupOnce(_sentry_hub__WEBPACK_IMPORTED_MODULE_1__["addGlobalEventProcessor"], _sentry_hub__WEBPACK_IMPORTED_MODULE_1__["getCurrentHub"]);
-    installedIntegrations.push(integration.name);
-    _sentry_utils__WEBPACK_IMPORTED_MODULE_2__["logger"].log("Integration installed: " + integration.name);
-}
-/**
- * Given a list of integration instances this installs them all. When `withDefaults` is set to `true` then all default
- * integrations are added unless they were already provided before.
- * @param integrations array of integration instances
- * @param withDefault should enable default integrations
- */
-function setupIntegrations(options) {
-    var integrations = {};
-    getIntegrationsToSetup(options).forEach(function (integration) {
-        integrations[integration.name] = integration;
-        setupIntegration(integration);
-    });
-    return integrations;
-}
-//# sourceMappingURL=integration.js.map
-
-/***/ }),
-
-/***/ "./node_modules/@sentry/core/esm/integrations/functiontostring.js":
-/*!************************************************************************!*\
-  !*** ./node_modules/@sentry/core/esm/integrations/functiontostring.js ***!
-  \************************************************************************/
-/*! exports provided: FunctionToString */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "FunctionToString", function() { return FunctionToString; });
-var originalFunctionToString;
-/** Patch toString calls to return proper name for wrapped functions */
-var FunctionToString = /** @class */ (function () {
-    function FunctionToString() {
-        /**
-         * @inheritDoc
-         */
-        this.name = FunctionToString.id;
-    }
-    /**
-     * @inheritDoc
-     */
-    FunctionToString.prototype.setupOnce = function () {
-        originalFunctionToString = Function.prototype.toString;
-        Function.prototype.toString = function () {
-            var args = [];
-            for (var _i = 0; _i < arguments.length; _i++) {
-                args[_i] = arguments[_i];
-            }
-            var context = this.__sentry_original__ || this;
-            // tslint:disable-next-line:no-unsafe-any
-            return originalFunctionToString.apply(context, args);
-        };
-    };
-    /**
-     * @inheritDoc
-     */
-    FunctionToString.id = 'FunctionToString';
-    return FunctionToString;
-}());
-
-//# sourceMappingURL=functiontostring.js.map
-
-/***/ }),
-
-/***/ "./node_modules/@sentry/core/esm/integrations/inboundfilters.js":
-/*!**********************************************************************!*\
-  !*** ./node_modules/@sentry/core/esm/integrations/inboundfilters.js ***!
-  \**********************************************************************/
-/*! exports provided: InboundFilters */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "InboundFilters", function() { return InboundFilters; });
-/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
-/* harmony import */ var _sentry_hub__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @sentry/hub */ "./node_modules/@sentry/hub/esm/index.js");
-/* harmony import */ var _sentry_utils__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @sentry/utils */ "./node_modules/@sentry/utils/esm/index.js");
-
-
-
-// "Script error." is hard coded into browsers for errors that it can't read.
-// this is the result of a script being pulled in from an external domain and CORS.
-var DEFAULT_IGNORE_ERRORS = [/^Script error\.?$/, /^Javascript error: Script error\.? on line 0$/];
-/** Inbound filters configurable by the user */
-var InboundFilters = /** @class */ (function () {
-    function InboundFilters(_options) {
-        if (_options === void 0) { _options = {}; }
-        this._options = _options;
-        /**
-         * @inheritDoc
-         */
-        this.name = InboundFilters.id;
-    }
-    /**
-     * @inheritDoc
-     */
-    InboundFilters.prototype.setupOnce = function () {
-        Object(_sentry_hub__WEBPACK_IMPORTED_MODULE_1__["addGlobalEventProcessor"])(function (event) {
-            var hub = Object(_sentry_hub__WEBPACK_IMPORTED_MODULE_1__["getCurrentHub"])();
-            if (!hub) {
-                return event;
-            }
-            var self = hub.getIntegration(InboundFilters);
-            if (self) {
-                var client = hub.getClient();
-                var clientOptions = client ? client.getOptions() : {};
-                var options = self._mergeOptions(clientOptions);
-                if (self._shouldDropEvent(event, options)) {
-                    return null;
-                }
-            }
-            return event;
-        });
-    };
-    /** JSDoc */
-    InboundFilters.prototype._shouldDropEvent = function (event, options) {
-        if (this._isSentryError(event, options)) {
-            _sentry_utils__WEBPACK_IMPORTED_MODULE_2__["logger"].warn("Event dropped due to being internal Sentry Error.\nEvent: " + Object(_sentry_utils__WEBPACK_IMPORTED_MODULE_2__["getEventDescription"])(event));
-            return true;
-        }
-        if (this._isIgnoredError(event, options)) {
-            _sentry_utils__WEBPACK_IMPORTED_MODULE_2__["logger"].warn("Event dropped due to being matched by `ignoreErrors` option.\nEvent: " + Object(_sentry_utils__WEBPACK_IMPORTED_MODULE_2__["getEventDescription"])(event));
-            return true;
-        }
-        if (this._isBlacklistedUrl(event, options)) {
-            _sentry_utils__WEBPACK_IMPORTED_MODULE_2__["logger"].warn("Event dropped due to being matched by `blacklistUrls` option.\nEvent: " + Object(_sentry_utils__WEBPACK_IMPORTED_MODULE_2__["getEventDescription"])(event) + ".\nUrl: " + this._getEventFilterUrl(event));
-            return true;
-        }
-        if (!this._isWhitelistedUrl(event, options)) {
-            _sentry_utils__WEBPACK_IMPORTED_MODULE_2__["logger"].warn("Event dropped due to not being matched by `whitelistUrls` option.\nEvent: " + Object(_sentry_utils__WEBPACK_IMPORTED_MODULE_2__["getEventDescription"])(event) + ".\nUrl: " + this._getEventFilterUrl(event));
-            return true;
-        }
-        return false;
-    };
-    /** JSDoc */
-    InboundFilters.prototype._isSentryError = function (event, options) {
-        if (options === void 0) { options = {}; }
-        if (!options.ignoreInternal) {
-            return false;
-        }
-        try {
-            return ((event &&
-                event.exception &&
-                event.exception.values &&
-                event.exception.values[0] &&
-                event.exception.values[0].type === 'SentryError') ||
-                false);
-        }
-        catch (_oO) {
-            return false;
-        }
-    };
-    /** JSDoc */
-    InboundFilters.prototype._isIgnoredError = function (event, options) {
-        if (options === void 0) { options = {}; }
-        if (!options.ignoreErrors || !options.ignoreErrors.length) {
-            return false;
-        }
-        return this._getPossibleEventMessages(event).some(function (message) {
-            // Not sure why TypeScript complains here...
-            return options.ignoreErrors.some(function (pattern) { return Object(_sentry_utils__WEBPACK_IMPORTED_MODULE_2__["isMatchingPattern"])(message, pattern); });
-        });
-    };
-    /** JSDoc */
-    InboundFilters.prototype._isBlacklistedUrl = function (event, options) {
-        if (options === void 0) { options = {}; }
-        // TODO: Use Glob instead?
-        if (!options.blacklistUrls || !options.blacklistUrls.length) {
-            return false;
-        }
-        var url = this._getEventFilterUrl(event);
-        return !url ? false : options.blacklistUrls.some(function (pattern) { return Object(_sentry_utils__WEBPACK_IMPORTED_MODULE_2__["isMatchingPattern"])(url, pattern); });
-    };
-    /** JSDoc */
-    InboundFilters.prototype._isWhitelistedUrl = function (event, options) {
-        if (options === void 0) { options = {}; }
-        // TODO: Use Glob instead?
-        if (!options.whitelistUrls || !options.whitelistUrls.length) {
-            return true;
-        }
-        var url = this._getEventFilterUrl(event);
-        return !url ? true : options.whitelistUrls.some(function (pattern) { return Object(_sentry_utils__WEBPACK_IMPORTED_MODULE_2__["isMatchingPattern"])(url, pattern); });
-    };
-    /** JSDoc */
-    InboundFilters.prototype._mergeOptions = function (clientOptions) {
-        if (clientOptions === void 0) { clientOptions = {}; }
-        return {
-            blacklistUrls: tslib__WEBPACK_IMPORTED_MODULE_0__["__spread"]((this._options.blacklistUrls || []), (clientOptions.blacklistUrls || [])),
-            ignoreErrors: tslib__WEBPACK_IMPORTED_MODULE_0__["__spread"]((this._options.ignoreErrors || []), (clientOptions.ignoreErrors || []), DEFAULT_IGNORE_ERRORS),
-            ignoreInternal: typeof this._options.ignoreInternal !== 'undefined' ? this._options.ignoreInternal : true,
-            whitelistUrls: tslib__WEBPACK_IMPORTED_MODULE_0__["__spread"]((this._options.whitelistUrls || []), (clientOptions.whitelistUrls || [])),
-        };
-    };
-    /** JSDoc */
-    InboundFilters.prototype._getPossibleEventMessages = function (event) {
-        if (event.message) {
-            return [event.message];
-        }
-        if (event.exception) {
-            try {
-                var _a = (event.exception.values && event.exception.values[0]) || {}, _b = _a.type, type = _b === void 0 ? '' : _b, _c = _a.value, value = _c === void 0 ? '' : _c;
-                return ["" + value, type + ": " + value];
-            }
-            catch (oO) {
-                _sentry_utils__WEBPACK_IMPORTED_MODULE_2__["logger"].error("Cannot extract message for event " + Object(_sentry_utils__WEBPACK_IMPORTED_MODULE_2__["getEventDescription"])(event));
-                return [];
-            }
-        }
-        return [];
-    };
-    /** JSDoc */
-    InboundFilters.prototype._getEventFilterUrl = function (event) {
-        try {
-            if (event.stacktrace) {
-                var frames_1 = event.stacktrace.frames;
-                return (frames_1 && frames_1[frames_1.length - 1].filename) || null;
-            }
-            if (event.exception) {
-                var frames_2 = event.exception.values && event.exception.values[0].stacktrace && event.exception.values[0].stacktrace.frames;
-                return (frames_2 && frames_2[frames_2.length - 1].filename) || null;
-            }
-            return null;
-        }
-        catch (oO) {
-            _sentry_utils__WEBPACK_IMPORTED_MODULE_2__["logger"].error("Cannot extract url for event " + Object(_sentry_utils__WEBPACK_IMPORTED_MODULE_2__["getEventDescription"])(event));
-            return null;
-        }
-    };
-    /**
-     * @inheritDoc
-     */
-    InboundFilters.id = 'InboundFilters';
-    return InboundFilters;
-}());
-
-//# sourceMappingURL=inboundfilters.js.map
-
-/***/ }),
-
-/***/ "./node_modules/@sentry/core/esm/integrations/index.js":
-/*!*************************************************************!*\
-  !*** ./node_modules/@sentry/core/esm/integrations/index.js ***!
-  \*************************************************************/
-/*! exports provided: FunctionToString, InboundFilters */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _functiontostring__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./functiontostring */ "./node_modules/@sentry/core/esm/integrations/functiontostring.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "FunctionToString", function() { return _functiontostring__WEBPACK_IMPORTED_MODULE_0__["FunctionToString"]; });
-
-/* harmony import */ var _inboundfilters__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./inboundfilters */ "./node_modules/@sentry/core/esm/integrations/inboundfilters.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "InboundFilters", function() { return _inboundfilters__WEBPACK_IMPORTED_MODULE_1__["InboundFilters"]; });
-
-
-
-//# sourceMappingURL=index.js.map
-
-/***/ }),
-
-/***/ "./node_modules/@sentry/core/esm/sdk.js":
-/*!**********************************************!*\
-  !*** ./node_modules/@sentry/core/esm/sdk.js ***!
-  \**********************************************/
-/*! exports provided: initAndBind */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "initAndBind", function() { return initAndBind; });
-/* harmony import */ var _sentry_hub__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @sentry/hub */ "./node_modules/@sentry/hub/esm/index.js");
-/* harmony import */ var _sentry_utils__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @sentry/utils */ "./node_modules/@sentry/utils/esm/index.js");
-
-
-/**
- * Internal function to create a new SDK client instance. The client is
- * installed and then bound to the current scope.
- *
- * @param clientClass The client class to instanciate.
- * @param options Options to pass to the client.
- */
-function initAndBind(clientClass, options) {
-    if (options.debug === true) {
-        _sentry_utils__WEBPACK_IMPORTED_MODULE_1__["logger"].enable();
-    }
-    var hub = Object(_sentry_hub__WEBPACK_IMPORTED_MODULE_0__["getCurrentHub"])();
-    var client = new clientClass(options);
-    hub.bindClient(client);
-}
-//# sourceMappingURL=sdk.js.map
-
-/***/ }),
-
-/***/ "./node_modules/@sentry/core/esm/transports/noop.js":
-/*!**********************************************************!*\
-  !*** ./node_modules/@sentry/core/esm/transports/noop.js ***!
-  \**********************************************************/
-/*! exports provided: NoopTransport */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "NoopTransport", function() { return NoopTransport; });
-/* harmony import */ var _sentry_types__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @sentry/types */ "./node_modules/@sentry/types/esm/index.js");
-/* harmony import */ var _sentry_utils__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @sentry/utils */ "./node_modules/@sentry/utils/esm/index.js");
-
-
-/** Noop transport */
-var NoopTransport = /** @class */ (function () {
-    function NoopTransport() {
-    }
-    /**
-     * @inheritDoc
-     */
-    NoopTransport.prototype.sendEvent = function (_) {
-        return _sentry_utils__WEBPACK_IMPORTED_MODULE_1__["SyncPromise"].resolve({
-            reason: "NoopTransport: Event has been skipped because no Dsn is configured.",
-            status: _sentry_types__WEBPACK_IMPORTED_MODULE_0__["Status"].Skipped,
-        });
-    };
-    /**
-     * @inheritDoc
-     */
-    NoopTransport.prototype.close = function (_) {
-        return _sentry_utils__WEBPACK_IMPORTED_MODULE_1__["SyncPromise"].resolve(true);
-    };
-    return NoopTransport;
-}());
-
-//# sourceMappingURL=noop.js.map
-
-/***/ }),
-
-/***/ "./node_modules/@sentry/hub/esm/hub.js":
-/*!*********************************************!*\
-  !*** ./node_modules/@sentry/hub/esm/hub.js ***!
-  \*********************************************/
-/*! exports provided: API_VERSION, Hub, getMainCarrier, makeMain, getCurrentHub, getHubFromCarrier, setHubOnCarrier */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* WEBPACK VAR INJECTION */(function(module) {/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "API_VERSION", function() { return API_VERSION; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Hub", function() { return Hub; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getMainCarrier", function() { return getMainCarrier; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "makeMain", function() { return makeMain; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getCurrentHub", function() { return getCurrentHub; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getHubFromCarrier", function() { return getHubFromCarrier; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "setHubOnCarrier", function() { return setHubOnCarrier; });
-/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
-/* harmony import */ var _sentry_utils__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @sentry/utils */ "./node_modules/@sentry/utils/esm/index.js");
-/* harmony import */ var _scope__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./scope */ "./node_modules/@sentry/hub/esm/scope.js");
-
-
-
-/**
- * API compatibility version of this hub.
- *
- * WARNING: This number should only be incresed when the global interface
- * changes a and new methods are introduced.
- *
- * @hidden
- */
-var API_VERSION = 3;
-/**
- * Default maximum number of breadcrumbs added to an event. Can be overwritten
- * with {@link Options.maxBreadcrumbs}.
- */
-var DEFAULT_BREADCRUMBS = 100;
-/**
- * Absolute maximum number of breadcrumbs added to an event. The
- * `maxBreadcrumbs` option cannot be higher than this value.
- */
-var MAX_BREADCRUMBS = 100;
-/**
- * @inheritDoc
- */
-var Hub = /** @class */ (function () {
-    /**
-     * Creates a new instance of the hub, will push one {@link Layer} into the
-     * internal stack on creation.
-     *
-     * @param client bound to the hub.
-     * @param scope bound to the hub.
-     * @param version number, higher number means higher priority.
-     */
-    function Hub(client, scope, _version) {
-        if (scope === void 0) { scope = new _scope__WEBPACK_IMPORTED_MODULE_2__["Scope"](); }
-        if (_version === void 0) { _version = API_VERSION; }
-        this._version = _version;
-        /** Is a {@link Layer}[] containing the client and scope */
-        this._stack = [];
-        this._stack.push({ client: client, scope: scope });
-    }
-    /**
-     * Internal helper function to call a method on the top client if it exists.
-     *
-     * @param method The method to call on the client.
-     * @param args Arguments to pass to the client function.
-     */
-    Hub.prototype._invokeClient = function (method) {
-        var _a;
-        var args = [];
-        for (var _i = 1; _i < arguments.length; _i++) {
-            args[_i - 1] = arguments[_i];
-        }
-        var top = this.getStackTop();
-        if (top && top.client && top.client[method]) {
-            (_a = top.client)[method].apply(_a, tslib__WEBPACK_IMPORTED_MODULE_0__["__spread"](args, [top.scope]));
-        }
-    };
-    /**
-     * @inheritDoc
-     */
-    Hub.prototype.isOlderThan = function (version) {
-        return this._version < version;
-    };
-    /**
-     * @inheritDoc
-     */
-    Hub.prototype.bindClient = function (client) {
-        var top = this.getStackTop();
-        top.client = client;
-        if (client && client.setupIntegrations) {
-            client.setupIntegrations();
-        }
-    };
-    /**
-     * @inheritDoc
-     */
-    Hub.prototype.pushScope = function () {
-        // We want to clone the content of prev scope
-        var stack = this.getStack();
-        var parentScope = stack.length > 0 ? stack[stack.length - 1].scope : undefined;
-        var scope = _scope__WEBPACK_IMPORTED_MODULE_2__["Scope"].clone(parentScope);
-        this.getStack().push({
-            client: this.getClient(),
-            scope: scope,
-        });
-        return scope;
-    };
-    /**
-     * @inheritDoc
-     */
-    Hub.prototype.popScope = function () {
-        return this.getStack().pop() !== undefined;
-    };
-    /**
-     * @inheritDoc
-     */
-    Hub.prototype.withScope = function (callback) {
-        var scope = this.pushScope();
-        try {
-            callback(scope);
-        }
-        finally {
-            this.popScope();
-        }
-    };
-    /**
-     * @inheritDoc
-     */
-    Hub.prototype.getClient = function () {
-        return this.getStackTop().client;
-    };
-    /** Returns the scope of the top stack. */
-    Hub.prototype.getScope = function () {
-        return this.getStackTop().scope;
-    };
-    /** Returns the scope stack for domains or the process. */
-    Hub.prototype.getStack = function () {
-        return this._stack;
-    };
-    /** Returns the topmost scope layer in the order domain > local > process. */
-    Hub.prototype.getStackTop = function () {
-        return this._stack[this._stack.length - 1];
-    };
-    /**
-     * @inheritDoc
-     */
-    Hub.prototype.captureException = function (exception, hint) {
-        var eventId = (this._lastEventId = Object(_sentry_utils__WEBPACK_IMPORTED_MODULE_1__["uuid4"])());
-        var finalHint = hint;
-        // If there's no explicit hint provided, mimick the same thing that would happen
-        // in the minimal itself to create a consistent behavior.
-        // We don't do this in the client, as it's the lowest level API, and doing this,
-        // would prevent user from having full control over direct calls.
-        if (!hint) {
-            var syntheticException = void 0;
-            try {
-                throw new Error('Sentry syntheticException');
-            }
-            catch (exception) {
-                syntheticException = exception;
-            }
-            finalHint = {
-                originalException: exception,
-                syntheticException: syntheticException,
-            };
-        }
-        this._invokeClient('captureException', exception, tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"]({}, finalHint, { event_id: eventId }));
-        return eventId;
-    };
-    /**
-     * @inheritDoc
-     */
-    Hub.prototype.captureMessage = function (message, level, hint) {
-        var eventId = (this._lastEventId = Object(_sentry_utils__WEBPACK_IMPORTED_MODULE_1__["uuid4"])());
-        var finalHint = hint;
-        // If there's no explicit hint provided, mimick the same thing that would happen
-        // in the minimal itself to create a consistent behavior.
-        // We don't do this in the client, as it's the lowest level API, and doing this,
-        // would prevent user from having full control over direct calls.
-        if (!hint) {
-            var syntheticException = void 0;
-            try {
-                throw new Error(message);
-            }
-            catch (exception) {
-                syntheticException = exception;
-            }
-            finalHint = {
-                originalException: message,
-                syntheticException: syntheticException,
-            };
-        }
-        this._invokeClient('captureMessage', message, level, tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"]({}, finalHint, { event_id: eventId }));
-        return eventId;
-    };
-    /**
-     * @inheritDoc
-     */
-    Hub.prototype.captureEvent = function (event, hint) {
-        var eventId = (this._lastEventId = Object(_sentry_utils__WEBPACK_IMPORTED_MODULE_1__["uuid4"])());
-        this._invokeClient('captureEvent', event, tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"]({}, hint, { event_id: eventId }));
-        return eventId;
-    };
-    /**
-     * @inheritDoc
-     */
-    Hub.prototype.lastEventId = function () {
-        return this._lastEventId;
-    };
-    /**
-     * @inheritDoc
-     */
-    Hub.prototype.addBreadcrumb = function (breadcrumb, hint) {
-        var top = this.getStackTop();
-        if (!top.scope || !top.client) {
-            return;
-        }
-        var _a = (top.client.getOptions && top.client.getOptions()) || {}, _b = _a.beforeBreadcrumb, beforeBreadcrumb = _b === void 0 ? null : _b, _c = _a.maxBreadcrumbs, maxBreadcrumbs = _c === void 0 ? DEFAULT_BREADCRUMBS : _c;
-        if (maxBreadcrumbs <= 0) {
-            return;
-        }
-        var timestamp = Object(_sentry_utils__WEBPACK_IMPORTED_MODULE_1__["timestampWithMs"])();
-        var mergedBreadcrumb = tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"]({ timestamp: timestamp }, breadcrumb);
-        var finalBreadcrumb = beforeBreadcrumb
-            ? Object(_sentry_utils__WEBPACK_IMPORTED_MODULE_1__["consoleSandbox"])(function () { return beforeBreadcrumb(mergedBreadcrumb, hint); })
-            : mergedBreadcrumb;
-        if (finalBreadcrumb === null) {
-            return;
-        }
-        top.scope.addBreadcrumb(finalBreadcrumb, Math.min(maxBreadcrumbs, MAX_BREADCRUMBS));
-    };
-    /**
-     * @inheritDoc
-     */
-    Hub.prototype.setUser = function (user) {
-        var top = this.getStackTop();
-        if (!top.scope) {
-            return;
-        }
-        top.scope.setUser(user);
-    };
-    /**
-     * @inheritDoc
-     */
-    Hub.prototype.setTags = function (tags) {
-        var top = this.getStackTop();
-        if (!top.scope) {
-            return;
-        }
-        top.scope.setTags(tags);
-    };
-    /**
-     * @inheritDoc
-     */
-    Hub.prototype.setExtras = function (extras) {
-        var top = this.getStackTop();
-        if (!top.scope) {
-            return;
-        }
-        top.scope.setExtras(extras);
-    };
-    /**
-     * @inheritDoc
-     */
-    Hub.prototype.setTag = function (key, value) {
-        var top = this.getStackTop();
-        if (!top.scope) {
-            return;
-        }
-        top.scope.setTag(key, value);
-    };
-    /**
-     * @inheritDoc
-     */
-    Hub.prototype.setExtra = function (key, extra) {
-        var top = this.getStackTop();
-        if (!top.scope) {
-            return;
-        }
-        top.scope.setExtra(key, extra);
-    };
-    /**
-     * @inheritDoc
-     */
-    Hub.prototype.setContext = function (name, context) {
-        var top = this.getStackTop();
-        if (!top.scope) {
-            return;
-        }
-        top.scope.setContext(name, context);
-    };
-    /**
-     * @inheritDoc
-     */
-    Hub.prototype.configureScope = function (callback) {
-        var top = this.getStackTop();
-        if (top.scope && top.client) {
-            callback(top.scope);
-        }
-    };
-    /**
-     * @inheritDoc
-     */
-    Hub.prototype.run = function (callback) {
-        var oldHub = makeMain(this);
-        try {
-            callback(this);
-        }
-        finally {
-            makeMain(oldHub);
-        }
-    };
-    /**
-     * @inheritDoc
-     */
-    Hub.prototype.getIntegration = function (integration) {
-        var client = this.getClient();
-        if (!client) {
-            return null;
-        }
-        try {
-            return client.getIntegration(integration);
-        }
-        catch (_oO) {
-            _sentry_utils__WEBPACK_IMPORTED_MODULE_1__["logger"].warn("Cannot retrieve integration " + integration.id + " from the current Hub");
-            return null;
-        }
-    };
-    /**
-     * @inheritDoc
-     */
-    Hub.prototype.startSpan = function (spanOrSpanContext, forceNoChild) {
-        if (forceNoChild === void 0) { forceNoChild = false; }
-        return this._callExtensionMethod('startSpan', spanOrSpanContext, forceNoChild);
-    };
-    /**
-     * @inheritDoc
-     */
-    Hub.prototype.traceHeaders = function () {
-        return this._callExtensionMethod('traceHeaders');
-    };
-    /**
-     * Calls global extension method and binding current instance to the function call
-     */
-    // @ts-ignore
-    Hub.prototype._callExtensionMethod = function (method) {
-        var args = [];
-        for (var _i = 1; _i < arguments.length; _i++) {
-            args[_i - 1] = arguments[_i];
-        }
-        var carrier = getMainCarrier();
-        var sentry = carrier.__SENTRY__;
-        // tslint:disable-next-line: strict-type-predicates
-        if (sentry && sentry.extensions && typeof sentry.extensions[method] === 'function') {
-            return sentry.extensions[method].apply(this, args);
-        }
-        _sentry_utils__WEBPACK_IMPORTED_MODULE_1__["logger"].warn("Extension method " + method + " couldn't be found, doing nothing.");
-    };
-    return Hub;
-}());
-
-/** Returns the global shim registry. */
-function getMainCarrier() {
-    var carrier = Object(_sentry_utils__WEBPACK_IMPORTED_MODULE_1__["getGlobalObject"])();
-    carrier.__SENTRY__ = carrier.__SENTRY__ || {
-        extensions: {},
-        hub: undefined,
-    };
-    return carrier;
-}
-/**
- * Replaces the current main hub with the passed one on the global object
- *
- * @returns The old replaced hub
- */
-function makeMain(hub) {
-    var registry = getMainCarrier();
-    var oldHub = getHubFromCarrier(registry);
-    setHubOnCarrier(registry, hub);
-    return oldHub;
-}
-/**
- * Returns the default hub instance.
- *
- * If a hub is already registered in the global carrier but this module
- * contains a more recent version, it replaces the registered version.
- * Otherwise, the currently registered hub will be returned.
- */
-function getCurrentHub() {
-    // Get main carrier (global for every environment)
-    var registry = getMainCarrier();
-    // If there's no hub, or its an old API, assign a new one
-    if (!hasHubOnCarrier(registry) || getHubFromCarrier(registry).isOlderThan(API_VERSION)) {
-        setHubOnCarrier(registry, new Hub());
-    }
-    // Prefer domains over global if they are there (applicable only to Node environment)
-    if (Object(_sentry_utils__WEBPACK_IMPORTED_MODULE_1__["isNodeEnv"])()) {
-        return getHubFromActiveDomain(registry);
-    }
-    // Return hub that lives on a global object
-    return getHubFromCarrier(registry);
-}
-/**
- * Try to read the hub from an active domain, fallback to the registry if one doesnt exist
- * @returns discovered hub
- */
-function getHubFromActiveDomain(registry) {
-    try {
-        // We need to use `dynamicRequire` because `require` on it's own will be optimized by webpack.
-        // We do not want this to happen, we need to try to `require` the domain node module and fail if we are in browser
-        // for example so we do not have to shim it and use `getCurrentHub` universally.
-        var domain = Object(_sentry_utils__WEBPACK_IMPORTED_MODULE_1__["dynamicRequire"])(module, 'domain');
-        var activeDomain = domain.active;
-        // If there no active domain, just return global hub
-        if (!activeDomain) {
-            return getHubFromCarrier(registry);
-        }
-        // If there's no hub on current domain, or its an old API, assign a new one
-        if (!hasHubOnCarrier(activeDomain) || getHubFromCarrier(activeDomain).isOlderThan(API_VERSION)) {
-            var registryHubTopStack = getHubFromCarrier(registry).getStackTop();
-            setHubOnCarrier(activeDomain, new Hub(registryHubTopStack.client, _scope__WEBPACK_IMPORTED_MODULE_2__["Scope"].clone(registryHubTopStack.scope)));
-        }
-        // Return hub that lives on a domain
-        return getHubFromCarrier(activeDomain);
-    }
-    catch (_Oo) {
-        // Return hub that lives on a global object
-        return getHubFromCarrier(registry);
-    }
-}
-/**
- * This will tell whether a carrier has a hub on it or not
- * @param carrier object
- */
-function hasHubOnCarrier(carrier) {
-    if (carrier && carrier.__SENTRY__ && carrier.__SENTRY__.hub) {
-        return true;
-    }
-    return false;
-}
-/**
- * This will create a new {@link Hub} and add to the passed object on
- * __SENTRY__.hub.
- * @param carrier object
- * @hidden
- */
-function getHubFromCarrier(carrier) {
-    if (carrier && carrier.__SENTRY__ && carrier.__SENTRY__.hub) {
-        return carrier.__SENTRY__.hub;
-    }
-    carrier.__SENTRY__ = carrier.__SENTRY__ || {};
-    carrier.__SENTRY__.hub = new Hub();
-    return carrier.__SENTRY__.hub;
-}
-/**
- * This will set passed {@link Hub} on the passed object's __SENTRY__.hub attribute
- * @param carrier object
- * @param hub Hub
- */
-function setHubOnCarrier(carrier, hub) {
-    if (!carrier) {
-        return false;
-    }
-    carrier.__SENTRY__ = carrier.__SENTRY__ || {};
-    carrier.__SENTRY__.hub = hub;
-    return true;
-}
-//# sourceMappingURL=hub.js.map
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../../../webpack/buildin/harmony-module.js */ "./node_modules/webpack/buildin/harmony-module.js")(module)))
-
-/***/ }),
-
-/***/ "./node_modules/@sentry/hub/esm/index.js":
-/*!***********************************************!*\
-  !*** ./node_modules/@sentry/hub/esm/index.js ***!
-  \***********************************************/
-/*! exports provided: addGlobalEventProcessor, Scope, getCurrentHub, getHubFromCarrier, getMainCarrier, Hub, makeMain, setHubOnCarrier */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _scope__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./scope */ "./node_modules/@sentry/hub/esm/scope.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "addGlobalEventProcessor", function() { return _scope__WEBPACK_IMPORTED_MODULE_0__["addGlobalEventProcessor"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Scope", function() { return _scope__WEBPACK_IMPORTED_MODULE_0__["Scope"]; });
-
-/* harmony import */ var _hub__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./hub */ "./node_modules/@sentry/hub/esm/hub.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "getCurrentHub", function() { return _hub__WEBPACK_IMPORTED_MODULE_1__["getCurrentHub"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "getHubFromCarrier", function() { return _hub__WEBPACK_IMPORTED_MODULE_1__["getHubFromCarrier"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "getMainCarrier", function() { return _hub__WEBPACK_IMPORTED_MODULE_1__["getMainCarrier"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Hub", function() { return _hub__WEBPACK_IMPORTED_MODULE_1__["Hub"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "makeMain", function() { return _hub__WEBPACK_IMPORTED_MODULE_1__["makeMain"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "setHubOnCarrier", function() { return _hub__WEBPACK_IMPORTED_MODULE_1__["setHubOnCarrier"]; });
-
-
-
-//# sourceMappingURL=index.js.map
-
-/***/ }),
-
-/***/ "./node_modules/@sentry/hub/esm/scope.js":
-/*!***********************************************!*\
-  !*** ./node_modules/@sentry/hub/esm/scope.js ***!
-  \***********************************************/
-/*! exports provided: Scope, addGlobalEventProcessor */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Scope", function() { return Scope; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "addGlobalEventProcessor", function() { return addGlobalEventProcessor; });
-/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
-/* harmony import */ var _sentry_utils__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @sentry/utils */ "./node_modules/@sentry/utils/esm/index.js");
-
-
-/**
- * Holds additional event information. {@link Scope.applyToEvent} will be
- * called by the client before an event will be sent.
- */
-var Scope = /** @class */ (function () {
-    function Scope() {
-        /** Flag if notifiying is happening. */
-        this._notifyingListeners = false;
-        /** Callback for client to receive scope changes. */
-        this._scopeListeners = [];
-        /** Callback list that will be called after {@link applyToEvent}. */
-        this._eventProcessors = [];
-        /** Array of breadcrumbs. */
-        this._breadcrumbs = [];
-        /** User */
-        this._user = {};
-        /** Tags */
-        this._tags = {};
-        /** Extra */
-        this._extra = {};
-        /** Contexts */
-        this._context = {};
-    }
-    /**
-     * Add internal on change listener. Used for sub SDKs that need to store the scope.
-     * @hidden
-     */
-    Scope.prototype.addScopeListener = function (callback) {
-        this._scopeListeners.push(callback);
-    };
-    /**
-     * @inheritDoc
-     */
-    Scope.prototype.addEventProcessor = function (callback) {
-        this._eventProcessors.push(callback);
-        return this;
-    };
-    /**
-     * This will be called on every set call.
-     */
-    Scope.prototype._notifyScopeListeners = function () {
-        var _this = this;
-        if (!this._notifyingListeners) {
-            this._notifyingListeners = true;
-            setTimeout(function () {
-                _this._scopeListeners.forEach(function (callback) {
-                    callback(_this);
-                });
-                _this._notifyingListeners = false;
-            });
-        }
-    };
-    /**
-     * This will be called after {@link applyToEvent} is finished.
-     */
-    Scope.prototype._notifyEventProcessors = function (processors, event, hint, index) {
-        var _this = this;
-        if (index === void 0) { index = 0; }
-        return new _sentry_utils__WEBPACK_IMPORTED_MODULE_1__["SyncPromise"](function (resolve, reject) {
-            var processor = processors[index];
-            // tslint:disable-next-line:strict-type-predicates
-            if (event === null || typeof processor !== 'function') {
-                resolve(event);
-            }
-            else {
-                var result = processor(tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"]({}, event), hint);
-                if (Object(_sentry_utils__WEBPACK_IMPORTED_MODULE_1__["isThenable"])(result)) {
-                    result
-                        .then(function (final) { return _this._notifyEventProcessors(processors, final, hint, index + 1).then(resolve); })
-                        .then(null, reject);
-                }
-                else {
-                    _this._notifyEventProcessors(processors, result, hint, index + 1)
-                        .then(resolve)
-                        .then(null, reject);
-                }
-            }
-        });
-    };
-    /**
-     * @inheritDoc
-     */
-    Scope.prototype.setUser = function (user) {
-        this._user = user || {};
-        this._notifyScopeListeners();
-        return this;
-    };
-    /**
-     * @inheritDoc
-     */
-    Scope.prototype.setTags = function (tags) {
-        this._tags = tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"]({}, this._tags, tags);
-        this._notifyScopeListeners();
-        return this;
-    };
-    /**
-     * @inheritDoc
-     */
-    Scope.prototype.setTag = function (key, value) {
-        var _a;
-        this._tags = tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"]({}, this._tags, (_a = {}, _a[key] = value, _a));
-        this._notifyScopeListeners();
-        return this;
-    };
-    /**
-     * @inheritDoc
-     */
-    Scope.prototype.setExtras = function (extras) {
-        this._extra = tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"]({}, this._extra, extras);
-        this._notifyScopeListeners();
-        return this;
-    };
-    /**
-     * @inheritDoc
-     */
-    Scope.prototype.setExtra = function (key, extra) {
-        var _a;
-        this._extra = tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"]({}, this._extra, (_a = {}, _a[key] = extra, _a));
-        this._notifyScopeListeners();
-        return this;
-    };
-    /**
-     * @inheritDoc
-     */
-    Scope.prototype.setFingerprint = function (fingerprint) {
-        this._fingerprint = fingerprint;
-        this._notifyScopeListeners();
-        return this;
-    };
-    /**
-     * @inheritDoc
-     */
-    Scope.prototype.setLevel = function (level) {
-        this._level = level;
-        this._notifyScopeListeners();
-        return this;
-    };
-    /**
-     * @inheritDoc
-     */
-    Scope.prototype.setTransaction = function (transaction) {
-        this._transaction = transaction;
-        if (this._span) {
-            this._span.transaction = transaction;
-        }
-        this._notifyScopeListeners();
-        return this;
-    };
-    /**
-     * @inheritDoc
-     */
-    Scope.prototype.setContext = function (key, context) {
-        var _a;
-        this._context = tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"]({}, this._context, (_a = {}, _a[key] = context, _a));
-        this._notifyScopeListeners();
-        return this;
-    };
-    /**
-     * @inheritDoc
-     */
-    Scope.prototype.setSpan = function (span) {
-        this._span = span;
-        this._notifyScopeListeners();
-        return this;
-    };
-    /**
-     * Internal getter for Span, used in Hub.
-     * @hidden
-     */
-    Scope.prototype.getSpan = function () {
-        return this._span;
-    };
-    /**
-     * Inherit values from the parent scope.
-     * @param scope to clone.
-     */
-    Scope.clone = function (scope) {
-        var newScope = new Scope();
-        if (scope) {
-            newScope._breadcrumbs = tslib__WEBPACK_IMPORTED_MODULE_0__["__spread"](scope._breadcrumbs);
-            newScope._tags = tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"]({}, scope._tags);
-            newScope._extra = tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"]({}, scope._extra);
-            newScope._context = tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"]({}, scope._context);
-            newScope._user = scope._user;
-            newScope._level = scope._level;
-            newScope._span = scope._span;
-            newScope._transaction = scope._transaction;
-            newScope._fingerprint = scope._fingerprint;
-            newScope._eventProcessors = tslib__WEBPACK_IMPORTED_MODULE_0__["__spread"](scope._eventProcessors);
-        }
-        return newScope;
-    };
-    /**
-     * @inheritDoc
-     */
-    Scope.prototype.clear = function () {
-        this._breadcrumbs = [];
-        this._tags = {};
-        this._extra = {};
-        this._user = {};
-        this._context = {};
-        this._level = undefined;
-        this._transaction = undefined;
-        this._fingerprint = undefined;
-        this._span = undefined;
-        this._notifyScopeListeners();
-        return this;
-    };
-    /**
-     * @inheritDoc
-     */
-    Scope.prototype.addBreadcrumb = function (breadcrumb, maxBreadcrumbs) {
-        var mergedBreadcrumb = tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"]({ timestamp: Object(_sentry_utils__WEBPACK_IMPORTED_MODULE_1__["timestampWithMs"])() }, breadcrumb);
-        this._breadcrumbs =
-            maxBreadcrumbs !== undefined && maxBreadcrumbs >= 0
-                ? tslib__WEBPACK_IMPORTED_MODULE_0__["__spread"](this._breadcrumbs, [mergedBreadcrumb]).slice(-maxBreadcrumbs)
-                : tslib__WEBPACK_IMPORTED_MODULE_0__["__spread"](this._breadcrumbs, [mergedBreadcrumb]);
-        this._notifyScopeListeners();
-        return this;
-    };
-    /**
-     * @inheritDoc
-     */
-    Scope.prototype.clearBreadcrumbs = function () {
-        this._breadcrumbs = [];
-        this._notifyScopeListeners();
-        return this;
-    };
-    /**
-     * Applies fingerprint from the scope to the event if there's one,
-     * uses message if there's one instead or get rid of empty fingerprint
-     */
-    Scope.prototype._applyFingerprint = function (event) {
-        // Make sure it's an array first and we actually have something in place
-        event.fingerprint = event.fingerprint
-            ? Array.isArray(event.fingerprint)
-                ? event.fingerprint
-                : [event.fingerprint]
-            : [];
-        // If we have something on the scope, then merge it with event
-        if (this._fingerprint) {
-            event.fingerprint = event.fingerprint.concat(this._fingerprint);
-        }
-        // If we have no data at all, remove empty array default
-        if (event.fingerprint && !event.fingerprint.length) {
-            delete event.fingerprint;
-        }
-    };
-    /**
-     * Applies the current context and fingerprint to the event.
-     * Note that breadcrumbs will be added by the client.
-     * Also if the event has already breadcrumbs on it, we do not merge them.
-     * @param event Event
-     * @param hint May contain additional informartion about the original exception.
-     * @hidden
-     */
-    Scope.prototype.applyToEvent = function (event, hint) {
-        if (this._extra && Object.keys(this._extra).length) {
-            event.extra = tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"]({}, this._extra, event.extra);
-        }
-        if (this._tags && Object.keys(this._tags).length) {
-            event.tags = tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"]({}, this._tags, event.tags);
-        }
-        if (this._user && Object.keys(this._user).length) {
-            event.user = tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"]({}, this._user, event.user);
-        }
-        if (this._context && Object.keys(this._context).length) {
-            event.contexts = tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"]({}, this._context, event.contexts);
-        }
-        if (this._level) {
-            event.level = this._level;
-        }
-        if (this._transaction) {
-            event.transaction = this._transaction;
-        }
-        if (this._span) {
-            event.contexts = tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"]({ trace: this._span.getTraceContext() }, event.contexts);
-        }
-        this._applyFingerprint(event);
-        event.breadcrumbs = tslib__WEBPACK_IMPORTED_MODULE_0__["__spread"]((event.breadcrumbs || []), this._breadcrumbs);
-        event.breadcrumbs = event.breadcrumbs.length > 0 ? event.breadcrumbs : undefined;
-        return this._notifyEventProcessors(tslib__WEBPACK_IMPORTED_MODULE_0__["__spread"](getGlobalEventProcessors(), this._eventProcessors), event, hint);
-    };
-    return Scope;
-}());
-
-/**
- * Retruns the global event processors.
- */
-function getGlobalEventProcessors() {
-    var global = Object(_sentry_utils__WEBPACK_IMPORTED_MODULE_1__["getGlobalObject"])();
-    global.__SENTRY__ = global.__SENTRY__ || {};
-    global.__SENTRY__.globalEventProcessors = global.__SENTRY__.globalEventProcessors || [];
-    return global.__SENTRY__.globalEventProcessors;
-}
-/**
- * Add a EventProcessor to be kept globally.
- * @param callback EventProcessor to add
- */
-function addGlobalEventProcessor(callback) {
-    getGlobalEventProcessors().push(callback);
-}
-//# sourceMappingURL=scope.js.map
-
-/***/ }),
-
-/***/ "./node_modules/@sentry/integrations/esm/angular.js":
-/*!**********************************************************!*\
-  !*** ./node_modules/@sentry/integrations/esm/angular.js ***!
-  \**********************************************************/
-/*! exports provided: Angular */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Angular", function() { return Angular; });
-/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
-/* harmony import */ var _sentry_utils__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @sentry/utils */ "./node_modules/@sentry/utils/esm/index.js");
-
-
-// See https://github.com/angular/angular.js/blob/v1.4.7/src/minErr.js
-var angularPattern = /^\[((?:[$a-zA-Z0-9]+:)?(?:[$a-zA-Z0-9]+))\] (.*?)\n?(\S+)$/;
-/**
- * AngularJS integration
- *
- * Provides an $exceptionHandler for AngularJS
- */
-var Angular = /** @class */ (function () {
-    /**
-     * @inheritDoc
-     */
-    function Angular(options) {
-        if (options === void 0) { options = {}; }
-        /**
-         * @inheritDoc
-         */
-        this.name = Angular.id;
-        // tslint:disable-next-line: no-unsafe-any
-        this._angular = options.angular || Object(_sentry_utils__WEBPACK_IMPORTED_MODULE_1__["getGlobalObject"])().angular;
-    }
-    /**
-     * @inheritDoc
-     */
-    Angular.prototype.setupOnce = function (_, getCurrentHub) {
-        var _this = this;
-        if (!this._angular) {
-            _sentry_utils__WEBPACK_IMPORTED_MODULE_1__["logger"].error('AngularIntegration is missing an Angular instance');
-            return;
-        }
-        this._getCurrentHub = getCurrentHub;
-        // tslint:disable: no-unsafe-any
-        this._angular.module(Angular.moduleName, []).config([
-            '$provide',
-            function ($provide) {
-                $provide.decorator('$exceptionHandler', ['$delegate', _this._$exceptionHandlerDecorator.bind(_this)]);
-            },
-        ]);
-        // tslint:enable: no-unsafe-any
-    };
-    /**
-     * Angular's exceptionHandler for Sentry integration
-     */
-    // tslint:disable-next-line: no-unsafe-any
-    Angular.prototype._$exceptionHandlerDecorator = function ($delegate) {
-        var _this = this;
-        return function (exception, cause) {
-            var hub = _this._getCurrentHub && _this._getCurrentHub();
-            if (hub && hub.getIntegration(Angular)) {
-                hub.withScope(function (scope) {
-                    if (cause) {
-                        scope.setExtra('cause', cause);
-                    }
-                    scope.addEventProcessor(function (event) {
-                        var ex = event.exception && event.exception.values && event.exception.values[0];
-                        if (ex) {
-                            var matches = angularPattern.exec(ex.value || '');
-                            if (matches) {
-                                // This type now becomes something like: $rootScope:inprog
-                                ex.type = matches[1];
-                                ex.value = matches[2];
-                                event.message = ex.type + ": " + ex.value;
-                                // auto set a new tag specifically for the angular error url
-                                event.extra = tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"]({}, event.extra, { angularDocs: matches[3].substr(0, 250) });
-                            }
-                        }
-                        return event;
-                    });
-                    hub.captureException(exception);
-                });
-            }
-            // tslint:disable-next-line: no-unsafe-any
-            $delegate(exception, cause);
-        };
-    };
-    /**
-     * @inheritDoc
-     */
-    Angular.id = 'AngularJS';
-    /**
-     * moduleName used in Angular's DI resolution algorithm
-     */
-    Angular.moduleName = 'ngSentry';
-    return Angular;
-}());
-
-//# sourceMappingURL=angular.js.map
-
-/***/ }),
-
-/***/ "./node_modules/@sentry/integrations/esm/captureconsole.js":
-/*!*****************************************************************!*\
-  !*** ./node_modules/@sentry/integrations/esm/captureconsole.js ***!
-  \*****************************************************************/
-/*! exports provided: CaptureConsole */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "CaptureConsole", function() { return CaptureConsole; });
-/* harmony import */ var _sentry_types__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @sentry/types */ "./node_modules/@sentry/types/esm/index.js");
-/* harmony import */ var _sentry_utils__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @sentry/utils */ "./node_modules/@sentry/utils/esm/index.js");
-
-
-var global = Object(_sentry_utils__WEBPACK_IMPORTED_MODULE_1__["getGlobalObject"])();
-/** Send Console API calls as Sentry Events */
-var CaptureConsole = /** @class */ (function () {
-    /**
-     * @inheritDoc
-     */
-    function CaptureConsole(options) {
-        if (options === void 0) { options = {}; }
-        /**
-         * @inheritDoc
-         */
-        this.name = CaptureConsole.id;
-        /**
-         * @inheritDoc
-         */
-        this._levels = ['log', 'info', 'warn', 'error', 'debug', 'assert'];
-        if (options.levels) {
-            this._levels = options.levels;
-        }
-    }
-    /**
-     * @inheritDoc
-     */
-    CaptureConsole.prototype.setupOnce = function (_, getCurrentHub) {
-        if (!('console' in global)) {
-            return;
-        }
-        this._levels.forEach(function (level) {
-            if (!(level in global.console)) {
-                return;
-            }
-            Object(_sentry_utils__WEBPACK_IMPORTED_MODULE_1__["fill"])(global.console, level, function (originalConsoleLevel) { return function () {
-                var args = [];
-                for (var _i = 0; _i < arguments.length; _i++) {
-                    args[_i] = arguments[_i];
-                }
-                var hub = getCurrentHub();
-                if (hub.getIntegration(CaptureConsole)) {
-                    hub.withScope(function (scope) {
-                        scope.setLevel(_sentry_types__WEBPACK_IMPORTED_MODULE_0__["Severity"].fromString(level));
-                        scope.setExtra('arguments', args);
-                        scope.addEventProcessor(function (event) {
-                            event.logger = 'console';
-                            return event;
-                        });
-                        var message = Object(_sentry_utils__WEBPACK_IMPORTED_MODULE_1__["safeJoin"])(args, ' ');
-                        if (level === 'assert') {
-                            if (args[0] === false) {
-                                message = "Assertion failed: " + (Object(_sentry_utils__WEBPACK_IMPORTED_MODULE_1__["safeJoin"])(args.slice(1), ' ') || 'console.assert');
-                                scope.setExtra('arguments', args.slice(1));
-                                hub.captureMessage(message);
-                            }
-                        }
-                        else {
-                            hub.captureMessage(message);
-                        }
-                    });
-                }
-                // this fails for some browsers. :(
-                if (originalConsoleLevel) {
-                    Function.prototype.apply.call(originalConsoleLevel, global.console, args);
-                }
-            }; });
-        });
-    };
-    /**
-     * @inheritDoc
-     */
-    CaptureConsole.id = 'CaptureConsole';
-    return CaptureConsole;
-}());
-
-//# sourceMappingURL=captureconsole.js.map
-
-/***/ }),
-
-/***/ "./node_modules/@sentry/integrations/esm/debug.js":
-/*!********************************************************!*\
-  !*** ./node_modules/@sentry/integrations/esm/debug.js ***!
-  \********************************************************/
-/*! exports provided: Debug */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Debug", function() { return Debug; });
-/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
-/* harmony import */ var _sentry_utils__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @sentry/utils */ "./node_modules/@sentry/utils/esm/index.js");
-
-
-/** JSDoc */
-var Debug = /** @class */ (function () {
-    /**
-     * @inheritDoc
-     */
-    function Debug(options) {
-        /**
-         * @inheritDoc
-         */
-        this.name = Debug.id;
-        this._options = tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"]({ debugger: false, stringify: false }, options);
-    }
-    /**
-     * @inheritDoc
-     */
-    Debug.prototype.setupOnce = function (addGlobalEventProcessor, getCurrentHub) {
-        addGlobalEventProcessor(function (event, hint) {
-            var self = getCurrentHub().getIntegration(Debug);
-            if (self) {
-                // tslint:disable:no-console
-                // tslint:disable:no-debugger
-                if (self._options.debugger) {
-                    debugger;
-                }
-                Object(_sentry_utils__WEBPACK_IMPORTED_MODULE_1__["consoleSandbox"])(function () {
-                    if (self._options.stringify) {
-                        console.log(JSON.stringify(event, null, 2));
-                        if (hint) {
-                            console.log(JSON.stringify(hint, null, 2));
-                        }
-                    }
-                    else {
-                        console.log(event);
-                        if (hint) {
-                            console.log(hint);
-                        }
-                    }
-                });
-            }
-            return event;
-        });
-    };
-    /**
-     * @inheritDoc
-     */
-    Debug.id = 'Debug';
-    return Debug;
-}());
-
-//# sourceMappingURL=debug.js.map
-
-/***/ }),
-
-/***/ "./node_modules/@sentry/integrations/esm/dedupe.js":
-/*!*********************************************************!*\
-  !*** ./node_modules/@sentry/integrations/esm/dedupe.js ***!
-  \*********************************************************/
-/*! exports provided: Dedupe */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Dedupe", function() { return Dedupe; });
-/** Deduplication filter */
-var Dedupe = /** @class */ (function () {
-    function Dedupe() {
-        /**
-         * @inheritDoc
-         */
-        this.name = Dedupe.id;
-    }
-    /**
-     * @inheritDoc
-     */
-    Dedupe.prototype.setupOnce = function (addGlobalEventProcessor, getCurrentHub) {
-        addGlobalEventProcessor(function (currentEvent) {
-            var self = getCurrentHub().getIntegration(Dedupe);
-            if (self) {
-                // Juuust in case something goes wrong
-                try {
-                    if (self._shouldDropEvent(currentEvent, self._previousEvent)) {
-                        return null;
-                    }
-                }
-                catch (_oO) {
-                    return (self._previousEvent = currentEvent);
-                }
-                return (self._previousEvent = currentEvent);
-            }
-            return currentEvent;
-        });
-    };
-    /** JSDoc */
-    Dedupe.prototype._shouldDropEvent = function (currentEvent, previousEvent) {
-        if (!previousEvent) {
-            return false;
-        }
-        if (this._isSameMessageEvent(currentEvent, previousEvent)) {
-            return true;
-        }
-        if (this._isSameExceptionEvent(currentEvent, previousEvent)) {
-            return true;
-        }
-        return false;
-    };
-    /** JSDoc */
-    Dedupe.prototype._isSameMessageEvent = function (currentEvent, previousEvent) {
-        var currentMessage = currentEvent.message;
-        var previousMessage = previousEvent.message;
-        // If neither event has a message property, they were both exceptions, so bail out
-        if (!currentMessage && !previousMessage) {
-            return false;
-        }
-        // If only one event has a stacktrace, but not the other one, they are not the same
-        if ((currentMessage && !previousMessage) || (!currentMessage && previousMessage)) {
-            return false;
-        }
-        if (currentMessage !== previousMessage) {
-            return false;
-        }
-        if (!this._isSameFingerprint(currentEvent, previousEvent)) {
-            return false;
-        }
-        if (!this._isSameStacktrace(currentEvent, previousEvent)) {
-            return false;
-        }
-        return true;
-    };
-    /** JSDoc */
-    Dedupe.prototype._getFramesFromEvent = function (event) {
-        var exception = event.exception;
-        if (exception) {
-            try {
-                // @ts-ignore
-                return exception.values[0].stacktrace.frames;
-            }
-            catch (_oO) {
-                return undefined;
-            }
-        }
-        else if (event.stacktrace) {
-            return event.stacktrace.frames;
-        }
-        return undefined;
-    };
-    /** JSDoc */
-    Dedupe.prototype._isSameStacktrace = function (currentEvent, previousEvent) {
-        var currentFrames = this._getFramesFromEvent(currentEvent);
-        var previousFrames = this._getFramesFromEvent(previousEvent);
-        // If neither event has a stacktrace, they are assumed to be the same
-        if (!currentFrames && !previousFrames) {
-            return true;
-        }
-        // If only one event has a stacktrace, but not the other one, they are not the same
-        if ((currentFrames && !previousFrames) || (!currentFrames && previousFrames)) {
-            return false;
-        }
-        currentFrames = currentFrames;
-        previousFrames = previousFrames;
-        // If number of frames differ, they are not the same
-        if (previousFrames.length !== currentFrames.length) {
-            return false;
-        }
-        // Otherwise, compare the two
-        for (var i = 0; i < previousFrames.length; i++) {
-            var frameA = previousFrames[i];
-            var frameB = currentFrames[i];
-            if (frameA.filename !== frameB.filename ||
-                frameA.lineno !== frameB.lineno ||
-                frameA.colno !== frameB.colno ||
-                frameA.function !== frameB.function) {
-                return false;
-            }
-        }
-        return true;
-    };
-    /** JSDoc */
-    Dedupe.prototype._getExceptionFromEvent = function (event) {
-        return event.exception && event.exception.values && event.exception.values[0];
-    };
-    /** JSDoc */
-    Dedupe.prototype._isSameExceptionEvent = function (currentEvent, previousEvent) {
-        var previousException = this._getExceptionFromEvent(previousEvent);
-        var currentException = this._getExceptionFromEvent(currentEvent);
-        if (!previousException || !currentException) {
-            return false;
-        }
-        if (previousException.type !== currentException.type || previousException.value !== currentException.value) {
-            return false;
-        }
-        if (!this._isSameFingerprint(currentEvent, previousEvent)) {
-            return false;
-        }
-        if (!this._isSameStacktrace(currentEvent, previousEvent)) {
-            return false;
-        }
-        return true;
-    };
-    /** JSDoc */
-    Dedupe.prototype._isSameFingerprint = function (currentEvent, previousEvent) {
-        var currentFingerprint = currentEvent.fingerprint;
-        var previousFingerprint = previousEvent.fingerprint;
-        // If neither event has a fingerprint, they are assumed to be the same
-        if (!currentFingerprint && !previousFingerprint) {
-            return true;
-        }
-        // If only one event has a fingerprint, but not the other one, they are not the same
-        if ((currentFingerprint && !previousFingerprint) || (!currentFingerprint && previousFingerprint)) {
-            return false;
-        }
-        currentFingerprint = currentFingerprint;
-        previousFingerprint = previousFingerprint;
-        // Otherwise, compare the two
-        try {
-            return !!(currentFingerprint.join('') === previousFingerprint.join(''));
-        }
-        catch (_oO) {
-            return false;
-        }
-    };
-    /**
-     * @inheritDoc
-     */
-    Dedupe.id = 'Dedupe';
-    return Dedupe;
-}());
-
-//# sourceMappingURL=dedupe.js.map
-
-/***/ }),
-
-/***/ "./node_modules/@sentry/integrations/esm/ember.js":
-/*!********************************************************!*\
-  !*** ./node_modules/@sentry/integrations/esm/ember.js ***!
-  \********************************************************/
-/*! exports provided: Ember */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Ember", function() { return Ember; });
-/* harmony import */ var _sentry_utils__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @sentry/utils */ "./node_modules/@sentry/utils/esm/index.js");
-
-/** JSDoc */
-var Ember = /** @class */ (function () {
-    /**
-     * @inheritDoc
-     */
-    function Ember(options) {
-        if (options === void 0) { options = {}; }
-        /**
-         * @inheritDoc
-         */
-        this.name = Ember.id;
-        // tslint:disable-next-line: no-unsafe-any
-        this._Ember = options.Ember || Object(_sentry_utils__WEBPACK_IMPORTED_MODULE_0__["getGlobalObject"])().Ember;
-    }
-    /**
-     * @inheritDoc
-     */
-    Ember.prototype.setupOnce = function (_, getCurrentHub) {
-        // tslint:disable:no-unsafe-any
-        var _this = this;
-        if (!this._Ember) {
-            _sentry_utils__WEBPACK_IMPORTED_MODULE_0__["logger"].error('EmberIntegration is missing an Ember instance');
-            return;
-        }
-        var oldOnError = this._Ember.onerror;
-        this._Ember.onerror = function (error) {
-            if (getCurrentHub().getIntegration(Ember)) {
-                getCurrentHub().captureException(error, { originalException: error });
-            }
-            if (typeof oldOnError === 'function') {
-                oldOnError.call(_this._Ember, error);
-            }
-            else if (_this._Ember.testing) {
-                throw error;
-            }
-        };
-        this._Ember.RSVP.on('error', function (reason) {
-            if (getCurrentHub().getIntegration(Ember)) {
-                getCurrentHub().withScope(function (scope) {
-                    if (Object(_sentry_utils__WEBPACK_IMPORTED_MODULE_0__["isInstanceOf"])(reason, Error)) {
-                        scope.setExtra('context', 'Unhandled Promise error detected');
-                        getCurrentHub().captureException(reason, { originalException: reason });
-                    }
-                    else {
-                        scope.setExtra('reason', reason);
-                        getCurrentHub().captureMessage('Unhandled Promise error detected');
-                    }
-                });
-            }
-        });
-    };
-    /**
-     * @inheritDoc
-     */
-    Ember.id = 'Ember';
-    return Ember;
-}());
-
-//# sourceMappingURL=ember.js.map
-
-/***/ }),
-
-/***/ "./node_modules/@sentry/integrations/esm/extraerrordata.js":
-/*!*****************************************************************!*\
-  !*** ./node_modules/@sentry/integrations/esm/extraerrordata.js ***!
-  \*****************************************************************/
-/*! exports provided: ExtraErrorData */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ExtraErrorData", function() { return ExtraErrorData; });
-/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
-/* harmony import */ var _sentry_utils__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @sentry/utils */ "./node_modules/@sentry/utils/esm/index.js");
-
-
-/** Patch toString calls to return proper name for wrapped functions */
-var ExtraErrorData = /** @class */ (function () {
-    /**
-     * @inheritDoc
-     */
-    function ExtraErrorData(_options) {
-        if (_options === void 0) { _options = { depth: 3 }; }
-        this._options = _options;
-        /**
-         * @inheritDoc
-         */
-        this.name = ExtraErrorData.id;
-    }
-    /**
-     * @inheritDoc
-     */
-    ExtraErrorData.prototype.setupOnce = function (addGlobalEventProcessor, getCurrentHub) {
-        addGlobalEventProcessor(function (event, hint) {
-            var self = getCurrentHub().getIntegration(ExtraErrorData);
-            if (!self) {
-                return event;
-            }
-            return self.enhanceEventWithErrorData(event, hint);
-        });
-    };
-    /**
-     * Attaches extracted information from the Error object to extra field in the Event
-     */
-    ExtraErrorData.prototype.enhanceEventWithErrorData = function (event, hint) {
-        var _a;
-        if (!hint || !hint.originalException || !Object(_sentry_utils__WEBPACK_IMPORTED_MODULE_1__["isError"])(hint.originalException)) {
-            return event;
-        }
-        var name = hint.originalException.name || hint.originalException.constructor.name;
-        var errorData = this._extractErrorData(hint.originalException);
-        if (errorData) {
-            var contexts = tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"]({}, event.contexts);
-            var normalizedErrorData = Object(_sentry_utils__WEBPACK_IMPORTED_MODULE_1__["normalize"])(errorData, this._options.depth);
-            if (Object(_sentry_utils__WEBPACK_IMPORTED_MODULE_1__["isPlainObject"])(normalizedErrorData)) {
-                contexts = tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"]({}, event.contexts, (_a = {}, _a[name] = tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"]({}, normalizedErrorData), _a));
-            }
-            return tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"]({}, event, { contexts: contexts });
-        }
-        return event;
-    };
-    /**
-     * Extract extra information from the Error object
-     */
-    ExtraErrorData.prototype._extractErrorData = function (error) {
-        var e_1, _a;
-        var result = null;
-        // We are trying to enhance already existing event, so no harm done if it won't succeed
-        try {
-            var nativeKeys_1 = ['name', 'message', 'stack', 'line', 'column', 'fileName', 'lineNumber', 'columnNumber'];
-            var errorKeys = Object.getOwnPropertyNames(error).filter(function (key) { return nativeKeys_1.indexOf(key) === -1; });
-            if (errorKeys.length) {
-                var extraErrorInfo = {};
-                try {
-                    for (var errorKeys_1 = tslib__WEBPACK_IMPORTED_MODULE_0__["__values"](errorKeys), errorKeys_1_1 = errorKeys_1.next(); !errorKeys_1_1.done; errorKeys_1_1 = errorKeys_1.next()) {
-                        var key = errorKeys_1_1.value;
-                        var value = error[key];
-                        if (Object(_sentry_utils__WEBPACK_IMPORTED_MODULE_1__["isError"])(value)) {
-                            value = value.toString();
-                        }
-                        // tslint:disable:no-unsafe-any
-                        extraErrorInfo[key] = value;
-                    }
-                }
-                catch (e_1_1) { e_1 = { error: e_1_1 }; }
-                finally {
-                    try {
-                        if (errorKeys_1_1 && !errorKeys_1_1.done && (_a = errorKeys_1.return)) _a.call(errorKeys_1);
-                    }
-                    finally { if (e_1) throw e_1.error; }
-                }
-                result = extraErrorInfo;
-            }
-        }
-        catch (oO) {
-            _sentry_utils__WEBPACK_IMPORTED_MODULE_1__["logger"].error('Unable to extract extra data from the Error object:', oO);
-        }
-        return result;
-    };
-    /**
-     * @inheritDoc
-     */
-    ExtraErrorData.id = 'ExtraErrorData';
-    return ExtraErrorData;
-}());
-
-//# sourceMappingURL=extraerrordata.js.map
-
-/***/ }),
-
-/***/ "./node_modules/@sentry/integrations/esm/index.js":
-/*!********************************************************!*\
-  !*** ./node_modules/@sentry/integrations/esm/index.js ***!
-  \********************************************************/
-/*! exports provided: Angular, CaptureConsole, Debug, Dedupe, Ember, ExtraErrorData, ReportingObserver, RewriteFrames, SessionTiming, Transaction, Vue */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _angular__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./angular */ "./node_modules/@sentry/integrations/esm/angular.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Angular", function() { return _angular__WEBPACK_IMPORTED_MODULE_0__["Angular"]; });
-
-/* harmony import */ var _captureconsole__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./captureconsole */ "./node_modules/@sentry/integrations/esm/captureconsole.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "CaptureConsole", function() { return _captureconsole__WEBPACK_IMPORTED_MODULE_1__["CaptureConsole"]; });
-
-/* harmony import */ var _debug__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./debug */ "./node_modules/@sentry/integrations/esm/debug.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Debug", function() { return _debug__WEBPACK_IMPORTED_MODULE_2__["Debug"]; });
-
-/* harmony import */ var _dedupe__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./dedupe */ "./node_modules/@sentry/integrations/esm/dedupe.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Dedupe", function() { return _dedupe__WEBPACK_IMPORTED_MODULE_3__["Dedupe"]; });
-
-/* harmony import */ var _ember__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./ember */ "./node_modules/@sentry/integrations/esm/ember.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Ember", function() { return _ember__WEBPACK_IMPORTED_MODULE_4__["Ember"]; });
-
-/* harmony import */ var _extraerrordata__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./extraerrordata */ "./node_modules/@sentry/integrations/esm/extraerrordata.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ExtraErrorData", function() { return _extraerrordata__WEBPACK_IMPORTED_MODULE_5__["ExtraErrorData"]; });
-
-/* harmony import */ var _reportingobserver__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./reportingobserver */ "./node_modules/@sentry/integrations/esm/reportingobserver.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ReportingObserver", function() { return _reportingobserver__WEBPACK_IMPORTED_MODULE_6__["ReportingObserver"]; });
-
-/* harmony import */ var _rewriteframes__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./rewriteframes */ "./node_modules/@sentry/integrations/esm/rewriteframes.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "RewriteFrames", function() { return _rewriteframes__WEBPACK_IMPORTED_MODULE_7__["RewriteFrames"]; });
-
-/* harmony import */ var _sessiontiming__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./sessiontiming */ "./node_modules/@sentry/integrations/esm/sessiontiming.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "SessionTiming", function() { return _sessiontiming__WEBPACK_IMPORTED_MODULE_8__["SessionTiming"]; });
-
-/* harmony import */ var _transaction__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./transaction */ "./node_modules/@sentry/integrations/esm/transaction.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Transaction", function() { return _transaction__WEBPACK_IMPORTED_MODULE_9__["Transaction"]; });
-
-/* harmony import */ var _vue__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./vue */ "./node_modules/@sentry/integrations/esm/vue.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Vue", function() { return _vue__WEBPACK_IMPORTED_MODULE_10__["Vue"]; });
-
-
-
-
-
-
-
-
-
-
-
-
-//# sourceMappingURL=index.js.map
-
-/***/ }),
-
-/***/ "./node_modules/@sentry/integrations/esm/reportingobserver.js":
-/*!********************************************************************!*\
-  !*** ./node_modules/@sentry/integrations/esm/reportingobserver.js ***!
-  \********************************************************************/
-/*! exports provided: ReportingObserver */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ReportingObserver", function() { return ReportingObserver; });
-/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
-/* harmony import */ var _sentry_utils__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @sentry/utils */ "./node_modules/@sentry/utils/esm/index.js");
-
-
-/** JSDoc */
-var ReportTypes;
-(function (ReportTypes) {
-    /** JSDoc */
-    ReportTypes["Crash"] = "crash";
-    /** JSDoc */
-    ReportTypes["Deprecation"] = "deprecation";
-    /** JSDoc */
-    ReportTypes["Intervention"] = "intervention";
-})(ReportTypes || (ReportTypes = {}));
-/** Reporting API integration - https://w3c.github.io/reporting/ */
-var ReportingObserver = /** @class */ (function () {
-    /**
-     * @inheritDoc
-     */
-    function ReportingObserver(_options) {
-        if (_options === void 0) { _options = {
-            types: [ReportTypes.Crash, ReportTypes.Deprecation, ReportTypes.Intervention],
-        }; }
-        this._options = _options;
-        /**
-         * @inheritDoc
-         */
-        this.name = ReportingObserver.id;
-    }
-    /**
-     * @inheritDoc
-     */
-    ReportingObserver.prototype.setupOnce = function (_, getCurrentHub) {
-        // tslint:disable:no-unsafe-any
-        if (!Object(_sentry_utils__WEBPACK_IMPORTED_MODULE_1__["supportsReportingObserver"])()) {
-            return;
-        }
-        this._getCurrentHub = getCurrentHub;
-        var observer = new (Object(_sentry_utils__WEBPACK_IMPORTED_MODULE_1__["getGlobalObject"])()).ReportingObserver(this.handler.bind(this), {
-            buffered: true,
-            types: this._options.types,
-        });
-        observer.observe();
-    };
-    /**
-     * @inheritDoc
-     */
-    ReportingObserver.prototype.handler = function (reports) {
-        var e_1, _a;
-        var hub = this._getCurrentHub && this._getCurrentHub();
-        if (!hub || !hub.getIntegration(ReportingObserver)) {
-            return;
-        }
-        var _loop_1 = function (report) {
-            hub.withScope(function (scope) {
-                scope.setExtra('url', report.url);
-                var label = "ReportingObserver [" + report.type + "]";
-                var details = 'No details available';
-                if (report.body) {
-                    // Object.keys doesn't work on ReportBody, as all properties are inheirted
-                    var plainBody = {};
-                    // tslint:disable-next-line:forin
-                    for (var prop in report.body) {
-                        plainBody[prop] = report.body[prop];
-                    }
-                    scope.setExtra('body', plainBody);
-                    if (report.type === ReportTypes.Crash) {
-                        var body = report.body;
-                        // A fancy way to create a message out of crashId OR reason OR both OR fallback
-                        details = [body.crashId || '', body.reason || ''].join(' ').trim() || details;
-                    }
-                    else {
-                        var body = report.body;
-                        details = body.message || details;
-                    }
-                }
-                hub.captureMessage(label + ": " + details);
-            });
-        };
-        try {
-            for (var reports_1 = tslib__WEBPACK_IMPORTED_MODULE_0__["__values"](reports), reports_1_1 = reports_1.next(); !reports_1_1.done; reports_1_1 = reports_1.next()) {
-                var report = reports_1_1.value;
-                _loop_1(report);
-            }
-        }
-        catch (e_1_1) { e_1 = { error: e_1_1 }; }
-        finally {
-            try {
-                if (reports_1_1 && !reports_1_1.done && (_a = reports_1.return)) _a.call(reports_1);
-            }
-            finally { if (e_1) throw e_1.error; }
-        }
-    };
-    /**
-     * @inheritDoc
-     */
-    ReportingObserver.id = 'ReportingObserver';
-    return ReportingObserver;
-}());
-
-//# sourceMappingURL=reportingobserver.js.map
-
-/***/ }),
-
-/***/ "./node_modules/@sentry/integrations/esm/rewriteframes.js":
-/*!****************************************************************!*\
-  !*** ./node_modules/@sentry/integrations/esm/rewriteframes.js ***!
-  \****************************************************************/
-/*! exports provided: RewriteFrames */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "RewriteFrames", function() { return RewriteFrames; });
-/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
-/* harmony import */ var _sentry_utils__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @sentry/utils */ "./node_modules/@sentry/utils/esm/index.js");
-
-
-/** Rewrite event frames paths */
-var RewriteFrames = /** @class */ (function () {
-    /**
-     * @inheritDoc
-     */
-    function RewriteFrames(options) {
-        var _this = this;
-        if (options === void 0) { options = {}; }
-        /**
-         * @inheritDoc
-         */
-        this.name = RewriteFrames.id;
-        /**
-         * @inheritDoc
-         */
-        this._iteratee = function (frame) {
-            if (!frame.filename) {
-                return frame;
-            }
-            // Check if the frame filename begins with `/` or a Windows-style prefix such as `C:\`
-            var isWindowsFrame = /^[A-Z]:\\/.test(frame.filename);
-            var startsWithSlash = /^\//.test(frame.filename);
-            if (frame.filename && (isWindowsFrame || startsWithSlash)) {
-                var filename = isWindowsFrame
-                    ? frame.filename
-                        .replace(/^[A-Z]:/, '') // remove Windows-style prefix
-                        .replace(/\\/g, '/') // replace all `\\` instances with `/`
-                    : frame.filename;
-                var base = _this._root ? Object(_sentry_utils__WEBPACK_IMPORTED_MODULE_1__["relative"])(_this._root, filename) : Object(_sentry_utils__WEBPACK_IMPORTED_MODULE_1__["basename"])(filename);
-                frame.filename = "app:///" + base;
-            }
-            return frame;
-        };
-        if (options.root) {
-            this._root = options.root;
-        }
-        if (options.iteratee) {
-            this._iteratee = options.iteratee;
-        }
-    }
-    /**
-     * @inheritDoc
-     */
-    RewriteFrames.prototype.setupOnce = function (addGlobalEventProcessor, getCurrentHub) {
-        addGlobalEventProcessor(function (event) {
-            var self = getCurrentHub().getIntegration(RewriteFrames);
-            if (self) {
-                return self.process(event);
-            }
-            return event;
-        });
-    };
-    /** JSDoc */
-    RewriteFrames.prototype.process = function (event) {
-        if (event.exception && Array.isArray(event.exception.values)) {
-            return this._processExceptionsEvent(event);
-        }
-        if (event.stacktrace) {
-            return this._processStacktraceEvent(event);
-        }
-        return event;
-    };
-    /** JSDoc */
-    RewriteFrames.prototype._processExceptionsEvent = function (event) {
-        var _this = this;
-        try {
-            return tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"]({}, event, { exception: tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"]({}, event.exception, { 
-                    // The check for this is performed inside `process` call itself, safe to skip here
-                    // tslint:disable-next-line:no-non-null-assertion
-                    values: event.exception.values.map(function (value) { return (tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"]({}, value, { stacktrace: _this._processStacktrace(value.stacktrace) })); }) }) });
-        }
-        catch (_oO) {
-            return event;
-        }
-    };
-    /** JSDoc */
-    RewriteFrames.prototype._processStacktraceEvent = function (event) {
-        try {
-            return tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"]({}, event, { stacktrace: this._processStacktrace(event.stacktrace) });
-        }
-        catch (_oO) {
-            return event;
-        }
-    };
-    /** JSDoc */
-    RewriteFrames.prototype._processStacktrace = function (stacktrace) {
-        var _this = this;
-        return tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"]({}, stacktrace, { frames: stacktrace && stacktrace.frames && stacktrace.frames.map(function (f) { return _this._iteratee(f); }) });
-    };
-    /**
-     * @inheritDoc
-     */
-    RewriteFrames.id = 'RewriteFrames';
-    return RewriteFrames;
-}());
-
-//# sourceMappingURL=rewriteframes.js.map
-
-/***/ }),
-
-/***/ "./node_modules/@sentry/integrations/esm/sessiontiming.js":
-/*!****************************************************************!*\
-  !*** ./node_modules/@sentry/integrations/esm/sessiontiming.js ***!
-  \****************************************************************/
-/*! exports provided: SessionTiming */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SessionTiming", function() { return SessionTiming; });
-/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
-
-/** This function adds duration since Sentry was initialized till the time event was sent */
-var SessionTiming = /** @class */ (function () {
-    function SessionTiming() {
-        /**
-         * @inheritDoc
-         */
-        this.name = SessionTiming.id;
-        /** Exact time Client was initialized expressed in milliseconds since Unix Epoch. */
-        this._startTime = Date.now();
-    }
-    /**
-     * @inheritDoc
-     */
-    SessionTiming.prototype.setupOnce = function (addGlobalEventProcessor, getCurrentHub) {
-        addGlobalEventProcessor(function (event) {
-            var self = getCurrentHub().getIntegration(SessionTiming);
-            if (self) {
-                return self.process(event);
-            }
-            return event;
-        });
-    };
-    /**
-     * @inheritDoc
-     */
-    SessionTiming.prototype.process = function (event) {
-        var _a;
-        var now = Date.now();
-        return tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"]({}, event, { extra: tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"]({}, event.extra, (_a = {}, _a['session:start'] = this._startTime, _a['session:duration'] = now - this._startTime, _a['session:end'] = now, _a)) });
-    };
-    /**
-     * @inheritDoc
-     */
-    SessionTiming.id = 'SessionTiming';
-    return SessionTiming;
-}());
-
-//# sourceMappingURL=sessiontiming.js.map
-
-/***/ }),
-
-/***/ "./node_modules/@sentry/integrations/esm/transaction.js":
-/*!**************************************************************!*\
-  !*** ./node_modules/@sentry/integrations/esm/transaction.js ***!
-  \**************************************************************/
-/*! exports provided: Transaction */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Transaction", function() { return Transaction; });
-/** Add node transaction to the event */
-var Transaction = /** @class */ (function () {
-    function Transaction() {
-        /**
-         * @inheritDoc
-         */
-        this.name = Transaction.id;
-    }
-    /**
-     * @inheritDoc
-     */
-    Transaction.prototype.setupOnce = function (addGlobalEventProcessor, getCurrentHub) {
-        addGlobalEventProcessor(function (event) {
-            var self = getCurrentHub().getIntegration(Transaction);
-            if (self) {
-                return self.process(event);
-            }
-            return event;
-        });
-    };
-    /**
-     * @inheritDoc
-     */
-    Transaction.prototype.process = function (event) {
-        var frames = this._getFramesFromEvent(event);
-        // use for loop so we don't have to reverse whole frames array
-        for (var i = frames.length - 1; i >= 0; i--) {
-            var frame = frames[i];
-            if (frame.in_app === true) {
-                event.transaction = this._getTransaction(frame);
-                break;
-            }
-        }
-        return event;
-    };
-    /** JSDoc */
-    Transaction.prototype._getFramesFromEvent = function (event) {
-        var exception = event.exception && event.exception.values && event.exception.values[0];
-        return (exception && exception.stacktrace && exception.stacktrace.frames) || [];
-    };
-    /** JSDoc */
-    Transaction.prototype._getTransaction = function (frame) {
-        return frame.module || frame.function ? (frame.module || '?') + "/" + (frame.function || '?') : '<unknown>';
-    };
-    /**
-     * @inheritDoc
-     */
-    Transaction.id = 'Transaction';
-    return Transaction;
-}());
-
-//# sourceMappingURL=transaction.js.map
-
-/***/ }),
-
-/***/ "./node_modules/@sentry/integrations/esm/vue.js":
-/*!******************************************************!*\
-  !*** ./node_modules/@sentry/integrations/esm/vue.js ***!
-  \******************************************************/
-/*! exports provided: Vue */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Vue", function() { return Vue; });
-/* harmony import */ var _sentry_utils__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @sentry/utils */ "./node_modules/@sentry/utils/esm/index.js");
-
-/** JSDoc */
-var Vue = /** @class */ (function () {
-    /**
-     * @inheritDoc
-     */
-    function Vue(options) {
-        if (options === void 0) { options = {}; }
-        /**
-         * @inheritDoc
-         */
-        this.name = Vue.id;
-        /**
-         * When set to false, Sentry will suppress reporting all props data
-         * from your Vue components for privacy concerns.
-         */
-        this._attachProps = true;
-        /**
-         * When set to true, original Vue's `logError` will be called as well.
-         * https://github.com/vuejs/vue/blob/c2b1cfe9ccd08835f2d99f6ce60f67b4de55187f/src/core/util/error.js#L38-L48
-         */
-        this._logErrors = false;
-        // tslint:disable-next-line: no-unsafe-any
-        this._Vue = options.Vue || Object(_sentry_utils__WEBPACK_IMPORTED_MODULE_0__["getGlobalObject"])().Vue;
-        if (options.logErrors !== undefined) {
-            this._logErrors = options.logErrors;
-        }
-        if (options.attachProps === false) {
-            this._attachProps = false;
-        }
-    }
-    /** JSDoc */
-    Vue.prototype._formatComponentName = function (vm) {
-        // tslint:disable:no-unsafe-any
-        if (vm.$root === vm) {
-            return 'root instance';
-        }
-        var name = vm._isVue ? vm.$options.name || vm.$options._componentTag : vm.name;
-        return ((name ? "component <" + name + ">" : 'anonymous component') +
-            (vm._isVue && vm.$options.__file ? " at " + vm.$options.__file : ''));
-    };
-    /**
-     * @inheritDoc
-     */
-    Vue.prototype.setupOnce = function (_, getCurrentHub) {
-        // tslint:disable:no-unsafe-any
-        var _this = this;
-        if (!this._Vue || !this._Vue.config) {
-            _sentry_utils__WEBPACK_IMPORTED_MODULE_0__["logger"].error('VueIntegration is missing a Vue instance');
-            return;
-        }
-        var oldOnError = this._Vue.config.errorHandler;
-        this._Vue.config.errorHandler = function (error, vm, info) {
-            var metadata = {};
-            if (Object(_sentry_utils__WEBPACK_IMPORTED_MODULE_0__["isPlainObject"])(vm)) {
-                metadata.componentName = _this._formatComponentName(vm);
-                if (_this._attachProps) {
-                    metadata.propsData = vm.$options.propsData;
-                }
-            }
-            if (info !== void 0) {
-                metadata.lifecycleHook = info;
-            }
-            if (getCurrentHub().getIntegration(Vue)) {
-                // This timeout makes sure that any breadcrumbs are recorded before sending it off the sentry
-                setTimeout(function () {
-                    getCurrentHub().withScope(function (scope) {
-                        scope.setContext('vue', metadata);
-                        getCurrentHub().captureException(error);
-                    });
-                });
-            }
-            if (typeof oldOnError === 'function') {
-                oldOnError.call(_this._Vue, error, vm, info);
-            }
-            if (_this._logErrors) {
-                _this._Vue.util.warn("Error in " + info + ": \"" + error.toString() + "\"", vm);
-                // tslint:disable-next-line:no-console
-                console.error(error);
-            }
-        };
-    };
-    /**
-     * @inheritDoc
-     */
-    Vue.id = 'Vue';
-    return Vue;
-}());
-
-//# sourceMappingURL=vue.js.map
-
-/***/ }),
-
-/***/ "./node_modules/@sentry/minimal/esm/index.js":
-/*!***************************************************!*\
-  !*** ./node_modules/@sentry/minimal/esm/index.js ***!
-  \***************************************************/
-/*! exports provided: captureException, captureMessage, captureEvent, configureScope, addBreadcrumb, setContext, setExtras, setTags, setExtra, setTag, setUser, withScope, _callOnClient */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "captureException", function() { return captureException; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "captureMessage", function() { return captureMessage; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "captureEvent", function() { return captureEvent; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "configureScope", function() { return configureScope; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "addBreadcrumb", function() { return addBreadcrumb; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "setContext", function() { return setContext; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "setExtras", function() { return setExtras; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "setTags", function() { return setTags; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "setExtra", function() { return setExtra; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "setTag", function() { return setTag; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "setUser", function() { return setUser; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "withScope", function() { return withScope; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "_callOnClient", function() { return _callOnClient; });
-/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
-/* harmony import */ var _sentry_hub__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @sentry/hub */ "./node_modules/@sentry/hub/esm/index.js");
-
-
-/**
- * This calls a function on the current hub.
- * @param method function to call on hub.
- * @param args to pass to function.
- */
-function callOnHub(method) {
-    var args = [];
-    for (var _i = 1; _i < arguments.length; _i++) {
-        args[_i - 1] = arguments[_i];
-    }
-    var hub = Object(_sentry_hub__WEBPACK_IMPORTED_MODULE_1__["getCurrentHub"])();
-    if (hub && hub[method]) {
-        // tslint:disable-next-line:no-unsafe-any
-        return hub[method].apply(hub, tslib__WEBPACK_IMPORTED_MODULE_0__["__spread"](args));
-    }
-    throw new Error("No hub defined or " + method + " was not found on the hub, please open a bug report.");
-}
-/**
- * Captures an exception event and sends it to Sentry.
- *
- * @param exception An exception-like object.
- * @returns The generated eventId.
- */
-function captureException(exception) {
-    var syntheticException;
-    try {
-        throw new Error('Sentry syntheticException');
-    }
-    catch (exception) {
-        syntheticException = exception;
-    }
-    return callOnHub('captureException', exception, {
-        originalException: exception,
-        syntheticException: syntheticException,
-    });
-}
-/**
- * Captures a message event and sends it to Sentry.
- *
- * @param message The message to send to Sentry.
- * @param level Define the level of the message.
- * @returns The generated eventId.
- */
-function captureMessage(message, level) {
-    var syntheticException;
-    try {
-        throw new Error(message);
-    }
-    catch (exception) {
-        syntheticException = exception;
-    }
-    return callOnHub('captureMessage', message, level, {
-        originalException: message,
-        syntheticException: syntheticException,
-    });
-}
-/**
- * Captures a manually created event and sends it to Sentry.
- *
- * @param event The event to send to Sentry.
- * @returns The generated eventId.
- */
-function captureEvent(event) {
-    return callOnHub('captureEvent', event);
-}
-/**
- * Callback to set context information onto the scope.
- * @param callback Callback function that receives Scope.
- */
-function configureScope(callback) {
-    callOnHub('configureScope', callback);
-}
-/**
- * Records a new breadcrumb which will be attached to future events.
- *
- * Breadcrumbs will be added to subsequent events to provide more context on
- * user's actions prior to an error or crash.
- *
- * @param breadcrumb The breadcrumb to record.
- */
-function addBreadcrumb(breadcrumb) {
-    callOnHub('addBreadcrumb', breadcrumb);
-}
-/**
- * Sets context data with the given name.
- * @param name of the context
- * @param context Any kind of data. This data will be normailzed.
- */
-function setContext(name, context) {
-    callOnHub('setContext', name, context);
-}
-/**
- * Set an object that will be merged sent as extra data with the event.
- * @param extras Extras object to merge into current context.
- */
-function setExtras(extras) {
-    callOnHub('setExtras', extras);
-}
-/**
- * Set an object that will be merged sent as tags data with the event.
- * @param tags Tags context object to merge into current context.
- */
-function setTags(tags) {
-    callOnHub('setTags', tags);
-}
-/**
- * Set key:value that will be sent as extra data with the event.
- * @param key String of extra
- * @param extra Any kind of data. This data will be normailzed.
- */
-function setExtra(key, extra) {
-    callOnHub('setExtra', key, extra);
-}
-/**
- * Set key:value that will be sent as tags data with the event.
- * @param key String key of tag
- * @param value String value of tag
- */
-function setTag(key, value) {
-    callOnHub('setTag', key, value);
-}
-/**
- * Updates user context information for future events.
- *
- * @param user User context object to be set in the current context. Pass `null` to unset the user.
- */
-function setUser(user) {
-    callOnHub('setUser', user);
-}
-/**
- * Creates a new scope with and executes the given operation within.
- * The scope is automatically removed once the operation
- * finishes or throws.
- *
- * This is essentially a convenience function for:
- *
- *     pushScope();
- *     callback();
- *     popScope();
- *
- * @param callback that will be enclosed into push/popScope.
- */
-function withScope(callback) {
-    callOnHub('withScope', callback);
-}
-/**
- * Calls a function on the latest client. Use this with caution, it's meant as
- * in "internal" helper so we don't need to expose every possible function in
- * the shim. It is not guaranteed that the client actually implements the
- * function.
- *
- * @param method The method to call on the client/client.
- * @param args Arguments to pass to the client/fontend.
- * @hidden
- */
-function _callOnClient(method) {
-    var args = [];
-    for (var _i = 1; _i < arguments.length; _i++) {
-        args[_i - 1] = arguments[_i];
-    }
-    callOnHub.apply(void 0, tslib__WEBPACK_IMPORTED_MODULE_0__["__spread"](['_invokeClient', method], args));
-}
-//# sourceMappingURL=index.js.map
-
-/***/ }),
-
-/***/ "./node_modules/@sentry/types/esm/index.js":
-/*!*************************************************!*\
-  !*** ./node_modules/@sentry/types/esm/index.js ***!
-  \*************************************************/
-/*! exports provided: LogLevel, Severity, SpanStatus, Status */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _loglevel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./loglevel */ "./node_modules/@sentry/types/esm/loglevel.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "LogLevel", function() { return _loglevel__WEBPACK_IMPORTED_MODULE_0__["LogLevel"]; });
-
-/* harmony import */ var _severity__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./severity */ "./node_modules/@sentry/types/esm/severity.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Severity", function() { return _severity__WEBPACK_IMPORTED_MODULE_1__["Severity"]; });
-
-/* harmony import */ var _span__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./span */ "./node_modules/@sentry/types/esm/span.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "SpanStatus", function() { return _span__WEBPACK_IMPORTED_MODULE_2__["SpanStatus"]; });
-
-/* harmony import */ var _status__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./status */ "./node_modules/@sentry/types/esm/status.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Status", function() { return _status__WEBPACK_IMPORTED_MODULE_3__["Status"]; });
-
-
-
-
-
-//# sourceMappingURL=index.js.map
-
-/***/ }),
-
-/***/ "./node_modules/@sentry/types/esm/loglevel.js":
-/*!****************************************************!*\
-  !*** ./node_modules/@sentry/types/esm/loglevel.js ***!
-  \****************************************************/
-/*! exports provided: LogLevel */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "LogLevel", function() { return LogLevel; });
-/** Console logging verbosity for the SDK. */
-var LogLevel;
-(function (LogLevel) {
-    /** No logs will be generated. */
-    LogLevel[LogLevel["None"] = 0] = "None";
-    /** Only SDK internal errors will be logged. */
-    LogLevel[LogLevel["Error"] = 1] = "Error";
-    /** Information useful for debugging the SDK will be logged. */
-    LogLevel[LogLevel["Debug"] = 2] = "Debug";
-    /** All SDK actions will be logged. */
-    LogLevel[LogLevel["Verbose"] = 3] = "Verbose";
-})(LogLevel || (LogLevel = {}));
-//# sourceMappingURL=loglevel.js.map
-
-/***/ }),
-
-/***/ "./node_modules/@sentry/types/esm/severity.js":
-/*!****************************************************!*\
-  !*** ./node_modules/@sentry/types/esm/severity.js ***!
-  \****************************************************/
-/*! exports provided: Severity */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Severity", function() { return Severity; });
-/** JSDoc */
-var Severity;
-(function (Severity) {
-    /** JSDoc */
-    Severity["Fatal"] = "fatal";
-    /** JSDoc */
-    Severity["Error"] = "error";
-    /** JSDoc */
-    Severity["Warning"] = "warning";
-    /** JSDoc */
-    Severity["Log"] = "log";
-    /** JSDoc */
-    Severity["Info"] = "info";
-    /** JSDoc */
-    Severity["Debug"] = "debug";
-    /** JSDoc */
-    Severity["Critical"] = "critical";
-})(Severity || (Severity = {}));
-// tslint:disable:completed-docs
-// tslint:disable:no-unnecessary-qualifier no-namespace
-(function (Severity) {
-    /**
-     * Converts a string-based level into a {@link Severity}.
-     *
-     * @param level string representation of Severity
-     * @returns Severity
-     */
-    function fromString(level) {
-        switch (level) {
-            case 'debug':
-                return Severity.Debug;
-            case 'info':
-                return Severity.Info;
-            case 'warn':
-            case 'warning':
-                return Severity.Warning;
-            case 'error':
-                return Severity.Error;
-            case 'fatal':
-                return Severity.Fatal;
-            case 'critical':
-                return Severity.Critical;
-            case 'log':
-            default:
-                return Severity.Log;
-        }
-    }
-    Severity.fromString = fromString;
-})(Severity || (Severity = {}));
-//# sourceMappingURL=severity.js.map
-
-/***/ }),
-
-/***/ "./node_modules/@sentry/types/esm/span.js":
-/*!************************************************!*\
-  !*** ./node_modules/@sentry/types/esm/span.js ***!
-  \************************************************/
-/*! exports provided: SpanStatus */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SpanStatus", function() { return SpanStatus; });
-/** The status of an Span. */
-var SpanStatus;
-(function (SpanStatus) {
-    /** The operation completed successfully. */
-    SpanStatus["Ok"] = "ok";
-    /** Deadline expired before operation could complete. */
-    SpanStatus["DeadlineExceeded"] = "deadline_exceeded";
-    /** 401 Unauthorized (actually does mean unauthenticated according to RFC 7235) */
-    SpanStatus["Unauthenticated"] = "unauthenticated";
-    /** 403 Forbidden */
-    SpanStatus["PermissionDenied"] = "permission_denied";
-    /** 404 Not Found. Some requested entity (file or directory) was not found. */
-    SpanStatus["NotFound"] = "not_found";
-    /** 429 Too Many Requests */
-    SpanStatus["ResourceExhausted"] = "resource_exhausted";
-    /** Client specified an invalid argument. 4xx. */
-    SpanStatus["InvalidArgument"] = "invalid_argument";
-    /** 501 Not Implemented */
-    SpanStatus["Unimplemented"] = "unimplemented";
-    /** 503 Service Unavailable */
-    SpanStatus["Unavailable"] = "unavailable";
-    /** Other/generic 5xx. */
-    SpanStatus["InternalError"] = "internal_error";
-    /** Unknown. Any non-standard HTTP status code. */
-    SpanStatus["UnknownError"] = "unknown_error";
-    /** The operation was cancelled (typically by the user). */
-    SpanStatus["Cancelled"] = "cancelled";
-    /** Already exists (409) */
-    SpanStatus["AlreadyExists"] = "already_exists";
-    /** Operation was rejected because the system is not in a state required for the operation's */
-    SpanStatus["FailedPrecondition"] = "failed_precondition";
-    /** The operation was aborted, typically due to a concurrency issue. */
-    SpanStatus["Aborted"] = "aborted";
-    /** Operation was attempted past the valid range. */
-    SpanStatus["OutOfRange"] = "out_of_range";
-    /** Unrecoverable data loss or corruption */
-    SpanStatus["DataLoss"] = "data_loss";
-})(SpanStatus || (SpanStatus = {}));
-// tslint:disable:no-unnecessary-qualifier no-namespace
-(function (SpanStatus) {
-    /**
-     * Converts a HTTP status code into a {@link SpanStatus}.
-     *
-     * @param httpStatus The HTTP response status code.
-     * @returns The span status or {@link SpanStatus.UnknownError}.
-     */
-    // tslint:disable-next-line:completed-docs
-    function fromHttpCode(httpStatus) {
-        if (httpStatus < 400) {
-            return SpanStatus.Ok;
-        }
-        if (httpStatus >= 400 && httpStatus < 500) {
-            switch (httpStatus) {
-                case 401:
-                    return SpanStatus.Unauthenticated;
-                case 403:
-                    return SpanStatus.PermissionDenied;
-                case 404:
-                    return SpanStatus.NotFound;
-                case 409:
-                    return SpanStatus.AlreadyExists;
-                case 413:
-                    return SpanStatus.FailedPrecondition;
-                case 429:
-                    return SpanStatus.ResourceExhausted;
-                default:
-                    return SpanStatus.InvalidArgument;
-            }
-        }
-        if (httpStatus >= 500 && httpStatus < 600) {
-            switch (httpStatus) {
-                case 501:
-                    return SpanStatus.Unimplemented;
-                case 503:
-                    return SpanStatus.Unavailable;
-                case 504:
-                    return SpanStatus.DeadlineExceeded;
-                default:
-                    return SpanStatus.InternalError;
-            }
-        }
-        return SpanStatus.UnknownError;
-    }
-    SpanStatus.fromHttpCode = fromHttpCode;
-})(SpanStatus || (SpanStatus = {}));
-//# sourceMappingURL=span.js.map
-
-/***/ }),
-
-/***/ "./node_modules/@sentry/types/esm/status.js":
-/*!**************************************************!*\
-  !*** ./node_modules/@sentry/types/esm/status.js ***!
-  \**************************************************/
-/*! exports provided: Status */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Status", function() { return Status; });
-/** The status of an event. */
-var Status;
-(function (Status) {
-    /** The status could not be determined. */
-    Status["Unknown"] = "unknown";
-    /** The event was skipped due to configuration or callbacks. */
-    Status["Skipped"] = "skipped";
-    /** The event was sent to Sentry successfully. */
-    Status["Success"] = "success";
-    /** The client is currently rate limited and will try again later. */
-    Status["RateLimit"] = "rate_limit";
-    /** The event could not be processed. */
-    Status["Invalid"] = "invalid";
-    /** A server-side error ocurred during submission. */
-    Status["Failed"] = "failed";
-})(Status || (Status = {}));
-// tslint:disable:completed-docs
-// tslint:disable:no-unnecessary-qualifier no-namespace
-(function (Status) {
-    /**
-     * Converts a HTTP status code into a {@link Status}.
-     *
-     * @param code The HTTP response status code.
-     * @returns The send status or {@link Status.Unknown}.
-     */
-    function fromHttpCode(code) {
-        if (code >= 200 && code < 300) {
-            return Status.Success;
-        }
-        if (code === 429) {
-            return Status.RateLimit;
-        }
-        if (code >= 400 && code < 500) {
-            return Status.Invalid;
-        }
-        if (code >= 500) {
-            return Status.Failed;
-        }
-        return Status.Unknown;
-    }
-    Status.fromHttpCode = fromHttpCode;
-})(Status || (Status = {}));
-//# sourceMappingURL=status.js.map
-
-/***/ }),
-
-/***/ "./node_modules/@sentry/utils/esm/async.js":
-/*!*************************************************!*\
-  !*** ./node_modules/@sentry/utils/esm/async.js ***!
-  \*************************************************/
-/*! exports provided: forget */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "forget", function() { return forget; });
-/**
- * Consumes the promise and logs the error when it rejects.
- * @param promise A promise to forget.
- */
-function forget(promise) {
-    promise.then(null, function (e) {
-        // TODO: Use a better logging mechanism
-        console.error(e);
-    });
-}
-//# sourceMappingURL=async.js.map
-
-/***/ }),
-
-/***/ "./node_modules/@sentry/utils/esm/dsn.js":
-/*!***********************************************!*\
-  !*** ./node_modules/@sentry/utils/esm/dsn.js ***!
-  \***********************************************/
-/*! exports provided: Dsn */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Dsn", function() { return Dsn; });
-/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
-/* harmony import */ var _error__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./error */ "./node_modules/@sentry/utils/esm/error.js");
-
-
-/** Regular expression used to parse a Dsn. */
-var DSN_REGEX = /^(?:(\w+):)\/\/(?:(\w+)(?::(\w+))?@)([\w\.-]+)(?::(\d+))?\/(.+)/;
-/** Error message */
-var ERROR_MESSAGE = 'Invalid Dsn';
-/** The Sentry Dsn, identifying a Sentry instance and project. */
-var Dsn = /** @class */ (function () {
-    /** Creates a new Dsn component */
-    function Dsn(from) {
-        if (typeof from === 'string') {
-            this._fromString(from);
-        }
-        else {
-            this._fromComponents(from);
-        }
-        this._validate();
-    }
-    /**
-     * Renders the string representation of this Dsn.
-     *
-     * By default, this will render the public representation without the password
-     * component. To get the deprecated private _representation, set `withPassword`
-     * to true.
-     *
-     * @param withPassword When set to true, the password will be included.
-     */
-    Dsn.prototype.toString = function (withPassword) {
-        if (withPassword === void 0) { withPassword = false; }
-        // tslint:disable-next-line:no-this-assignment
-        var _a = this, host = _a.host, path = _a.path, pass = _a.pass, port = _a.port, projectId = _a.projectId, protocol = _a.protocol, user = _a.user;
-        return (protocol + "://" + user + (withPassword && pass ? ":" + pass : '') +
-            ("@" + host + (port ? ":" + port : '') + "/" + (path ? path + "/" : path) + projectId));
-    };
-    /** Parses a string into this Dsn. */
-    Dsn.prototype._fromString = function (str) {
-        var match = DSN_REGEX.exec(str);
-        if (!match) {
-            throw new _error__WEBPACK_IMPORTED_MODULE_1__["SentryError"](ERROR_MESSAGE);
-        }
-        var _a = tslib__WEBPACK_IMPORTED_MODULE_0__["__read"](match.slice(1), 6), protocol = _a[0], user = _a[1], _b = _a[2], pass = _b === void 0 ? '' : _b, host = _a[3], _c = _a[4], port = _c === void 0 ? '' : _c, lastPath = _a[5];
-        var path = '';
-        var projectId = lastPath;
-        var split = projectId.split('/');
-        if (split.length > 1) {
-            path = split.slice(0, -1).join('/');
-            projectId = split.pop();
-        }
-        this._fromComponents({ host: host, pass: pass, path: path, projectId: projectId, port: port, protocol: protocol, user: user });
-    };
-    /** Maps Dsn components into this instance. */
-    Dsn.prototype._fromComponents = function (components) {
-        this.protocol = components.protocol;
-        this.user = components.user;
-        this.pass = components.pass || '';
-        this.host = components.host;
-        this.port = components.port || '';
-        this.path = components.path || '';
-        this.projectId = components.projectId;
-    };
-    /** Validates this Dsn and throws on error. */
-    Dsn.prototype._validate = function () {
-        var _this = this;
-        ['protocol', 'user', 'host', 'projectId'].forEach(function (component) {
-            if (!_this[component]) {
-                throw new _error__WEBPACK_IMPORTED_MODULE_1__["SentryError"](ERROR_MESSAGE);
-            }
-        });
-        if (this.protocol !== 'http' && this.protocol !== 'https') {
-            throw new _error__WEBPACK_IMPORTED_MODULE_1__["SentryError"](ERROR_MESSAGE);
-        }
-        if (this.port && isNaN(parseInt(this.port, 10))) {
-            throw new _error__WEBPACK_IMPORTED_MODULE_1__["SentryError"](ERROR_MESSAGE);
-        }
-    };
-    return Dsn;
-}());
-
-//# sourceMappingURL=dsn.js.map
-
-/***/ }),
-
-/***/ "./node_modules/@sentry/utils/esm/error.js":
-/*!*************************************************!*\
-  !*** ./node_modules/@sentry/utils/esm/error.js ***!
-  \*************************************************/
-/*! exports provided: SentryError */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SentryError", function() { return SentryError; });
-/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
-/* harmony import */ var _polyfill__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./polyfill */ "./node_modules/@sentry/utils/esm/polyfill.js");
-
-
-/** An error emitted by Sentry SDKs and related utilities. */
-var SentryError = /** @class */ (function (_super) {
-    tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"](SentryError, _super);
-    function SentryError(message) {
-        var _newTarget = this.constructor;
-        var _this = _super.call(this, message) || this;
-        _this.message = message;
-        // tslint:disable:no-unsafe-any
-        _this.name = _newTarget.prototype.constructor.name;
-        Object(_polyfill__WEBPACK_IMPORTED_MODULE_1__["setPrototypeOf"])(_this, _newTarget.prototype);
-        return _this;
-    }
-    return SentryError;
-}(Error));
-
-//# sourceMappingURL=error.js.map
-
-/***/ }),
-
-/***/ "./node_modules/@sentry/utils/esm/index.js":
-/*!*************************************************!*\
-  !*** ./node_modules/@sentry/utils/esm/index.js ***!
-  \*************************************************/
-/*! exports provided: forget, SentryError, isError, isErrorEvent, isDOMError, isDOMException, isString, isPrimitive, isPlainObject, isEvent, isElement, isRegExp, isThenable, isSyntheticEvent, isInstanceOf, logger, Memo, dynamicRequire, isNodeEnv, getGlobalObject, uuid4, parseUrl, getEventDescription, consoleSandbox, addExceptionTypeValue, addExceptionMechanism, getLocationHref, htmlTreeAsString, crossPlatformPerformance, timestampWithMs, parseSemver, parseRetryAfterHeader, getFunctionName, addContextToFrame, fill, urlEncode, normalizeToSize, walk, normalize, extractExceptionKeysForMessage, dropUndefinedKeys, resolve, relative, normalizePath, isAbsolute, join, dirname, basename, PromiseBuffer, truncate, snipLine, safeJoin, isMatchingPattern, supportsErrorEvent, supportsDOMError, supportsDOMException, supportsFetch, supportsNativeFetch, supportsReportingObserver, supportsReferrerPolicy, supportsHistory, SyncPromise, addInstrumentationHandler, Dsn */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _async__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./async */ "./node_modules/@sentry/utils/esm/async.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "forget", function() { return _async__WEBPACK_IMPORTED_MODULE_0__["forget"]; });
-
-/* harmony import */ var _error__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./error */ "./node_modules/@sentry/utils/esm/error.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "SentryError", function() { return _error__WEBPACK_IMPORTED_MODULE_1__["SentryError"]; });
-
-/* harmony import */ var _is__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./is */ "./node_modules/@sentry/utils/esm/is.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "isError", function() { return _is__WEBPACK_IMPORTED_MODULE_2__["isError"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "isErrorEvent", function() { return _is__WEBPACK_IMPORTED_MODULE_2__["isErrorEvent"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "isDOMError", function() { return _is__WEBPACK_IMPORTED_MODULE_2__["isDOMError"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "isDOMException", function() { return _is__WEBPACK_IMPORTED_MODULE_2__["isDOMException"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "isString", function() { return _is__WEBPACK_IMPORTED_MODULE_2__["isString"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "isPrimitive", function() { return _is__WEBPACK_IMPORTED_MODULE_2__["isPrimitive"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "isPlainObject", function() { return _is__WEBPACK_IMPORTED_MODULE_2__["isPlainObject"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "isEvent", function() { return _is__WEBPACK_IMPORTED_MODULE_2__["isEvent"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "isElement", function() { return _is__WEBPACK_IMPORTED_MODULE_2__["isElement"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "isRegExp", function() { return _is__WEBPACK_IMPORTED_MODULE_2__["isRegExp"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "isThenable", function() { return _is__WEBPACK_IMPORTED_MODULE_2__["isThenable"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "isSyntheticEvent", function() { return _is__WEBPACK_IMPORTED_MODULE_2__["isSyntheticEvent"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "isInstanceOf", function() { return _is__WEBPACK_IMPORTED_MODULE_2__["isInstanceOf"]; });
-
-/* harmony import */ var _logger__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./logger */ "./node_modules/@sentry/utils/esm/logger.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "logger", function() { return _logger__WEBPACK_IMPORTED_MODULE_3__["logger"]; });
-
-/* harmony import */ var _memo__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./memo */ "./node_modules/@sentry/utils/esm/memo.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Memo", function() { return _memo__WEBPACK_IMPORTED_MODULE_4__["Memo"]; });
-
-/* harmony import */ var _misc__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./misc */ "./node_modules/@sentry/utils/esm/misc.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "dynamicRequire", function() { return _misc__WEBPACK_IMPORTED_MODULE_5__["dynamicRequire"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "isNodeEnv", function() { return _misc__WEBPACK_IMPORTED_MODULE_5__["isNodeEnv"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "getGlobalObject", function() { return _misc__WEBPACK_IMPORTED_MODULE_5__["getGlobalObject"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "uuid4", function() { return _misc__WEBPACK_IMPORTED_MODULE_5__["uuid4"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "parseUrl", function() { return _misc__WEBPACK_IMPORTED_MODULE_5__["parseUrl"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "getEventDescription", function() { return _misc__WEBPACK_IMPORTED_MODULE_5__["getEventDescription"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "consoleSandbox", function() { return _misc__WEBPACK_IMPORTED_MODULE_5__["consoleSandbox"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "addExceptionTypeValue", function() { return _misc__WEBPACK_IMPORTED_MODULE_5__["addExceptionTypeValue"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "addExceptionMechanism", function() { return _misc__WEBPACK_IMPORTED_MODULE_5__["addExceptionMechanism"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "getLocationHref", function() { return _misc__WEBPACK_IMPORTED_MODULE_5__["getLocationHref"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "htmlTreeAsString", function() { return _misc__WEBPACK_IMPORTED_MODULE_5__["htmlTreeAsString"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "crossPlatformPerformance", function() { return _misc__WEBPACK_IMPORTED_MODULE_5__["crossPlatformPerformance"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "timestampWithMs", function() { return _misc__WEBPACK_IMPORTED_MODULE_5__["timestampWithMs"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "parseSemver", function() { return _misc__WEBPACK_IMPORTED_MODULE_5__["parseSemver"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "parseRetryAfterHeader", function() { return _misc__WEBPACK_IMPORTED_MODULE_5__["parseRetryAfterHeader"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "getFunctionName", function() { return _misc__WEBPACK_IMPORTED_MODULE_5__["getFunctionName"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "addContextToFrame", function() { return _misc__WEBPACK_IMPORTED_MODULE_5__["addContextToFrame"]; });
-
-/* harmony import */ var _object__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./object */ "./node_modules/@sentry/utils/esm/object.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "fill", function() { return _object__WEBPACK_IMPORTED_MODULE_6__["fill"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "urlEncode", function() { return _object__WEBPACK_IMPORTED_MODULE_6__["urlEncode"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "normalizeToSize", function() { return _object__WEBPACK_IMPORTED_MODULE_6__["normalizeToSize"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "walk", function() { return _object__WEBPACK_IMPORTED_MODULE_6__["walk"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "normalize", function() { return _object__WEBPACK_IMPORTED_MODULE_6__["normalize"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "extractExceptionKeysForMessage", function() { return _object__WEBPACK_IMPORTED_MODULE_6__["extractExceptionKeysForMessage"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "dropUndefinedKeys", function() { return _object__WEBPACK_IMPORTED_MODULE_6__["dropUndefinedKeys"]; });
-
-/* harmony import */ var _path__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./path */ "./node_modules/@sentry/utils/esm/path.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "resolve", function() { return _path__WEBPACK_IMPORTED_MODULE_7__["resolve"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "relative", function() { return _path__WEBPACK_IMPORTED_MODULE_7__["relative"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "normalizePath", function() { return _path__WEBPACK_IMPORTED_MODULE_7__["normalizePath"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "isAbsolute", function() { return _path__WEBPACK_IMPORTED_MODULE_7__["isAbsolute"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "join", function() { return _path__WEBPACK_IMPORTED_MODULE_7__["join"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "dirname", function() { return _path__WEBPACK_IMPORTED_MODULE_7__["dirname"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "basename", function() { return _path__WEBPACK_IMPORTED_MODULE_7__["basename"]; });
-
-/* harmony import */ var _promisebuffer__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./promisebuffer */ "./node_modules/@sentry/utils/esm/promisebuffer.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "PromiseBuffer", function() { return _promisebuffer__WEBPACK_IMPORTED_MODULE_8__["PromiseBuffer"]; });
-
-/* harmony import */ var _string__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./string */ "./node_modules/@sentry/utils/esm/string.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "truncate", function() { return _string__WEBPACK_IMPORTED_MODULE_9__["truncate"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "snipLine", function() { return _string__WEBPACK_IMPORTED_MODULE_9__["snipLine"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "safeJoin", function() { return _string__WEBPACK_IMPORTED_MODULE_9__["safeJoin"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "isMatchingPattern", function() { return _string__WEBPACK_IMPORTED_MODULE_9__["isMatchingPattern"]; });
-
-/* harmony import */ var _supports__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./supports */ "./node_modules/@sentry/utils/esm/supports.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "supportsErrorEvent", function() { return _supports__WEBPACK_IMPORTED_MODULE_10__["supportsErrorEvent"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "supportsDOMError", function() { return _supports__WEBPACK_IMPORTED_MODULE_10__["supportsDOMError"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "supportsDOMException", function() { return _supports__WEBPACK_IMPORTED_MODULE_10__["supportsDOMException"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "supportsFetch", function() { return _supports__WEBPACK_IMPORTED_MODULE_10__["supportsFetch"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "supportsNativeFetch", function() { return _supports__WEBPACK_IMPORTED_MODULE_10__["supportsNativeFetch"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "supportsReportingObserver", function() { return _supports__WEBPACK_IMPORTED_MODULE_10__["supportsReportingObserver"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "supportsReferrerPolicy", function() { return _supports__WEBPACK_IMPORTED_MODULE_10__["supportsReferrerPolicy"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "supportsHistory", function() { return _supports__WEBPACK_IMPORTED_MODULE_10__["supportsHistory"]; });
-
-/* harmony import */ var _syncpromise__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./syncpromise */ "./node_modules/@sentry/utils/esm/syncpromise.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "SyncPromise", function() { return _syncpromise__WEBPACK_IMPORTED_MODULE_11__["SyncPromise"]; });
-
-/* harmony import */ var _instrument__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./instrument */ "./node_modules/@sentry/utils/esm/instrument.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "addInstrumentationHandler", function() { return _instrument__WEBPACK_IMPORTED_MODULE_12__["addInstrumentationHandler"]; });
-
-/* harmony import */ var _dsn__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./dsn */ "./node_modules/@sentry/utils/esm/dsn.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Dsn", function() { return _dsn__WEBPACK_IMPORTED_MODULE_13__["Dsn"]; });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//# sourceMappingURL=index.js.map
-
-/***/ }),
-
-/***/ "./node_modules/@sentry/utils/esm/instrument.js":
-/*!******************************************************!*\
-  !*** ./node_modules/@sentry/utils/esm/instrument.js ***!
-  \******************************************************/
-/*! exports provided: addInstrumentationHandler */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "addInstrumentationHandler", function() { return addInstrumentationHandler; });
-/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
-/* harmony import */ var _is__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./is */ "./node_modules/@sentry/utils/esm/is.js");
-/* harmony import */ var _logger__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./logger */ "./node_modules/@sentry/utils/esm/logger.js");
-/* harmony import */ var _misc__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./misc */ "./node_modules/@sentry/utils/esm/misc.js");
-/* harmony import */ var _object__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./object */ "./node_modules/@sentry/utils/esm/object.js");
-/* harmony import */ var _supports__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./supports */ "./node_modules/@sentry/utils/esm/supports.js");
-/* tslint:disable:only-arrow-functions no-unsafe-any */
-
-
-
-
-
-
-var global = Object(_misc__WEBPACK_IMPORTED_MODULE_3__["getGlobalObject"])();
-/**
- * Instrument native APIs to call handlers that can be used to create breadcrumbs, APM spans etc.
- *  - Console API
- *  - Fetch API
- *  - XHR API
- *  - History API
- *  - DOM API (click/typing)
- *  - Error API
- *  - UnhandledRejection API
- */
-var handlers = {};
-var instrumented = {};
-/** Instruments given API */
-function instrument(type) {
-    if (instrumented[type]) {
-        return;
-    }
-    instrumented[type] = true;
-    switch (type) {
-        case 'console':
-            instrumentConsole();
-            break;
-        case 'dom':
-            instrumentDOM();
-            break;
-        case 'xhr':
-            instrumentXHR();
-            break;
-        case 'fetch':
-            instrumentFetch();
-            break;
-        case 'history':
-            instrumentHistory();
-            break;
-        case 'error':
-            instrumentError();
-            break;
-        case 'unhandledrejection':
-            instrumentUnhandledRejection();
-            break;
-        default:
-            _logger__WEBPACK_IMPORTED_MODULE_2__["logger"].warn('unknown instrumentation type:', type);
-    }
-}
-/**
- * Add handler that will be called when given type of instrumentation triggers.
- * Use at your own risk, this might break without changelog notice, only used internally.
- * @hidden
- */
-function addInstrumentationHandler(handler) {
-    // tslint:disable-next-line:strict-type-predicates
-    if (!handler || typeof handler.type !== 'string' || typeof handler.callback !== 'function') {
-        return;
-    }
-    handlers[handler.type] = handlers[handler.type] || [];
-    handlers[handler.type].push(handler.callback);
-    instrument(handler.type);
-}
-/** JSDoc */
-function triggerHandlers(type, data) {
-    var e_1, _a;
-    if (!type || !handlers[type]) {
-        return;
-    }
-    try {
-        for (var _b = tslib__WEBPACK_IMPORTED_MODULE_0__["__values"](handlers[type] || []), _c = _b.next(); !_c.done; _c = _b.next()) {
-            var handler = _c.value;
-            try {
-                handler(data);
-            }
-            catch (e) {
-                _logger__WEBPACK_IMPORTED_MODULE_2__["logger"].error("Error while triggering instrumentation handler.\nType: " + type + "\nName: " + Object(_misc__WEBPACK_IMPORTED_MODULE_3__["getFunctionName"])(handler) + "\nError: " + e);
-            }
-        }
-    }
-    catch (e_1_1) { e_1 = { error: e_1_1 }; }
-    finally {
-        try {
-            if (_c && !_c.done && (_a = _b.return)) _a.call(_b);
-        }
-        finally { if (e_1) throw e_1.error; }
-    }
-}
-/** JSDoc */
-function instrumentConsole() {
-    if (!('console' in global)) {
-        return;
-    }
-    ['debug', 'info', 'warn', 'error', 'log', 'assert'].forEach(function (level) {
-        if (!(level in global.console)) {
-            return;
-        }
-        Object(_object__WEBPACK_IMPORTED_MODULE_4__["fill"])(global.console, level, function (originalConsoleLevel) {
-            return function () {
-                var args = [];
-                for (var _i = 0; _i < arguments.length; _i++) {
-                    args[_i] = arguments[_i];
-                }
-                triggerHandlers('console', { args: args, level: level });
-                // this fails for some browsers. :(
-                if (originalConsoleLevel) {
-                    Function.prototype.apply.call(originalConsoleLevel, global.console, args);
-                }
-            };
-        });
-    });
-}
-/** JSDoc */
-function instrumentFetch() {
-    if (!Object(_supports__WEBPACK_IMPORTED_MODULE_5__["supportsNativeFetch"])()) {
-        return;
-    }
-    Object(_object__WEBPACK_IMPORTED_MODULE_4__["fill"])(global, 'fetch', function (originalFetch) {
-        return function () {
-            var args = [];
-            for (var _i = 0; _i < arguments.length; _i++) {
-                args[_i] = arguments[_i];
-            }
-            var commonHandlerData = {
-                args: args,
-                fetchData: {
-                    method: getFetchMethod(args),
-                    url: getFetchUrl(args),
-                },
-                startTimestamp: Date.now(),
-            };
-            triggerHandlers('fetch', tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"]({}, commonHandlerData));
-            return originalFetch.apply(global, args).then(function (response) {
-                triggerHandlers('fetch', tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"]({}, commonHandlerData, { endTimestamp: Date.now(), response: response }));
-                return response;
-            }, function (error) {
-                triggerHandlers('fetch', tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"]({}, commonHandlerData, { endTimestamp: Date.now(), error: error }));
-                throw error;
-            });
-        };
-    });
-}
-/** Extract `method` from fetch call arguments */
-function getFetchMethod(fetchArgs) {
-    if (fetchArgs === void 0) { fetchArgs = []; }
-    if ('Request' in global && Object(_is__WEBPACK_IMPORTED_MODULE_1__["isInstanceOf"])(fetchArgs[0], Request) && fetchArgs[0].method) {
-        return String(fetchArgs[0].method).toUpperCase();
-    }
-    if (fetchArgs[1] && fetchArgs[1].method) {
-        return String(fetchArgs[1].method).toUpperCase();
-    }
-    return 'GET';
-}
-/** Extract `url` from fetch call arguments */
-function getFetchUrl(fetchArgs) {
-    if (fetchArgs === void 0) { fetchArgs = []; }
-    if (typeof fetchArgs[0] === 'string') {
-        return fetchArgs[0];
-    }
-    if ('Request' in global && Object(_is__WEBPACK_IMPORTED_MODULE_1__["isInstanceOf"])(fetchArgs[0], Request)) {
-        return fetchArgs[0].url;
-    }
-    return String(fetchArgs[0]);
-}
-/** JSDoc */
-function instrumentXHR() {
-    if (!('XMLHttpRequest' in global)) {
-        return;
-    }
-    var xhrproto = XMLHttpRequest.prototype;
-    Object(_object__WEBPACK_IMPORTED_MODULE_4__["fill"])(xhrproto, 'open', function (originalOpen) {
-        return function () {
-            var args = [];
-            for (var _i = 0; _i < arguments.length; _i++) {
-                args[_i] = arguments[_i];
-            }
-            var url = args[1];
-            this.__sentry_xhr__ = {
-                method: Object(_is__WEBPACK_IMPORTED_MODULE_1__["isString"])(args[0]) ? args[0].toUpperCase() : args[0],
-                url: args[1],
-            };
-            // if Sentry key appears in URL, don't capture it as a request
-            if (Object(_is__WEBPACK_IMPORTED_MODULE_1__["isString"])(url) && this.__sentry_xhr__.method === 'POST' && url.match(/sentry_key/)) {
-                this.__sentry_own_request__ = true;
-            }
-            return originalOpen.apply(this, args);
-        };
-    });
-    Object(_object__WEBPACK_IMPORTED_MODULE_4__["fill"])(xhrproto, 'send', function (originalSend) {
-        return function () {
-            var args = [];
-            for (var _i = 0; _i < arguments.length; _i++) {
-                args[_i] = arguments[_i];
-            }
-            var xhr = this; // tslint:disable-line:no-this-assignment
-            var commonHandlerData = {
-                args: args,
-                startTimestamp: Date.now(),
-                xhr: xhr,
-            };
-            triggerHandlers('xhr', tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"]({}, commonHandlerData));
-            xhr.addEventListener('readystatechange', function () {
-                if (xhr.readyState === 4) {
-                    try {
-                        // touching statusCode in some platforms throws
-                        // an exception
-                        if (xhr.__sentry_xhr__) {
-                            xhr.__sentry_xhr__.status_code = xhr.status;
-                        }
-                    }
-                    catch (e) {
-                        /* do nothing */
-                    }
-                    triggerHandlers('xhr', tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"]({}, commonHandlerData, { endTimestamp: Date.now() }));
-                }
-            });
-            return originalSend.apply(this, args);
-        };
-    });
-}
-var lastHref;
-/** JSDoc */
-function instrumentHistory() {
-    if (!Object(_supports__WEBPACK_IMPORTED_MODULE_5__["supportsHistory"])()) {
-        return;
-    }
-    var oldOnPopState = global.onpopstate;
-    global.onpopstate = function () {
-        var args = [];
-        for (var _i = 0; _i < arguments.length; _i++) {
-            args[_i] = arguments[_i];
-        }
-        var to = global.location.href;
-        // keep track of the current URL state, as we always receive only the updated state
-        var from = lastHref;
-        lastHref = to;
-        triggerHandlers('history', {
-            from: from,
-            to: to,
-        });
-        if (oldOnPopState) {
-            return oldOnPopState.apply(this, args);
-        }
-    };
-    /** @hidden */
-    function historyReplacementFunction(originalHistoryFunction) {
-        return function () {
-            var args = [];
-            for (var _i = 0; _i < arguments.length; _i++) {
-                args[_i] = arguments[_i];
-            }
-            var url = args.length > 2 ? args[2] : undefined;
-            if (url) {
-                // coerce to string (this is what pushState does)
-                var from = lastHref;
-                var to = String(url);
-                // keep track of the current URL state, as we always receive only the updated state
-                lastHref = to;
-                triggerHandlers('history', {
-                    from: from,
-                    to: to,
-                });
-            }
-            return originalHistoryFunction.apply(this, args);
-        };
-    }
-    Object(_object__WEBPACK_IMPORTED_MODULE_4__["fill"])(global.history, 'pushState', historyReplacementFunction);
-    Object(_object__WEBPACK_IMPORTED_MODULE_4__["fill"])(global.history, 'replaceState', historyReplacementFunction);
-}
-/** JSDoc */
-function instrumentDOM() {
-    if (!('document' in global)) {
-        return;
-    }
-    // Capture breadcrumbs from any click that is unhandled / bubbled up all the way
-    // to the document. Do this before we instrument addEventListener.
-    global.document.addEventListener('click', domEventHandler('click', triggerHandlers.bind(null, 'dom')), false);
-    global.document.addEventListener('keypress', keypressEventHandler(triggerHandlers.bind(null, 'dom')), false);
-    // After hooking into document bubbled up click and keypresses events, we also hook into user handled click & keypresses.
-    ['EventTarget', 'Node'].forEach(function (target) {
-        var proto = global[target] && global[target].prototype;
-        if (!proto || !proto.hasOwnProperty || !proto.hasOwnProperty('addEventListener')) {
-            return;
-        }
-        Object(_object__WEBPACK_IMPORTED_MODULE_4__["fill"])(proto, 'addEventListener', function (original) {
-            return function (eventName, fn, options) {
-                if (fn && fn.handleEvent) {
-                    if (eventName === 'click') {
-                        Object(_object__WEBPACK_IMPORTED_MODULE_4__["fill"])(fn, 'handleEvent', function (innerOriginal) {
-                            return function (event) {
-                                domEventHandler('click', triggerHandlers.bind(null, 'dom'))(event);
-                                return innerOriginal.call(this, event);
-                            };
-                        });
-                    }
-                    if (eventName === 'keypress') {
-                        Object(_object__WEBPACK_IMPORTED_MODULE_4__["fill"])(fn, 'handleEvent', function (innerOriginal) {
-                            return function (event) {
-                                keypressEventHandler(triggerHandlers.bind(null, 'dom'))(event);
-                                return innerOriginal.call(this, event);
-                            };
-                        });
-                    }
-                }
-                else {
-                    if (eventName === 'click') {
-                        domEventHandler('click', triggerHandlers.bind(null, 'dom'), true)(this);
-                    }
-                    if (eventName === 'keypress') {
-                        keypressEventHandler(triggerHandlers.bind(null, 'dom'))(this);
-                    }
-                }
-                return original.call(this, eventName, fn, options);
-            };
-        });
-        Object(_object__WEBPACK_IMPORTED_MODULE_4__["fill"])(proto, 'removeEventListener', function (original) {
-            return function (eventName, fn, options) {
-                var callback = fn;
-                try {
-                    callback = callback && (callback.__sentry_wrapped__ || callback);
-                }
-                catch (e) {
-                    // ignore, accessing __sentry_wrapped__ will throw in some Selenium environments
-                }
-                return original.call(this, eventName, callback, options);
-            };
-        });
-    });
-}
-var debounceDuration = 1000;
-var debounceTimer = 0;
-var keypressTimeout;
-var lastCapturedEvent;
-/**
- * Wraps addEventListener to capture UI breadcrumbs
- * @param name the event name (e.g. "click")
- * @param handler function that will be triggered
- * @param debounce decides whether it should wait till another event loop
- * @returns wrapped breadcrumb events handler
- * @hidden
- */
-function domEventHandler(name, handler, debounce) {
-    if (debounce === void 0) { debounce = false; }
-    return function (event) {
-        // reset keypress timeout; e.g. triggering a 'click' after
-        // a 'keypress' will reset the keypress debounce so that a new
-        // set of keypresses can be recorded
-        keypressTimeout = undefined;
-        // It's possible this handler might trigger multiple times for the same
-        // event (e.g. event propagation through node ancestors). Ignore if we've
-        // already captured the event.
-        if (!event || lastCapturedEvent === event) {
-            return;
-        }
-        lastCapturedEvent = event;
-        if (debounceTimer) {
-            clearTimeout(debounceTimer);
-        }
-        if (debounce) {
-            debounceTimer = setTimeout(function () {
-                handler({ event: event, name: name });
-            });
-        }
-        else {
-            handler({ event: event, name: name });
-        }
-    };
-}
-/**
- * Wraps addEventListener to capture keypress UI events
- * @param handler function that will be triggered
- * @returns wrapped keypress events handler
- * @hidden
- */
-function keypressEventHandler(handler) {
-    // TODO: if somehow user switches keypress target before
-    //       debounce timeout is triggered, we will only capture
-    //       a single breadcrumb from the FIRST target (acceptable?)
-    return function (event) {
-        var target;
-        try {
-            target = event.target;
-        }
-        catch (e) {
-            // just accessing event properties can throw an exception in some rare circumstances
-            // see: https://github.com/getsentry/raven-js/issues/838
-            return;
-        }
-        var tagName = target && target.tagName;
-        // only consider keypress events on actual input elements
-        // this will disregard keypresses targeting body (e.g. tabbing
-        // through elements, hotkeys, etc)
-        if (!tagName || (tagName !== 'INPUT' && tagName !== 'TEXTAREA' && !target.isContentEditable)) {
-            return;
-        }
-        // record first keypress in a series, but ignore subsequent
-        // keypresses until debounce clears
-        if (!keypressTimeout) {
-            domEventHandler('input', handler)(event);
-        }
-        clearTimeout(keypressTimeout);
-        keypressTimeout = setTimeout(function () {
-            keypressTimeout = undefined;
-        }, debounceDuration);
-    };
-}
-var _oldOnErrorHandler = null;
-/** JSDoc */
-function instrumentError() {
-    _oldOnErrorHandler = global.onerror;
-    global.onerror = function (msg, url, line, column, error) {
-        triggerHandlers('error', {
-            column: column,
-            error: error,
-            line: line,
-            msg: msg,
-            url: url,
-        });
-        if (_oldOnErrorHandler) {
-            return _oldOnErrorHandler.apply(this, arguments);
-        }
-        return false;
-    };
-}
-var _oldOnUnhandledRejectionHandler = null;
-/** JSDoc */
-function instrumentUnhandledRejection() {
-    _oldOnUnhandledRejectionHandler = global.onunhandledrejection;
-    global.onunhandledrejection = function (e) {
-        triggerHandlers('unhandledrejection', e);
-        if (_oldOnUnhandledRejectionHandler) {
-            return _oldOnUnhandledRejectionHandler.apply(this, arguments);
-        }
-        return true;
-    };
-}
-//# sourceMappingURL=instrument.js.map
-
-/***/ }),
-
-/***/ "./node_modules/@sentry/utils/esm/is.js":
-/*!**********************************************!*\
-  !*** ./node_modules/@sentry/utils/esm/is.js ***!
-  \**********************************************/
-/*! exports provided: isError, isErrorEvent, isDOMError, isDOMException, isString, isPrimitive, isPlainObject, isEvent, isElement, isRegExp, isThenable, isSyntheticEvent, isInstanceOf */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isError", function() { return isError; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isErrorEvent", function() { return isErrorEvent; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isDOMError", function() { return isDOMError; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isDOMException", function() { return isDOMException; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isString", function() { return isString; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isPrimitive", function() { return isPrimitive; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isPlainObject", function() { return isPlainObject; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isEvent", function() { return isEvent; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isElement", function() { return isElement; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isRegExp", function() { return isRegExp; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isThenable", function() { return isThenable; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isSyntheticEvent", function() { return isSyntheticEvent; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isInstanceOf", function() { return isInstanceOf; });
-/**
- * Checks whether given value's type is one of a few Error or Error-like
- * {@link isError}.
- *
- * @param wat A value to be checked.
- * @returns A boolean representing the result.
- */
-function isError(wat) {
-    switch (Object.prototype.toString.call(wat)) {
-        case '[object Error]':
-            return true;
-        case '[object Exception]':
-            return true;
-        case '[object DOMException]':
-            return true;
-        default:
-            return isInstanceOf(wat, Error);
-    }
-}
-/**
- * Checks whether given value's type is ErrorEvent
- * {@link isErrorEvent}.
- *
- * @param wat A value to be checked.
- * @returns A boolean representing the result.
- */
-function isErrorEvent(wat) {
-    return Object.prototype.toString.call(wat) === '[object ErrorEvent]';
-}
-/**
- * Checks whether given value's type is DOMError
- * {@link isDOMError}.
- *
- * @param wat A value to be checked.
- * @returns A boolean representing the result.
- */
-function isDOMError(wat) {
-    return Object.prototype.toString.call(wat) === '[object DOMError]';
-}
-/**
- * Checks whether given value's type is DOMException
- * {@link isDOMException}.
- *
- * @param wat A value to be checked.
- * @returns A boolean representing the result.
- */
-function isDOMException(wat) {
-    return Object.prototype.toString.call(wat) === '[object DOMException]';
-}
-/**
- * Checks whether given value's type is a string
- * {@link isString}.
- *
- * @param wat A value to be checked.
- * @returns A boolean representing the result.
- */
-function isString(wat) {
-    return Object.prototype.toString.call(wat) === '[object String]';
-}
-/**
- * Checks whether given value's is a primitive (undefined, null, number, boolean, string)
- * {@link isPrimitive}.
- *
- * @param wat A value to be checked.
- * @returns A boolean representing the result.
- */
-function isPrimitive(wat) {
-    return wat === null || (typeof wat !== 'object' && typeof wat !== 'function');
-}
-/**
- * Checks whether given value's type is an object literal
- * {@link isPlainObject}.
- *
- * @param wat A value to be checked.
- * @returns A boolean representing the result.
- */
-function isPlainObject(wat) {
-    return Object.prototype.toString.call(wat) === '[object Object]';
-}
-/**
- * Checks whether given value's type is an Event instance
- * {@link isEvent}.
- *
- * @param wat A value to be checked.
- * @returns A boolean representing the result.
- */
-function isEvent(wat) {
-    // tslint:disable-next-line:strict-type-predicates
-    return typeof Event !== 'undefined' && isInstanceOf(wat, Event);
-}
-/**
- * Checks whether given value's type is an Element instance
- * {@link isElement}.
- *
- * @param wat A value to be checked.
- * @returns A boolean representing the result.
- */
-function isElement(wat) {
-    // tslint:disable-next-line:strict-type-predicates
-    return typeof Element !== 'undefined' && isInstanceOf(wat, Element);
-}
-/**
- * Checks whether given value's type is an regexp
- * {@link isRegExp}.
- *
- * @param wat A value to be checked.
- * @returns A boolean representing the result.
- */
-function isRegExp(wat) {
-    return Object.prototype.toString.call(wat) === '[object RegExp]';
-}
-/**
- * Checks whether given value has a then function.
- * @param wat A value to be checked.
- */
-function isThenable(wat) {
-    // tslint:disable:no-unsafe-any
-    return Boolean(wat && wat.then && typeof wat.then === 'function');
-    // tslint:enable:no-unsafe-any
-}
-/**
- * Checks whether given value's type is a SyntheticEvent
- * {@link isSyntheticEvent}.
- *
- * @param wat A value to be checked.
- * @returns A boolean representing the result.
- */
-function isSyntheticEvent(wat) {
-    // tslint:disable-next-line:no-unsafe-any
-    return isPlainObject(wat) && 'nativeEvent' in wat && 'preventDefault' in wat && 'stopPropagation' in wat;
-}
-/**
- * Checks whether given value's type is an instance of provided constructor.
- * {@link isInstanceOf}.
- *
- * @param wat A value to be checked.
- * @param base A constructor to be used in a check.
- * @returns A boolean representing the result.
- */
-function isInstanceOf(wat, base) {
-    try {
-        // tslint:disable-next-line:no-unsafe-any
-        return wat instanceof base;
-    }
-    catch (_e) {
-        return false;
-    }
-}
-//# sourceMappingURL=is.js.map
-
-/***/ }),
-
-/***/ "./node_modules/@sentry/utils/esm/logger.js":
-/*!**************************************************!*\
-  !*** ./node_modules/@sentry/utils/esm/logger.js ***!
-  \**************************************************/
-/*! exports provided: logger */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "logger", function() { return logger; });
-/* harmony import */ var _misc__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./misc */ "./node_modules/@sentry/utils/esm/misc.js");
-
-// TODO: Implement different loggers for different environments
-var global = Object(_misc__WEBPACK_IMPORTED_MODULE_0__["getGlobalObject"])();
-/** Prefix for logging strings */
-var PREFIX = 'Sentry Logger ';
-/** JSDoc */
-var Logger = /** @class */ (function () {
-    /** JSDoc */
-    function Logger() {
-        this._enabled = false;
-    }
-    /** JSDoc */
-    Logger.prototype.disable = function () {
-        this._enabled = false;
-    };
-    /** JSDoc */
-    Logger.prototype.enable = function () {
-        this._enabled = true;
-    };
-    /** JSDoc */
-    Logger.prototype.log = function () {
-        var args = [];
-        for (var _i = 0; _i < arguments.length; _i++) {
-            args[_i] = arguments[_i];
-        }
-        if (!this._enabled) {
-            return;
-        }
-        Object(_misc__WEBPACK_IMPORTED_MODULE_0__["consoleSandbox"])(function () {
-            global.console.log(PREFIX + "[Log]: " + args.join(' ')); // tslint:disable-line:no-console
-        });
-    };
-    /** JSDoc */
-    Logger.prototype.warn = function () {
-        var args = [];
-        for (var _i = 0; _i < arguments.length; _i++) {
-            args[_i] = arguments[_i];
-        }
-        if (!this._enabled) {
-            return;
-        }
-        Object(_misc__WEBPACK_IMPORTED_MODULE_0__["consoleSandbox"])(function () {
-            global.console.warn(PREFIX + "[Warn]: " + args.join(' ')); // tslint:disable-line:no-console
-        });
-    };
-    /** JSDoc */
-    Logger.prototype.error = function () {
-        var args = [];
-        for (var _i = 0; _i < arguments.length; _i++) {
-            args[_i] = arguments[_i];
-        }
-        if (!this._enabled) {
-            return;
-        }
-        Object(_misc__WEBPACK_IMPORTED_MODULE_0__["consoleSandbox"])(function () {
-            global.console.error(PREFIX + "[Error]: " + args.join(' ')); // tslint:disable-line:no-console
-        });
-    };
-    return Logger;
-}());
-// Ensure we only have a single logger instance, even if multiple versions of @sentry/utils are being used
-global.__SENTRY__ = global.__SENTRY__ || {};
-var logger = global.__SENTRY__.logger || (global.__SENTRY__.logger = new Logger());
-
-//# sourceMappingURL=logger.js.map
-
-/***/ }),
-
-/***/ "./node_modules/@sentry/utils/esm/memo.js":
-/*!************************************************!*\
-  !*** ./node_modules/@sentry/utils/esm/memo.js ***!
-  \************************************************/
-/*! exports provided: Memo */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Memo", function() { return Memo; });
-// tslint:disable:no-unsafe-any
-/**
- * Memo class used for decycle json objects. Uses WeakSet if available otherwise array.
- */
-var Memo = /** @class */ (function () {
-    function Memo() {
-        // tslint:disable-next-line
-        this._hasWeakSet = typeof WeakSet === 'function';
-        this._inner = this._hasWeakSet ? new WeakSet() : [];
-    }
-    /**
-     * Sets obj to remember.
-     * @param obj Object to remember
-     */
-    Memo.prototype.memoize = function (obj) {
-        if (this._hasWeakSet) {
-            if (this._inner.has(obj)) {
-                return true;
-            }
-            this._inner.add(obj);
-            return false;
-        }
-        // tslint:disable-next-line:prefer-for-of
-        for (var i = 0; i < this._inner.length; i++) {
-            var value = this._inner[i];
-            if (value === obj) {
-                return true;
-            }
-        }
-        this._inner.push(obj);
-        return false;
-    };
-    /**
-     * Removes object from internal storage.
-     * @param obj Object to forget
-     */
-    Memo.prototype.unmemoize = function (obj) {
-        if (this._hasWeakSet) {
-            this._inner.delete(obj);
-        }
-        else {
-            for (var i = 0; i < this._inner.length; i++) {
-                if (this._inner[i] === obj) {
-                    this._inner.splice(i, 1);
-                    break;
-                }
-            }
-        }
-    };
-    return Memo;
-}());
-
-//# sourceMappingURL=memo.js.map
-
-/***/ }),
-
-/***/ "./node_modules/@sentry/utils/esm/misc.js":
-/*!************************************************!*\
-  !*** ./node_modules/@sentry/utils/esm/misc.js ***!
-  \************************************************/
-/*! exports provided: dynamicRequire, isNodeEnv, getGlobalObject, uuid4, parseUrl, getEventDescription, consoleSandbox, addExceptionTypeValue, addExceptionMechanism, getLocationHref, htmlTreeAsString, crossPlatformPerformance, timestampWithMs, parseSemver, parseRetryAfterHeader, getFunctionName, addContextToFrame */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* WEBPACK VAR INJECTION */(function(process, global, module) {/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "dynamicRequire", function() { return dynamicRequire; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isNodeEnv", function() { return isNodeEnv; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getGlobalObject", function() { return getGlobalObject; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "uuid4", function() { return uuid4; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "parseUrl", function() { return parseUrl; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getEventDescription", function() { return getEventDescription; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "consoleSandbox", function() { return consoleSandbox; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "addExceptionTypeValue", function() { return addExceptionTypeValue; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "addExceptionMechanism", function() { return addExceptionMechanism; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getLocationHref", function() { return getLocationHref; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "htmlTreeAsString", function() { return htmlTreeAsString; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "crossPlatformPerformance", function() { return crossPlatformPerformance; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "timestampWithMs", function() { return timestampWithMs; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "parseSemver", function() { return parseSemver; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "parseRetryAfterHeader", function() { return parseRetryAfterHeader; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getFunctionName", function() { return getFunctionName; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "addContextToFrame", function() { return addContextToFrame; });
-/* harmony import */ var _is__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./is */ "./node_modules/@sentry/utils/esm/is.js");
-/* harmony import */ var _string__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./string */ "./node_modules/@sentry/utils/esm/string.js");
-
-
-/**
- * Requires a module which is protected _against bundler minification.
- *
- * @param request The module path to resolve
- */
-function dynamicRequire(mod, request) {
-    // tslint:disable-next-line: no-unsafe-any
-    return mod.require(request);
-}
-/**
- * Checks whether we're in the Node.js or Browser environment
- *
- * @returns Answer to given question
- */
-function isNodeEnv() {
-    // tslint:disable:strict-type-predicates
-    return Object.prototype.toString.call(typeof process !== 'undefined' ? process : 0) === '[object process]';
-}
-var fallbackGlobalObject = {};
-/**
- * Safely get global scope object
- *
- * @returns Global scope object
- */
-function getGlobalObject() {
-    return (isNodeEnv()
-        ? global
-        : typeof window !== 'undefined'
-            ? window
-            : typeof self !== 'undefined'
-                ? self
-                : fallbackGlobalObject);
-}
-/**
- * UUID4 generator
- *
- * @returns string Generated UUID4.
- */
-function uuid4() {
-    var global = getGlobalObject();
-    var crypto = global.crypto || global.msCrypto;
-    if (!(crypto === void 0) && crypto.getRandomValues) {
-        // Use window.crypto API if available
-        var arr = new Uint16Array(8);
-        crypto.getRandomValues(arr);
-        // set 4 in byte 7
-        // tslint:disable-next-line:no-bitwise
-        arr[3] = (arr[3] & 0xfff) | 0x4000;
-        // set 2 most significant bits of byte 9 to '10'
-        // tslint:disable-next-line:no-bitwise
-        arr[4] = (arr[4] & 0x3fff) | 0x8000;
-        var pad = function (num) {
-            var v = num.toString(16);
-            while (v.length < 4) {
-                v = "0" + v;
-            }
-            return v;
-        };
-        return (pad(arr[0]) + pad(arr[1]) + pad(arr[2]) + pad(arr[3]) + pad(arr[4]) + pad(arr[5]) + pad(arr[6]) + pad(arr[7]));
-    }
-    // http://stackoverflow.com/questions/105034/how-to-create-a-guid-uuid-in-javascript/2117523#2117523
-    return 'xxxxxxxxxxxx4xxxyxxxxxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
-        // tslint:disable-next-line:no-bitwise
-        var r = (Math.random() * 16) | 0;
-        // tslint:disable-next-line:no-bitwise
-        var v = c === 'x' ? r : (r & 0x3) | 0x8;
-        return v.toString(16);
-    });
-}
-/**
- * Parses string form of URL into an object
- * // borrowed from https://tools.ietf.org/html/rfc3986#appendix-B
- * // intentionally using regex and not <a/> href parsing trick because React Native and other
- * // environments where DOM might not be available
- * @returns parsed URL object
- */
-function parseUrl(url) {
-    if (!url) {
-        return {};
-    }
-    var match = url.match(/^(([^:\/?#]+):)?(\/\/([^\/?#]*))?([^?#]*)(\?([^#]*))?(#(.*))?$/);
-    if (!match) {
-        return {};
-    }
-    // coerce to undefined values to empty string so we don't get 'undefined'
-    var query = match[6] || '';
-    var fragment = match[8] || '';
-    return {
-        host: match[4],
-        path: match[5],
-        protocol: match[2],
-        relative: match[5] + query + fragment,
-    };
-}
-/**
- * Extracts either message or type+value from an event that can be used for user-facing logs
- * @returns event's description
- */
-function getEventDescription(event) {
-    if (event.message) {
-        return event.message;
-    }
-    if (event.exception && event.exception.values && event.exception.values[0]) {
-        var exception = event.exception.values[0];
-        if (exception.type && exception.value) {
-            return exception.type + ": " + exception.value;
-        }
-        return exception.type || exception.value || event.event_id || '<unknown>';
-    }
-    return event.event_id || '<unknown>';
-}
-/** JSDoc */
-function consoleSandbox(callback) {
-    var global = getGlobalObject();
-    var levels = ['debug', 'info', 'warn', 'error', 'log', 'assert'];
-    if (!('console' in global)) {
-        return callback();
-    }
-    var originalConsole = global.console;
-    var wrappedLevels = {};
-    // Restore all wrapped console methods
-    levels.forEach(function (level) {
-        if (level in global.console && originalConsole[level].__sentry_original__) {
-            wrappedLevels[level] = originalConsole[level];
-            originalConsole[level] = originalConsole[level].__sentry_original__;
-        }
-    });
-    // Perform callback manipulations
-    var result = callback();
-    // Revert restoration to wrapped state
-    Object.keys(wrappedLevels).forEach(function (level) {
-        originalConsole[level] = wrappedLevels[level];
-    });
-    return result;
-}
-/**
- * Adds exception values, type and value to an synthetic Exception.
- * @param event The event to modify.
- * @param value Value of the exception.
- * @param type Type of the exception.
- * @hidden
- */
-function addExceptionTypeValue(event, value, type) {
-    event.exception = event.exception || {};
-    event.exception.values = event.exception.values || [];
-    event.exception.values[0] = event.exception.values[0] || {};
-    event.exception.values[0].value = event.exception.values[0].value || value || '';
-    event.exception.values[0].type = event.exception.values[0].type || type || 'Error';
-}
-/**
- * Adds exception mechanism to a given event.
- * @param event The event to modify.
- * @param mechanism Mechanism of the mechanism.
- * @hidden
- */
-function addExceptionMechanism(event, mechanism) {
-    if (mechanism === void 0) { mechanism = {}; }
-    // TODO: Use real type with `keyof Mechanism` thingy and maybe make it better?
-    try {
-        // @ts-ignore
-        // tslint:disable:no-non-null-assertion
-        event.exception.values[0].mechanism = event.exception.values[0].mechanism || {};
-        Object.keys(mechanism).forEach(function (key) {
-            // @ts-ignore
-            event.exception.values[0].mechanism[key] = mechanism[key];
-        });
-    }
-    catch (_oO) {
-        // no-empty
-    }
-}
-/**
- * A safe form of location.href
- */
-function getLocationHref() {
-    try {
-        return document.location.href;
-    }
-    catch (oO) {
-        return '';
-    }
-}
-/**
- * Given a child DOM element, returns a query-selector statement describing that
- * and its ancestors
- * e.g. [HTMLElement] => body > div > input#foo.btn[name=baz]
- * @returns generated DOM path
- */
-function htmlTreeAsString(elem) {
-    // try/catch both:
-    // - accessing event.target (see getsentry/raven-js#838, #768)
-    // - `htmlTreeAsString` because it's complex, and just accessing the DOM incorrectly
-    // - can throw an exception in some circumstances.
-    try {
-        var currentElem = elem;
-        var MAX_TRAVERSE_HEIGHT = 5;
-        var MAX_OUTPUT_LEN = 80;
-        var out = [];
-        var height = 0;
-        var len = 0;
-        var separator = ' > ';
-        var sepLength = separator.length;
-        var nextStr = void 0;
-        while (currentElem && height++ < MAX_TRAVERSE_HEIGHT) {
-            nextStr = _htmlElementAsString(currentElem);
-            // bail out if
-            // - nextStr is the 'html' element
-            // - the length of the string that would be created exceeds MAX_OUTPUT_LEN
-            //   (ignore this limit if we are on the first iteration)
-            if (nextStr === 'html' || (height > 1 && len + out.length * sepLength + nextStr.length >= MAX_OUTPUT_LEN)) {
-                break;
-            }
-            out.push(nextStr);
-            len += nextStr.length;
-            currentElem = currentElem.parentNode;
-        }
-        return out.reverse().join(separator);
-    }
-    catch (_oO) {
-        return '<unknown>';
-    }
-}
-/**
- * Returns a simple, query-selector representation of a DOM element
- * e.g. [HTMLElement] => input#foo.btn[name=baz]
- * @returns generated DOM path
- */
-function _htmlElementAsString(el) {
-    var elem = el;
-    var out = [];
-    var className;
-    var classes;
-    var key;
-    var attr;
-    var i;
-    if (!elem || !elem.tagName) {
-        return '';
-    }
-    out.push(elem.tagName.toLowerCase());
-    if (elem.id) {
-        out.push("#" + elem.id);
-    }
-    className = elem.className;
-    if (className && Object(_is__WEBPACK_IMPORTED_MODULE_0__["isString"])(className)) {
-        classes = className.split(/\s+/);
-        for (i = 0; i < classes.length; i++) {
-            out.push("." + classes[i]);
-        }
-    }
-    var attrWhitelist = ['type', 'name', 'title', 'alt'];
-    for (i = 0; i < attrWhitelist.length; i++) {
-        key = attrWhitelist[i];
-        attr = elem.getAttribute(key);
-        if (attr) {
-            out.push("[" + key + "=\"" + attr + "\"]");
-        }
-    }
-    return out.join('');
-}
-var INITIAL_TIME = Date.now();
-var prevNow = 0;
-var performanceFallback = {
-    now: function () {
-        var now = Date.now() - INITIAL_TIME;
-        if (now < prevNow) {
-            now = prevNow;
-        }
-        prevNow = now;
-        return now;
-    },
-    timeOrigin: INITIAL_TIME,
-};
-var crossPlatformPerformance = (function () {
-    if (isNodeEnv()) {
-        try {
-            var perfHooks = dynamicRequire(module, 'perf_hooks');
-            return perfHooks.performance;
-        }
-        catch (_) {
-            return performanceFallback;
-        }
-    }
-    if (getGlobalObject().performance) {
-        // Polyfill for performance.timeOrigin.
-        //
-        // While performance.timing.navigationStart is deprecated in favor of performance.timeOrigin, performance.timeOrigin
-        // is not as widely supported. Namely, performance.timeOrigin is undefined in Safari as of writing.
-        // tslint:disable-next-line:strict-type-predicates
-        if (performance.timeOrigin === undefined) {
-            // As of writing, performance.timing is not available in Web Workers in mainstream browsers, so it is not always a
-            // valid fallback. In the absence of a initial time provided by the browser, fallback to INITIAL_TIME.
-            // @ts-ignore
-            // tslint:disable-next-line:deprecation
-            performance.timeOrigin = (performance.timing && performance.timing.navigationStart) || INITIAL_TIME;
-        }
-    }
-    return getGlobalObject().performance || performanceFallback;
-})();
-/**
- * Returns a timestamp in seconds with milliseconds precision since the UNIX epoch calculated with the monotonic clock.
- */
-function timestampWithMs() {
-    return (crossPlatformPerformance.timeOrigin + crossPlatformPerformance.now()) / 1000;
-}
-// https://semver.org/#is-there-a-suggested-regular-expression-regex-to-check-a-semver-string
-var SEMVER_REGEXP = /^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$/;
-/**
- * Parses input into a SemVer interface
- * @param input string representation of a semver version
- */
-function parseSemver(input) {
-    var match = input.match(SEMVER_REGEXP) || [];
-    var major = parseInt(match[1], 10);
-    var minor = parseInt(match[2], 10);
-    var patch = parseInt(match[3], 10);
-    return {
-        buildmetadata: match[5],
-        major: isNaN(major) ? undefined : major,
-        minor: isNaN(minor) ? undefined : minor,
-        patch: isNaN(patch) ? undefined : patch,
-        prerelease: match[4],
-    };
-}
-var defaultRetryAfter = 60 * 1000; // 60 seconds
-/**
- * Extracts Retry-After value from the request header or returns default value
- * @param now current unix timestamp
- * @param header string representation of 'Retry-After' header
- */
-function parseRetryAfterHeader(now, header) {
-    if (!header) {
-        return defaultRetryAfter;
-    }
-    var headerDelay = parseInt("" + header, 10);
-    if (!isNaN(headerDelay)) {
-        return headerDelay * 1000;
-    }
-    var headerDate = Date.parse("" + header);
-    if (!isNaN(headerDate)) {
-        return headerDate - now;
-    }
-    return defaultRetryAfter;
-}
-var defaultFunctionName = '<anonymous>';
-/**
- * Safely extract function name from itself
- */
-function getFunctionName(fn) {
-    try {
-        if (!fn || typeof fn !== 'function') {
-            return defaultFunctionName;
-        }
-        return fn.name || defaultFunctionName;
-    }
-    catch (e) {
-        // Just accessing custom props in some Selenium environments
-        // can cause a "Permission denied" exception (see raven-js#495).
-        return defaultFunctionName;
-    }
-}
-/**
- * This function adds context (pre/post/line) lines to the provided frame
- *
- * @param lines string[] containing all lines
- * @param frame StackFrame that will be mutated
- * @param linesOfContext number of context lines we want to add pre/post
- */
-function addContextToFrame(lines, frame, linesOfContext) {
-    if (linesOfContext === void 0) { linesOfContext = 5; }
-    var lineno = frame.lineno || 0;
-    var maxLines = lines.length;
-    var sourceLine = Math.max(Math.min(maxLines, lineno - 1), 0);
-    frame.pre_context = lines
-        .slice(Math.max(0, sourceLine - linesOfContext), sourceLine)
-        .map(function (line) { return Object(_string__WEBPACK_IMPORTED_MODULE_1__["snipLine"])(line, 0); });
-    frame.context_line = Object(_string__WEBPACK_IMPORTED_MODULE_1__["snipLine"])(lines[Math.min(maxLines - 1, sourceLine)], frame.colno || 0);
-    frame.post_context = lines
-        .slice(Math.min(sourceLine + 1, maxLines), sourceLine + 1 + linesOfContext)
-        .map(function (line) { return Object(_string__WEBPACK_IMPORTED_MODULE_1__["snipLine"])(line, 0); });
-}
-//# sourceMappingURL=misc.js.map
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../../../process/browser.js */ "./node_modules/process/browser.js"), __webpack_require__(/*! ./../../../webpack/buildin/global.js */ "./node_modules/webpack/buildin/global.js"), __webpack_require__(/*! ./../../../webpack/buildin/harmony-module.js */ "./node_modules/webpack/buildin/harmony-module.js")(module)))
-
-/***/ }),
-
-/***/ "./node_modules/@sentry/utils/esm/object.js":
-/*!**************************************************!*\
-  !*** ./node_modules/@sentry/utils/esm/object.js ***!
-  \**************************************************/
-/*! exports provided: fill, urlEncode, normalizeToSize, walk, normalize, extractExceptionKeysForMessage, dropUndefinedKeys */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* WEBPACK VAR INJECTION */(function(global) {/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "fill", function() { return fill; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "urlEncode", function() { return urlEncode; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "normalizeToSize", function() { return normalizeToSize; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "walk", function() { return walk; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "normalize", function() { return normalize; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "extractExceptionKeysForMessage", function() { return extractExceptionKeysForMessage; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "dropUndefinedKeys", function() { return dropUndefinedKeys; });
-/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
-/* harmony import */ var _is__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./is */ "./node_modules/@sentry/utils/esm/is.js");
-/* harmony import */ var _memo__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./memo */ "./node_modules/@sentry/utils/esm/memo.js");
-/* harmony import */ var _misc__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./misc */ "./node_modules/@sentry/utils/esm/misc.js");
-/* harmony import */ var _string__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./string */ "./node_modules/@sentry/utils/esm/string.js");
-
-
-
-
-
-/**
- * Wrap a given object method with a higher-order function
- *
- * @param source An object that contains a method to be wrapped.
- * @param name A name of method to be wrapped.
- * @param replacement A function that should be used to wrap a given method.
- * @returns void
- */
-function fill(source, name, replacement) {
-    if (!(name in source)) {
-        return;
-    }
-    var original = source[name];
-    var wrapped = replacement(original);
-    // Make sure it's a function first, as we need to attach an empty prototype for `defineProperties` to work
-    // otherwise it'll throw "TypeError: Object.defineProperties called on non-object"
-    // tslint:disable-next-line:strict-type-predicates
-    if (typeof wrapped === 'function') {
-        try {
-            wrapped.prototype = wrapped.prototype || {};
-            Object.defineProperties(wrapped, {
-                __sentry_original__: {
-                    enumerable: false,
-                    value: original,
-                },
-            });
-        }
-        catch (_Oo) {
-            // This can throw if multiple fill happens on a global object like XMLHttpRequest
-            // Fixes https://github.com/getsentry/sentry-javascript/issues/2043
-        }
-    }
-    source[name] = wrapped;
-}
-/**
- * Encodes given object into url-friendly format
- *
- * @param object An object that contains serializable values
- * @returns string Encoded
- */
-function urlEncode(object) {
-    return Object.keys(object)
-        .map(
-    // tslint:disable-next-line:no-unsafe-any
-    function (key) { return encodeURIComponent(key) + "=" + encodeURIComponent(object[key]); })
-        .join('&');
-}
-/**
- * Transforms any object into an object literal with all it's attributes
- * attached to it.
- *
- * @param value Initial source that we have to transform in order to be usable by the serializer
- */
-function getWalkSource(value) {
-    if (Object(_is__WEBPACK_IMPORTED_MODULE_1__["isError"])(value)) {
-        var error = value;
-        var err = {
-            message: error.message,
-            name: error.name,
-            stack: error.stack,
-        };
-        for (var i in error) {
-            if (Object.prototype.hasOwnProperty.call(error, i)) {
-                err[i] = error[i];
-            }
-        }
-        return err;
-    }
-    if (Object(_is__WEBPACK_IMPORTED_MODULE_1__["isEvent"])(value)) {
-        var event_1 = value;
-        var source = {};
-        source.type = event_1.type;
-        // Accessing event.target can throw (see getsentry/raven-js#838, #768)
-        try {
-            source.target = Object(_is__WEBPACK_IMPORTED_MODULE_1__["isElement"])(event_1.target)
-                ? Object(_misc__WEBPACK_IMPORTED_MODULE_3__["htmlTreeAsString"])(event_1.target)
-                : Object.prototype.toString.call(event_1.target);
-        }
-        catch (_oO) {
-            source.target = '<unknown>';
-        }
-        try {
-            source.currentTarget = Object(_is__WEBPACK_IMPORTED_MODULE_1__["isElement"])(event_1.currentTarget)
-                ? Object(_misc__WEBPACK_IMPORTED_MODULE_3__["htmlTreeAsString"])(event_1.currentTarget)
-                : Object.prototype.toString.call(event_1.currentTarget);
-        }
-        catch (_oO) {
-            source.currentTarget = '<unknown>';
-        }
-        // tslint:disable-next-line:strict-type-predicates
-        if (typeof CustomEvent !== 'undefined' && Object(_is__WEBPACK_IMPORTED_MODULE_1__["isInstanceOf"])(value, CustomEvent)) {
-            source.detail = event_1.detail;
-        }
-        for (var i in event_1) {
-            if (Object.prototype.hasOwnProperty.call(event_1, i)) {
-                source[i] = event_1;
-            }
-        }
-        return source;
-    }
-    return value;
-}
-/** Calculates bytes size of input string */
-function utf8Length(value) {
-    // tslint:disable-next-line:no-bitwise
-    return ~-encodeURI(value).split(/%..|./).length;
-}
-/** Calculates bytes size of input object */
-function jsonSize(value) {
-    return utf8Length(JSON.stringify(value));
-}
-/** JSDoc */
-function normalizeToSize(object, 
-// Default Node.js REPL depth
-depth, 
-// 100kB, as 200kB is max payload size, so half sounds reasonable
-maxSize) {
-    if (depth === void 0) { depth = 3; }
-    if (maxSize === void 0) { maxSize = 100 * 1024; }
-    var serialized = normalize(object, depth);
-    if (jsonSize(serialized) > maxSize) {
-        return normalizeToSize(object, depth - 1, maxSize);
-    }
-    return serialized;
-}
-/** Transforms any input value into a string form, either primitive value or a type of the input */
-function serializeValue(value) {
-    var type = Object.prototype.toString.call(value);
-    // Node.js REPL notation
-    if (typeof value === 'string') {
-        return value;
-    }
-    if (type === '[object Object]') {
-        return '[Object]';
-    }
-    if (type === '[object Array]') {
-        return '[Array]';
-    }
-    var normalized = normalizeValue(value);
-    return Object(_is__WEBPACK_IMPORTED_MODULE_1__["isPrimitive"])(normalized) ? normalized : type;
-}
-/**
- * normalizeValue()
- *
- * Takes unserializable input and make it serializable friendly
- *
- * - translates undefined/NaN values to "[undefined]"/"[NaN]" respectively,
- * - serializes Error objects
- * - filter global objects
- */
-// tslint:disable-next-line:cyclomatic-complexity
-function normalizeValue(value, key) {
-    if (key === 'domain' && value && typeof value === 'object' && value._events) {
-        return '[Domain]';
-    }
-    if (key === 'domainEmitter') {
-        return '[DomainEmitter]';
-    }
-    if (typeof global !== 'undefined' && value === global) {
-        return '[Global]';
-    }
-    if (typeof window !== 'undefined' && value === window) {
-        return '[Window]';
-    }
-    if (typeof document !== 'undefined' && value === document) {
-        return '[Document]';
-    }
-    // React's SyntheticEvent thingy
-    if (Object(_is__WEBPACK_IMPORTED_MODULE_1__["isSyntheticEvent"])(value)) {
-        return '[SyntheticEvent]';
-    }
-    // tslint:disable-next-line:no-tautology-expression
-    if (typeof value === 'number' && value !== value) {
-        return '[NaN]';
-    }
-    if (value === void 0) {
-        return '[undefined]';
-    }
-    if (typeof value === 'function') {
-        return "[Function: " + Object(_misc__WEBPACK_IMPORTED_MODULE_3__["getFunctionName"])(value) + "]";
-    }
-    return value;
-}
-/**
- * Walks an object to perform a normalization on it
- *
- * @param key of object that's walked in current iteration
- * @param value object to be walked
- * @param depth Optional number indicating how deep should walking be performed
- * @param memo Optional Memo class handling decycling
- */
-function walk(key, value, depth, memo) {
-    if (depth === void 0) { depth = +Infinity; }
-    if (memo === void 0) { memo = new _memo__WEBPACK_IMPORTED_MODULE_2__["Memo"](); }
-    // If we reach the maximum depth, serialize whatever has left
-    if (depth === 0) {
-        return serializeValue(value);
-    }
-    // If value implements `toJSON` method, call it and return early
-    // tslint:disable:no-unsafe-any
-    if (value !== null && value !== undefined && typeof value.toJSON === 'function') {
-        return value.toJSON();
-    }
-    // tslint:enable:no-unsafe-any
-    // If normalized value is a primitive, there are no branches left to walk, so we can just bail out, as theres no point in going down that branch any further
-    var normalized = normalizeValue(value, key);
-    if (Object(_is__WEBPACK_IMPORTED_MODULE_1__["isPrimitive"])(normalized)) {
-        return normalized;
-    }
-    // Create source that we will use for next itterations, either objectified error object (Error type with extracted keys:value pairs) or the input itself
-    var source = getWalkSource(value);
-    // Create an accumulator that will act as a parent for all future itterations of that branch
-    var acc = Array.isArray(value) ? [] : {};
-    // If we already walked that branch, bail out, as it's circular reference
-    if (memo.memoize(value)) {
-        return '[Circular ~]';
-    }
-    // Walk all keys of the source
-    for (var innerKey in source) {
-        // Avoid iterating over fields in the prototype if they've somehow been exposed to enumeration.
-        if (!Object.prototype.hasOwnProperty.call(source, innerKey)) {
-            continue;
-        }
-        // Recursively walk through all the child nodes
-        acc[innerKey] = walk(innerKey, source[innerKey], depth - 1, memo);
-    }
-    // Once walked through all the branches, remove the parent from memo storage
-    memo.unmemoize(value);
-    // Return accumulated values
-    return acc;
-}
-/**
- * normalize()
- *
- * - Creates a copy to prevent original input mutation
- * - Skip non-enumerablers
- * - Calls `toJSON` if implemented
- * - Removes circular references
- * - Translates non-serializeable values (undefined/NaN/Functions) to serializable format
- * - Translates known global objects/Classes to a string representations
- * - Takes care of Error objects serialization
- * - Optionally limit depth of final output
- */
-function normalize(input, depth) {
-    try {
-        // tslint:disable-next-line:no-unsafe-any
-        return JSON.parse(JSON.stringify(input, function (key, value) { return walk(key, value, depth); }));
-    }
-    catch (_oO) {
-        return '**non-serializable**';
-    }
-}
-/**
- * Given any captured exception, extract its keys and create a sorted
- * and truncated list that will be used inside the event message.
- * eg. `Non-error exception captured with keys: foo, bar, baz`
- */
-function extractExceptionKeysForMessage(exception, maxLength) {
-    if (maxLength === void 0) { maxLength = 40; }
-    // tslint:disable:strict-type-predicates
-    var keys = Object.keys(getWalkSource(exception));
-    keys.sort();
-    if (!keys.length) {
-        return '[object has no keys]';
-    }
-    if (keys[0].length >= maxLength) {
-        return Object(_string__WEBPACK_IMPORTED_MODULE_4__["truncate"])(keys[0], maxLength);
-    }
-    for (var includedKeys = keys.length; includedKeys > 0; includedKeys--) {
-        var serialized = keys.slice(0, includedKeys).join(', ');
-        if (serialized.length > maxLength) {
-            continue;
-        }
-        if (includedKeys === keys.length) {
-            return serialized;
-        }
-        return Object(_string__WEBPACK_IMPORTED_MODULE_4__["truncate"])(serialized, maxLength);
-    }
-    return '';
-}
-/**
- * Given any object, return the new object with removed keys that value was `undefined`.
- * Works recursively on objects and arrays.
- */
-function dropUndefinedKeys(val) {
-    var e_1, _a;
-    if (Object(_is__WEBPACK_IMPORTED_MODULE_1__["isPlainObject"])(val)) {
-        var obj = val;
-        var rv = {};
-        try {
-            for (var _b = tslib__WEBPACK_IMPORTED_MODULE_0__["__values"](Object.keys(obj)), _c = _b.next(); !_c.done; _c = _b.next()) {
-                var key = _c.value;
-                if (typeof obj[key] !== 'undefined') {
-                    rv[key] = dropUndefinedKeys(obj[key]);
-                }
-            }
-        }
-        catch (e_1_1) { e_1 = { error: e_1_1 }; }
-        finally {
-            try {
-                if (_c && !_c.done && (_a = _b.return)) _a.call(_b);
-            }
-            finally { if (e_1) throw e_1.error; }
-        }
-        return rv;
-    }
-    if (Array.isArray(val)) {
-        return val.map(dropUndefinedKeys);
-    }
-    return val;
-}
-//# sourceMappingURL=object.js.map
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../../../webpack/buildin/global.js */ "./node_modules/webpack/buildin/global.js")))
-
-/***/ }),
-
-/***/ "./node_modules/@sentry/utils/esm/path.js":
-/*!************************************************!*\
-  !*** ./node_modules/@sentry/utils/esm/path.js ***!
-  \************************************************/
-/*! exports provided: resolve, relative, normalizePath, isAbsolute, join, dirname, basename */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "resolve", function() { return resolve; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "relative", function() { return relative; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "normalizePath", function() { return normalizePath; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isAbsolute", function() { return isAbsolute; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "join", function() { return join; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "dirname", function() { return dirname; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "basename", function() { return basename; });
-// Slightly modified (no IE8 support, ES6) and transcribed to TypeScript
-// https://raw.githubusercontent.com/calvinmetcalf/rollup-plugin-node-builtins/master/src/es6/path.js
-/** JSDoc */
-function normalizeArray(parts, allowAboveRoot) {
-    // if the path tries to go above the root, `up` ends up > 0
-    var up = 0;
-    for (var i = parts.length - 1; i >= 0; i--) {
-        var last = parts[i];
-        if (last === '.') {
-            parts.splice(i, 1);
-        }
-        else if (last === '..') {
-            parts.splice(i, 1);
-            up++;
-        }
-        else if (up) {
-            parts.splice(i, 1);
-            up--;
-        }
-    }
-    // if the path is allowed to go above the root, restore leading ..s
-    if (allowAboveRoot) {
-        for (; up--; up) {
-            parts.unshift('..');
-        }
-    }
-    return parts;
-}
-// Split a filename into [root, dir, basename, ext], unix version
-// 'root' is just a slash, or nothing.
-var splitPathRe = /^(\/?|)([\s\S]*?)((?:\.{1,2}|[^\/]+?|)(\.[^.\/]*|))(?:[\/]*)$/;
-/** JSDoc */
-function splitPath(filename) {
-    var parts = splitPathRe.exec(filename);
-    return parts ? parts.slice(1) : [];
-}
-// path.resolve([from ...], to)
-// posix version
-/** JSDoc */
-function resolve() {
-    var args = [];
-    for (var _i = 0; _i < arguments.length; _i++) {
-        args[_i] = arguments[_i];
-    }
-    var resolvedPath = '';
-    var resolvedAbsolute = false;
-    for (var i = args.length - 1; i >= -1 && !resolvedAbsolute; i--) {
-        var path = i >= 0 ? args[i] : '/';
-        // Skip empty entries
-        if (!path) {
-            continue;
-        }
-        resolvedPath = path + "/" + resolvedPath;
-        resolvedAbsolute = path.charAt(0) === '/';
-    }
-    // At this point the path should be resolved to a full absolute path, but
-    // handle relative paths to be safe (might happen when process.cwd() fails)
-    // Normalize the path
-    resolvedPath = normalizeArray(resolvedPath.split('/').filter(function (p) { return !!p; }), !resolvedAbsolute).join('/');
-    return (resolvedAbsolute ? '/' : '') + resolvedPath || '.';
-}
-/** JSDoc */
-function trim(arr) {
-    var start = 0;
-    for (; start < arr.length; start++) {
-        if (arr[start] !== '') {
-            break;
-        }
-    }
-    var end = arr.length - 1;
-    for (; end >= 0; end--) {
-        if (arr[end] !== '') {
-            break;
-        }
-    }
-    if (start > end) {
-        return [];
-    }
-    return arr.slice(start, end - start + 1);
-}
-// path.relative(from, to)
-// posix version
-/** JSDoc */
-function relative(from, to) {
-    // tslint:disable:no-parameter-reassignment
-    from = resolve(from).substr(1);
-    to = resolve(to).substr(1);
-    var fromParts = trim(from.split('/'));
-    var toParts = trim(to.split('/'));
-    var length = Math.min(fromParts.length, toParts.length);
-    var samePartsLength = length;
-    for (var i = 0; i < length; i++) {
-        if (fromParts[i] !== toParts[i]) {
-            samePartsLength = i;
-            break;
-        }
-    }
-    var outputParts = [];
-    for (var i = samePartsLength; i < fromParts.length; i++) {
-        outputParts.push('..');
-    }
-    outputParts = outputParts.concat(toParts.slice(samePartsLength));
-    return outputParts.join('/');
-}
-// path.normalize(path)
-// posix version
-/** JSDoc */
-function normalizePath(path) {
-    var isPathAbsolute = isAbsolute(path);
-    var trailingSlash = path.substr(-1) === '/';
-    // Normalize the path
-    var normalizedPath = normalizeArray(path.split('/').filter(function (p) { return !!p; }), !isPathAbsolute).join('/');
-    if (!normalizedPath && !isPathAbsolute) {
-        normalizedPath = '.';
-    }
-    if (normalizedPath && trailingSlash) {
-        normalizedPath += '/';
-    }
-    return (isPathAbsolute ? '/' : '') + normalizedPath;
-}
-// posix version
-/** JSDoc */
-function isAbsolute(path) {
-    return path.charAt(0) === '/';
-}
-// posix version
-/** JSDoc */
-function join() {
-    var args = [];
-    for (var _i = 0; _i < arguments.length; _i++) {
-        args[_i] = arguments[_i];
-    }
-    return normalizePath(args.join('/'));
-}
-/** JSDoc */
-function dirname(path) {
-    var result = splitPath(path);
-    var root = result[0];
-    var dir = result[1];
-    if (!root && !dir) {
-        // No dirname whatsoever
-        return '.';
-    }
-    if (dir) {
-        // It has a dirname, strip trailing slash
-        dir = dir.substr(0, dir.length - 1);
-    }
-    return root + dir;
-}
-/** JSDoc */
-function basename(path, ext) {
-    var f = splitPath(path)[2];
-    if (ext && f.substr(ext.length * -1) === ext) {
-        f = f.substr(0, f.length - ext.length);
-    }
-    return f;
-}
-//# sourceMappingURL=path.js.map
-
-/***/ }),
-
-/***/ "./node_modules/@sentry/utils/esm/polyfill.js":
-/*!****************************************************!*\
-  !*** ./node_modules/@sentry/utils/esm/polyfill.js ***!
-  \****************************************************/
-/*! exports provided: setPrototypeOf */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "setPrototypeOf", function() { return setPrototypeOf; });
-var setPrototypeOf = Object.setPrototypeOf || ({ __proto__: [] } instanceof Array ? setProtoOf : mixinProperties); // tslint:disable-line:no-unbound-method
-/**
- * setPrototypeOf polyfill using __proto__
- */
-function setProtoOf(obj, proto) {
-    // @ts-ignore
-    obj.__proto__ = proto;
-    return obj;
-}
-/**
- * setPrototypeOf polyfill using mixin
- */
-function mixinProperties(obj, proto) {
-    for (var prop in proto) {
-        if (!obj.hasOwnProperty(prop)) {
-            // @ts-ignore
-            obj[prop] = proto[prop];
-        }
-    }
-    return obj;
-}
-//# sourceMappingURL=polyfill.js.map
-
-/***/ }),
-
-/***/ "./node_modules/@sentry/utils/esm/promisebuffer.js":
-/*!*********************************************************!*\
-  !*** ./node_modules/@sentry/utils/esm/promisebuffer.js ***!
-  \*********************************************************/
-/*! exports provided: PromiseBuffer */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "PromiseBuffer", function() { return PromiseBuffer; });
-/* harmony import */ var _error__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./error */ "./node_modules/@sentry/utils/esm/error.js");
-/* harmony import */ var _syncpromise__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./syncpromise */ "./node_modules/@sentry/utils/esm/syncpromise.js");
-
-
-/** A simple queue that holds promises. */
-var PromiseBuffer = /** @class */ (function () {
-    function PromiseBuffer(_limit) {
-        this._limit = _limit;
-        /** Internal set of queued Promises */
-        this._buffer = [];
-    }
-    /**
-     * Says if the buffer is ready to take more requests
-     */
-    PromiseBuffer.prototype.isReady = function () {
-        return this._limit === undefined || this.length() < this._limit;
-    };
-    /**
-     * Add a promise to the queue.
-     *
-     * @param task Can be any PromiseLike<T>
-     * @returns The original promise.
-     */
-    PromiseBuffer.prototype.add = function (task) {
-        var _this = this;
-        if (!this.isReady()) {
-            return _syncpromise__WEBPACK_IMPORTED_MODULE_1__["SyncPromise"].reject(new _error__WEBPACK_IMPORTED_MODULE_0__["SentryError"]('Not adding Promise due to buffer limit reached.'));
-        }
-        if (this._buffer.indexOf(task) === -1) {
-            this._buffer.push(task);
-        }
-        task
-            .then(function () { return _this.remove(task); })
-            .then(null, function () {
-            return _this.remove(task).then(null, function () {
-                // We have to add this catch here otherwise we have an unhandledPromiseRejection
-                // because it's a new Promise chain.
-            });
-        });
-        return task;
-    };
-    /**
-     * Remove a promise to the queue.
-     *
-     * @param task Can be any PromiseLike<T>
-     * @returns Removed promise.
-     */
-    PromiseBuffer.prototype.remove = function (task) {
-        var removedTask = this._buffer.splice(this._buffer.indexOf(task), 1)[0];
-        return removedTask;
-    };
-    /**
-     * This function returns the number of unresolved promises in the queue.
-     */
-    PromiseBuffer.prototype.length = function () {
-        return this._buffer.length;
-    };
-    /**
-     * This will drain the whole queue, returns true if queue is empty or drained.
-     * If timeout is provided and the queue takes longer to drain, the promise still resolves but with false.
-     *
-     * @param timeout Number in ms to wait until it resolves with false.
-     */
-    PromiseBuffer.prototype.drain = function (timeout) {
-        var _this = this;
-        return new _syncpromise__WEBPACK_IMPORTED_MODULE_1__["SyncPromise"](function (resolve) {
-            var capturedSetTimeout = setTimeout(function () {
-                if (timeout && timeout > 0) {
-                    resolve(false);
-                }
-            }, timeout);
-            _syncpromise__WEBPACK_IMPORTED_MODULE_1__["SyncPromise"].all(_this._buffer)
-                .then(function () {
-                clearTimeout(capturedSetTimeout);
-                resolve(true);
-            })
-                .then(null, function () {
-                resolve(true);
-            });
-        });
-    };
-    return PromiseBuffer;
-}());
-
-//# sourceMappingURL=promisebuffer.js.map
-
-/***/ }),
-
-/***/ "./node_modules/@sentry/utils/esm/string.js":
-/*!**************************************************!*\
-  !*** ./node_modules/@sentry/utils/esm/string.js ***!
-  \**************************************************/
-/*! exports provided: truncate, snipLine, safeJoin, isMatchingPattern */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "truncate", function() { return truncate; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "snipLine", function() { return snipLine; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "safeJoin", function() { return safeJoin; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isMatchingPattern", function() { return isMatchingPattern; });
-/* harmony import */ var _is__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./is */ "./node_modules/@sentry/utils/esm/is.js");
-
-/**
- * Truncates given string to the maximum characters count
- *
- * @param str An object that contains serializable values
- * @param max Maximum number of characters in truncated string
- * @returns string Encoded
- */
-function truncate(str, max) {
-    if (max === void 0) { max = 0; }
-    // tslint:disable-next-line:strict-type-predicates
-    if (typeof str !== 'string' || max === 0) {
-        return str;
-    }
-    return str.length <= max ? str : str.substr(0, max) + "...";
-}
-/**
- * This is basically just `trim_line` from
- * https://github.com/getsentry/sentry/blob/master/src/sentry/lang/javascript/processor.py#L67
- *
- * @param str An object that contains serializable values
- * @param max Maximum number of characters in truncated string
- * @returns string Encoded
- */
-function snipLine(line, colno) {
-    var newLine = line;
-    var ll = newLine.length;
-    if (ll <= 150) {
-        return newLine;
-    }
-    if (colno > ll) {
-        colno = ll; // tslint:disable-line:no-parameter-reassignment
-    }
-    var start = Math.max(colno - 60, 0);
-    if (start < 5) {
-        start = 0;
-    }
-    var end = Math.min(start + 140, ll);
-    if (end > ll - 5) {
-        end = ll;
-    }
-    if (end === ll) {
-        start = Math.max(end - 140, 0);
-    }
-    newLine = newLine.slice(start, end);
-    if (start > 0) {
-        newLine = "'{snip} " + newLine;
-    }
-    if (end < ll) {
-        newLine += ' {snip}';
-    }
-    return newLine;
-}
-/**
- * Join values in array
- * @param input array of values to be joined together
- * @param delimiter string to be placed in-between values
- * @returns Joined values
- */
-function safeJoin(input, delimiter) {
-    if (!Array.isArray(input)) {
-        return '';
-    }
-    var output = [];
-    // tslint:disable-next-line:prefer-for-of
-    for (var i = 0; i < input.length; i++) {
-        var value = input[i];
-        try {
-            output.push(String(value));
-        }
-        catch (e) {
-            output.push('[value cannot be serialized]');
-        }
-    }
-    return output.join(delimiter);
-}
-/**
- * Checks if the value matches a regex or includes the string
- * @param value The string value to be checked against
- * @param pattern Either a regex or a string that must be contained in value
- */
-function isMatchingPattern(value, pattern) {
-    if (Object(_is__WEBPACK_IMPORTED_MODULE_0__["isRegExp"])(pattern)) {
-        return pattern.test(value);
-    }
-    if (typeof pattern === 'string') {
-        return value.indexOf(pattern) !== -1;
-    }
-    return false;
-}
-//# sourceMappingURL=string.js.map
-
-/***/ }),
-
-/***/ "./node_modules/@sentry/utils/esm/supports.js":
-/*!****************************************************!*\
-  !*** ./node_modules/@sentry/utils/esm/supports.js ***!
-  \****************************************************/
-/*! exports provided: supportsErrorEvent, supportsDOMError, supportsDOMException, supportsFetch, supportsNativeFetch, supportsReportingObserver, supportsReferrerPolicy, supportsHistory */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "supportsErrorEvent", function() { return supportsErrorEvent; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "supportsDOMError", function() { return supportsDOMError; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "supportsDOMException", function() { return supportsDOMException; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "supportsFetch", function() { return supportsFetch; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "supportsNativeFetch", function() { return supportsNativeFetch; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "supportsReportingObserver", function() { return supportsReportingObserver; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "supportsReferrerPolicy", function() { return supportsReferrerPolicy; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "supportsHistory", function() { return supportsHistory; });
-/* harmony import */ var _logger__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./logger */ "./node_modules/@sentry/utils/esm/logger.js");
-/* harmony import */ var _misc__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./misc */ "./node_modules/@sentry/utils/esm/misc.js");
-
-
-/**
- * Tells whether current environment supports ErrorEvent objects
- * {@link supportsErrorEvent}.
- *
- * @returns Answer to the given question.
- */
-function supportsErrorEvent() {
-    try {
-        // tslint:disable:no-unused-expression
-        new ErrorEvent('');
-        return true;
-    }
-    catch (e) {
-        return false;
-    }
-}
-/**
- * Tells whether current environment supports DOMError objects
- * {@link supportsDOMError}.
- *
- * @returns Answer to the given question.
- */
-function supportsDOMError() {
-    try {
-        // It really needs 1 argument, not 0.
-        // Chrome: VM89:1 Uncaught TypeError: Failed to construct 'DOMError':
-        // 1 argument required, but only 0 present.
-        // @ts-ignore
-        // tslint:disable:no-unused-expression
-        new DOMError('');
-        return true;
-    }
-    catch (e) {
-        return false;
-    }
-}
-/**
- * Tells whether current environment supports DOMException objects
- * {@link supportsDOMException}.
- *
- * @returns Answer to the given question.
- */
-function supportsDOMException() {
-    try {
-        // tslint:disable:no-unused-expression
-        new DOMException('');
-        return true;
-    }
-    catch (e) {
-        return false;
-    }
-}
-/**
- * Tells whether current environment supports Fetch API
- * {@link supportsFetch}.
- *
- * @returns Answer to the given question.
- */
-function supportsFetch() {
-    if (!('fetch' in Object(_misc__WEBPACK_IMPORTED_MODULE_1__["getGlobalObject"])())) {
-        return false;
-    }
-    try {
-        // tslint:disable-next-line:no-unused-expression
-        new Headers();
-        // tslint:disable-next-line:no-unused-expression
-        new Request('');
-        // tslint:disable-next-line:no-unused-expression
-        new Response();
-        return true;
-    }
-    catch (e) {
-        return false;
-    }
-}
-/**
- * isNativeFetch checks if the given function is a native implementation of fetch()
- */
-function isNativeFetch(func) {
-    return func && /^function fetch\(\)\s+\{\s+\[native code\]\s+\}$/.test(func.toString());
-}
-/**
- * Tells whether current environment supports Fetch API natively
- * {@link supportsNativeFetch}.
- *
- * @returns true if `window.fetch` is natively implemented, false otherwise
- */
-function supportsNativeFetch() {
-    if (!supportsFetch()) {
-        return false;
-    }
-    var global = Object(_misc__WEBPACK_IMPORTED_MODULE_1__["getGlobalObject"])();
-    // Fast path to avoid DOM I/O
-    // tslint:disable-next-line:no-unbound-method
-    if (isNativeFetch(global.fetch)) {
-        return true;
-    }
-    // window.fetch is implemented, but is polyfilled or already wrapped (e.g: by a chrome extension)
-    // so create a "pure" iframe to see if that has native fetch
-    var result = false;
-    var doc = global.document;
-    if (doc) {
-        try {
-            var sandbox = doc.createElement('iframe');
-            sandbox.hidden = true;
-            doc.head.appendChild(sandbox);
-            if (sandbox.contentWindow && sandbox.contentWindow.fetch) {
-                // tslint:disable-next-line:no-unbound-method
-                result = isNativeFetch(sandbox.contentWindow.fetch);
-            }
-            doc.head.removeChild(sandbox);
-        }
-        catch (err) {
-            _logger__WEBPACK_IMPORTED_MODULE_0__["logger"].warn('Could not create sandbox iframe for pure fetch check, bailing to window.fetch: ', err);
-        }
-    }
-    return result;
-}
-/**
- * Tells whether current environment supports ReportingObserver API
- * {@link supportsReportingObserver}.
- *
- * @returns Answer to the given question.
- */
-function supportsReportingObserver() {
-    // tslint:disable-next-line: no-unsafe-any
-    return 'ReportingObserver' in Object(_misc__WEBPACK_IMPORTED_MODULE_1__["getGlobalObject"])();
-}
-/**
- * Tells whether current environment supports Referrer Policy API
- * {@link supportsReferrerPolicy}.
- *
- * @returns Answer to the given question.
- */
-function supportsReferrerPolicy() {
-    // Despite all stars in the sky saying that Edge supports old draft syntax, aka 'never', 'always', 'origin' and 'default
-    // https://caniuse.com/#feat=referrer-policy
-    // It doesn't. And it throw exception instead of ignoring this parameter...
-    // REF: https://github.com/getsentry/raven-js/issues/1233
-    if (!supportsFetch()) {
-        return false;
-    }
-    try {
-        // tslint:disable:no-unused-expression
-        new Request('_', {
-            referrerPolicy: 'origin',
-        });
-        return true;
-    }
-    catch (e) {
-        return false;
-    }
-}
-/**
- * Tells whether current environment supports History API
- * {@link supportsHistory}.
- *
- * @returns Answer to the given question.
- */
-function supportsHistory() {
-    // NOTE: in Chrome App environment, touching history.pushState, *even inside
-    //       a try/catch block*, will cause Chrome to output an error to console.error
-    // borrowed from: https://github.com/angular/angular.js/pull/13945/files
-    var global = Object(_misc__WEBPACK_IMPORTED_MODULE_1__["getGlobalObject"])();
-    var chrome = global.chrome;
-    // tslint:disable-next-line:no-unsafe-any
-    var isChromePackagedApp = chrome && chrome.app && chrome.app.runtime;
-    var hasHistoryApi = 'history' in global && !!global.history.pushState && !!global.history.replaceState;
-    return !isChromePackagedApp && hasHistoryApi;
-}
-//# sourceMappingURL=supports.js.map
-
-/***/ }),
-
-/***/ "./node_modules/@sentry/utils/esm/syncpromise.js":
-/*!*******************************************************!*\
-  !*** ./node_modules/@sentry/utils/esm/syncpromise.js ***!
-  \*******************************************************/
-/*! exports provided: SyncPromise */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SyncPromise", function() { return SyncPromise; });
-/* harmony import */ var _is__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./is */ "./node_modules/@sentry/utils/esm/is.js");
-
-/** SyncPromise internal states */
-var States;
-(function (States) {
-    /** Pending */
-    States["PENDING"] = "PENDING";
-    /** Resolved / OK */
-    States["RESOLVED"] = "RESOLVED";
-    /** Rejected / Error */
-    States["REJECTED"] = "REJECTED";
-})(States || (States = {}));
-/**
- * Thenable class that behaves like a Promise and follows it's interface
- * but is not async internally
- */
-var SyncPromise = /** @class */ (function () {
-    function SyncPromise(executor) {
-        var _this = this;
-        this._state = States.PENDING;
-        this._handlers = [];
-        /** JSDoc */
-        this._resolve = function (value) {
-            _this._setResult(States.RESOLVED, value);
-        };
-        /** JSDoc */
-        this._reject = function (reason) {
-            _this._setResult(States.REJECTED, reason);
-        };
-        /** JSDoc */
-        this._setResult = function (state, value) {
-            if (_this._state !== States.PENDING) {
-                return;
-            }
-            if (Object(_is__WEBPACK_IMPORTED_MODULE_0__["isThenable"])(value)) {
-                value.then(_this._resolve, _this._reject);
-                return;
-            }
-            _this._state = state;
-            _this._value = value;
-            _this._executeHandlers();
-        };
-        // TODO: FIXME
-        /** JSDoc */
-        this._attachHandler = function (handler) {
-            _this._handlers = _this._handlers.concat(handler);
-            _this._executeHandlers();
-        };
-        /** JSDoc */
-        this._executeHandlers = function () {
-            if (_this._state === States.PENDING) {
-                return;
-            }
-            if (_this._state === States.REJECTED) {
-                _this._handlers.forEach(function (handler) {
-                    if (handler.onrejected) {
-                        handler.onrejected(_this._value);
-                    }
-                });
-            }
-            else {
-                _this._handlers.forEach(function (handler) {
-                    if (handler.onfulfilled) {
-                        // tslint:disable-next-line:no-unsafe-any
-                        handler.onfulfilled(_this._value);
-                    }
-                });
-            }
-            _this._handlers = [];
-        };
-        try {
-            executor(this._resolve, this._reject);
-        }
-        catch (e) {
-            this._reject(e);
-        }
-    }
-    /** JSDoc */
-    SyncPromise.prototype.toString = function () {
-        return '[object SyncPromise]';
-    };
-    /** JSDoc */
-    SyncPromise.resolve = function (value) {
-        return new SyncPromise(function (resolve) {
-            resolve(value);
-        });
-    };
-    /** JSDoc */
-    SyncPromise.reject = function (reason) {
-        return new SyncPromise(function (_, reject) {
-            reject(reason);
-        });
-    };
-    /** JSDoc */
-    SyncPromise.all = function (collection) {
-        return new SyncPromise(function (resolve, reject) {
-            if (!Array.isArray(collection)) {
-                reject(new TypeError("Promise.all requires an array as input."));
-                return;
-            }
-            if (collection.length === 0) {
-                resolve([]);
-                return;
-            }
-            var counter = collection.length;
-            var resolvedCollection = [];
-            collection.forEach(function (item, index) {
-                SyncPromise.resolve(item)
-                    .then(function (value) {
-                    resolvedCollection[index] = value;
-                    counter -= 1;
-                    if (counter !== 0) {
-                        return;
-                    }
-                    resolve(resolvedCollection);
-                })
-                    .then(null, reject);
-            });
-        });
-    };
-    /** JSDoc */
-    SyncPromise.prototype.then = function (onfulfilled, onrejected) {
-        var _this = this;
-        return new SyncPromise(function (resolve, reject) {
-            _this._attachHandler({
-                onfulfilled: function (result) {
-                    if (!onfulfilled) {
-                        // TODO: ¯\_(ツ)_/¯
-                        // TODO: FIXME
-                        resolve(result);
-                        return;
-                    }
-                    try {
-                        resolve(onfulfilled(result));
-                        return;
-                    }
-                    catch (e) {
-                        reject(e);
-                        return;
-                    }
-                },
-                onrejected: function (reason) {
-                    if (!onrejected) {
-                        reject(reason);
-                        return;
-                    }
-                    try {
-                        resolve(onrejected(reason));
-                        return;
-                    }
-                    catch (e) {
-                        reject(e);
-                        return;
-                    }
-                },
-            });
-        });
-    };
-    /** JSDoc */
-    SyncPromise.prototype.catch = function (onrejected) {
-        return this.then(function (val) { return val; }, onrejected);
-    };
-    /** JSDoc */
-    SyncPromise.prototype.finally = function (onfinally) {
-        var _this = this;
-        return new SyncPromise(function (resolve, reject) {
-            var val;
-            var isRejected;
-            return _this.then(function (value) {
-                isRejected = false;
-                val = value;
-                if (onfinally) {
-                    onfinally();
-                }
-            }, function (reason) {
-                isRejected = true;
-                val = reason;
-                if (onfinally) {
-                    onfinally();
-                }
-            }).then(function () {
-                if (isRejected) {
-                    reject(val);
-                    return;
-                }
-                // tslint:disable-next-line:no-unsafe-any
-                resolve(val);
-            });
-        });
-    };
-    return SyncPromise;
-}());
-
-//# sourceMappingURL=syncpromise.js.map
-
-/***/ }),
-
 /***/ "./node_modules/axios/index.js":
 /*!*************************************!*\
   !*** ./node_modules/axios/index.js ***!
@@ -10615,6 +2245,8 @@ __webpack_require__.r(__webpack_exports__);
       sideLinks.forEach(function (l) {
         l.hasSubs = l.subs && l.subs.length !== 0;
       });
+      /* function to execute to determine if link should show*/
+
       return sideLinks;
     }
   }
@@ -10702,28 +2334,6 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Spinner.vue?vue&type=script&lang=js&":
-/*!******************************************************************************************************************************************************************!*\
-  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/Spinner.vue?vue&type=script&lang=js& ***!
-  \******************************************************************************************************************************************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-//
-//
-//
-//
-//
-//
-//
-/* harmony default export */ __webpack_exports__["default"] = ({
-  name: "Spinner"
-});
-
-/***/ }),
-
 /***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/modules/dashboard/views/components/LeaveDashboard.vue?vue&type=script&lang=js&":
 /*!*************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/modules/dashboard/views/components/LeaveDashboard.vue?vue&type=script&lang=js& ***!
@@ -10734,9 +2344,8 @@ __webpack_require__.r(__webpack_exports__);
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _charts__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../../charts */ "./resources/js/charts/index.js");
-/* harmony import */ var _mixins_loader_loader__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../../mixins/loader/loader */ "./resources/js/mixins/loader/loader.js");
-/* harmony import */ var _components_Spinner__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../components/Spinner */ "./resources/js/components/Spinner.vue");
-/* harmony import */ var _plugins_paginator_paginator__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../../plugins/paginator/paginator */ "./resources/js/plugins/paginator/paginator.js");
+/* harmony import */ var _plugins_paginator_paginator__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../../plugins/paginator/paginator */ "./resources/js/plugins/paginator/paginator.js");
+/* harmony import */ var _plugins_loader_views_Spinner__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../plugins/loader/views/Spinner */ "./resources/js/plugins/loader/views/Spinner.vue");
 //
 //
 //
@@ -10770,19 +2379,18 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-
 
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "LeaveDashboard",
   components: {
-    Spinner: _components_Spinner__WEBPACK_IMPORTED_MODULE_2__["default"],
+    Spinner: _plugins_loader_views_Spinner__WEBPACK_IMPORTED_MODULE_2__["default"],
     BarChart: _charts__WEBPACK_IMPORTED_MODULE_0__["BarChart"],
     DoughnutChart: _charts__WEBPACK_IMPORTED_MODULE_0__["DoughnutChart"],
     LinerChart: _charts__WEBPACK_IMPORTED_MODULE_0__["LinerChart"]
   },
-  mixins: [_mixins_loader_loader__WEBPACK_IMPORTED_MODULE_1__["default"], _plugins_paginator_paginator__WEBPACK_IMPORTED_MODULE_3__["default"]],
+  mixins: [_plugins_paginator_paginator__WEBPACK_IMPORTED_MODULE_1__["default"]],
   data: function data() {
     return {
       datasets: [{
@@ -11055,9 +2663,8 @@ __webpack_require__.r(__webpack_exports__);
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _plugins_paginator_paginator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../../plugins/paginator/paginator */ "./resources/js/plugins/paginator/paginator.js");
-/* harmony import */ var _mixins_loader_loader__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../../mixins/loader/loader */ "./resources/js/mixins/loader/loader.js");
-/* harmony import */ var _components_Spinner__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../components/Spinner */ "./resources/js/components/Spinner.vue");
-/* harmony import */ var _charts__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../../charts */ "./resources/js/charts/index.js");
+/* harmony import */ var _charts__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../../charts */ "./resources/js/charts/index.js");
+/* harmony import */ var _plugins_loader_views_Spinner__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../plugins/loader/views/Spinner */ "./resources/js/plugins/loader/views/Spinner.vue");
 //
 //
 //
@@ -11087,17 +2694,16 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-
 
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "TimeSheetDashboard",
   components: {
-    Spinner: _components_Spinner__WEBPACK_IMPORTED_MODULE_2__["default"],
-    BarChart: _charts__WEBPACK_IMPORTED_MODULE_3__["BarChart"]
+    Spinner: _plugins_loader_views_Spinner__WEBPACK_IMPORTED_MODULE_2__["default"],
+    BarChart: _charts__WEBPACK_IMPORTED_MODULE_1__["BarChart"]
   },
-  mixins: [_mixins_loader_loader__WEBPACK_IMPORTED_MODULE_1__["default"], _plugins_paginator_paginator__WEBPACK_IMPORTED_MODULE_0__["default"]],
+  mixins: [_plugins_paginator_paginator__WEBPACK_IMPORTED_MODULE_0__["default"]],
   data: function data() {
     return {
       datasets: [{
@@ -11160,9 +2766,6 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _components_Spinner__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../components/Spinner */ "./resources/js/components/Spinner.vue");
-/* harmony import */ var _mixins_loader_loader__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../mixins/loader/loader */ "./resources/js/mixins/loader/loader.js");
-/* harmony import */ var _plugins_paginator_paginator__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../plugins/paginator/paginator */ "./resources/js/plugins/paginator/paginator.js");
 //
 //
 //
@@ -11220,15 +2823,8 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-
-
-
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "LeaveAllocation",
-  components: {
-    Spinner: _components_Spinner__WEBPACK_IMPORTED_MODULE_0__["default"]
-  },
-  mixins: [_mixins_loader_loader__WEBPACK_IMPORTED_MODULE_1__["default"], _plugins_paginator_paginator__WEBPACK_IMPORTED_MODULE_2__["default"]],
   beforeRouteEnter: function beforeRouteEnter(to, from, next) {
     next(function (v) {
       v.$store.dispatch("profile/getEmployee", v.$auth.user().id);
@@ -11271,12 +2867,10 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _components_Spinner__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../components/Spinner */ "./resources/js/components/Spinner.vue");
-/* harmony import */ var _mixins_loader_loader__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../mixins/loader/loader */ "./resources/js/mixins/loader/loader.js");
-/* harmony import */ var _plugins_paginator_paginator__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../plugins/paginator/paginator */ "./resources/js/plugins/paginator/paginator.js");
-/* harmony import */ var vue2_datepicker__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! vue2-datepicker */ "./node_modules/vue2-datepicker/dist/build.js");
-/* harmony import */ var vue2_datepicker__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(vue2_datepicker__WEBPACK_IMPORTED_MODULE_3__);
-/* harmony import */ var _utilities__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../utilities */ "./resources/js/utilities/index.js");
+/* harmony import */ var vue2_datepicker__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue2-datepicker */ "./node_modules/vue2-datepicker/dist/build.js");
+/* harmony import */ var vue2_datepicker__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(vue2_datepicker__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _utilities__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../utilities */ "./resources/js/utilities/index.js");
+/* harmony import */ var _plugins_loader_views_Spinner__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../plugins/loader/views/Spinner */ "./resources/js/plugins/loader/views/Spinner.vue");
 //
 //
 //
@@ -11709,18 +3303,15 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-
-
 
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "LeaveApplication",
   components: {
-    Spinner: _components_Spinner__WEBPACK_IMPORTED_MODULE_0__["default"],
-    Datepicker: vue2_datepicker__WEBPACK_IMPORTED_MODULE_3___default.a
+    Spinner: _plugins_loader_views_Spinner__WEBPACK_IMPORTED_MODULE_2__["default"],
+    Datepicker: vue2_datepicker__WEBPACK_IMPORTED_MODULE_0___default.a
   },
-  mixins: [_mixins_loader_loader__WEBPACK_IMPORTED_MODULE_1__["default"], _plugins_paginator_paginator__WEBPACK_IMPORTED_MODULE_2__["default"]],
   data: function data() {
     return {
       dateRange: [],
@@ -11813,10 +3404,13 @@ __webpack_require__.r(__webpack_exports__);
   watch: {
     dateRange: {
       handler: function handler(n) {
-        this.formData.start_date = _utilities__WEBPACK_IMPORTED_MODULE_4__["helper"].prepareDate(n[0]);
-        this.formData.end_date = _utilities__WEBPACK_IMPORTED_MODULE_4__["helper"].prepareDate(n[1]);
+        this.formData.start_date = _utilities__WEBPACK_IMPORTED_MODULE_1__["helper"].prepareDate(n[0]);
+        this.formData.end_date = _utilities__WEBPACK_IMPORTED_MODULE_1__["helper"].prepareDate(n[1]);
         this.calculate();
       }
+    },
+    myMethod: function myMethod() {
+      alert("here I am");
     },
     leaveDates: {
       handler: function handler(n) {
@@ -11835,6 +3429,9 @@ __webpack_require__.r(__webpack_exports__);
       var url = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
       this.$store.dispatch("leave/getApplications", url || "");
     },
+    test: function test() {
+      alert("navigating");
+    },
     getApplicationDetails: function getApplicationDetails(id) {
       this.$store.dispatch("leave/getApplicationDetails", id); // eslint-disable-next-line no-undef
 
@@ -11847,7 +3444,7 @@ __webpack_require__.r(__webpack_exports__);
     },
     calculate: function calculate() {
       /* validate */
-      var res = _utilities__WEBPACK_IMPORTED_MODULE_4__["validator"].fields(this.formData, {
+      var res = _utilities__WEBPACK_IMPORTED_MODULE_1__["validator"].fields(this.formData, {
         leave_code: "required",
         start_date: "required",
         no_of_days: "optional",
@@ -11867,7 +3464,7 @@ __webpack_require__.r(__webpack_exports__);
     saveLeaveApplication: function saveLeaveApplication() {
       /* validate form */
       if (this.formData.return_date === "") return;
-      var res = _utilities__WEBPACK_IMPORTED_MODULE_4__["validator"].fields(this.formData, this.rules, this.formDataError);
+      var res = _utilities__WEBPACK_IMPORTED_MODULE_1__["validator"].fields(this.formData, this.rules, this.formDataError);
 
       if (res.hasErrors) {
         this.formDataError = res.errors;
@@ -11898,9 +3495,7 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _components_Spinner__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../components/Spinner */ "./resources/js/components/Spinner.vue");
-/* harmony import */ var _mixins_loader_loader__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../mixins/loader/loader */ "./resources/js/mixins/loader/loader.js");
-/* harmony import */ var _plugins_paginator_paginator__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../plugins/paginator/paginator */ "./resources/js/plugins/paginator/paginator.js");
+/* harmony import */ var _plugins_loader_views_Spinner__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../plugins/loader/views/Spinner */ "./resources/js/plugins/loader/views/Spinner.vue");
 //
 //
 //
@@ -11961,15 +3556,12 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-
-
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "LeaveHistory",
   components: {
-    Spinner: _components_Spinner__WEBPACK_IMPORTED_MODULE_0__["default"]
+    Spinner: _plugins_loader_views_Spinner__WEBPACK_IMPORTED_MODULE_0__["default"]
   },
-  mixins: [_mixins_loader_loader__WEBPACK_IMPORTED_MODULE_1__["default"], _plugins_paginator_paginator__WEBPACK_IMPORTED_MODULE_2__["default"]],
   beforeRouteEnter: function beforeRouteEnter(to, from, next) {
     next(function (v) {
       v.getData();
@@ -12047,9 +3639,7 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _components_Spinner__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../components/Spinner */ "./resources/js/components/Spinner.vue");
-/* harmony import */ var _mixins_loader_loader__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../mixins/loader/loader */ "./resources/js/mixins/loader/loader.js");
-/* harmony import */ var _plugins_paginator_paginator__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../plugins/paginator/paginator */ "./resources/js/plugins/paginator/paginator.js");
+/* harmony import */ var _plugins_loader_views_Spinner__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../plugins/loader/views/Spinner */ "./resources/js/plugins/loader/views/Spinner.vue");
 //
 //
 //
@@ -12122,15 +3712,12 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-
-
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "PayslipList",
   components: {
-    Spinner: _components_Spinner__WEBPACK_IMPORTED_MODULE_0__["default"]
+    Spinner: _plugins_loader_views_Spinner__WEBPACK_IMPORTED_MODULE_0__["default"]
   },
-  mixins: [_mixins_loader_loader__WEBPACK_IMPORTED_MODULE_1__["default"], _plugins_paginator_paginator__WEBPACK_IMPORTED_MODULE_2__["default"]],
   beforeRouteEnter: function beforeRouteEnter(to, from, next) {
     next(function (v) {
       v.getData();
@@ -12399,8 +3986,7 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _mixins_loader_loader__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../mixins/loader/loader */ "./resources/js/mixins/loader/loader.js");
-/* harmony import */ var _components_Spinner__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../components/Spinner */ "./resources/js/components/Spinner.vue");
+/* harmony import */ var _plugins_loader_views_Spinner__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../plugins/loader/views/Spinner */ "./resources/js/plugins/loader/views/Spinner.vue");
 //
 //
 //
@@ -12454,14 +4040,12 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "Activities",
   components: {
-    Spinner: _components_Spinner__WEBPACK_IMPORTED_MODULE_1__["default"]
+    Spinner: _plugins_loader_views_Spinner__WEBPACK_IMPORTED_MODULE_0__["default"]
   },
-  mixins: [_mixins_loader_loader__WEBPACK_IMPORTED_MODULE_0__["default"]],
   beforeRouteEnter: function beforeRouteEnter(to, from, next) {
     next(function (v) {
       v.$store.dispatch("setup/getActivities");
@@ -12485,8 +4069,6 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _mixins_loader_loader__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../mixins/loader/loader */ "./resources/js/mixins/loader/loader.js");
-/* harmony import */ var _components_Spinner__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../components/Spinner */ "./resources/js/components/Spinner.vue");
 //
 //
 //
@@ -12544,15 +4126,8 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-
-
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "Employees",
-  components: {
-    Spinner: _components_Spinner__WEBPACK_IMPORTED_MODULE_1__["default"]
-  },
-  mixins: [_mixins_loader_loader__WEBPACK_IMPORTED_MODULE_0__["default"]],
   beforeRouteEnter: function beforeRouteEnter(to, from, next) {
     next(function (v) {
       v.$store.dispatch("setup/getEmployees");
@@ -12576,8 +4151,7 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _mixins_loader_loader__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../mixins/loader/loader */ "./resources/js/mixins/loader/loader.js");
-/* harmony import */ var _components_Spinner__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../components/Spinner */ "./resources/js/components/Spinner.vue");
+/* harmony import */ var _plugins_loader_views_Spinner__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../plugins/loader/views/Spinner */ "./resources/js/plugins/loader/views/Spinner.vue");
 //
 //
 //
@@ -12627,14 +4201,12 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "Locations",
   components: {
-    Spinner: _components_Spinner__WEBPACK_IMPORTED_MODULE_1__["default"]
+    Spinner: _plugins_loader_views_Spinner__WEBPACK_IMPORTED_MODULE_0__["default"]
   },
-  mixins: [_mixins_loader_loader__WEBPACK_IMPORTED_MODULE_0__["default"]],
   beforeRouteEnter: function beforeRouteEnter(to, from, next) {
     next(function (v) {
       v.$store.dispatch("setup/getLocation");
@@ -12658,8 +4230,7 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _mixins_loader_loader__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../mixins/loader/loader */ "./resources/js/mixins/loader/loader.js");
-/* harmony import */ var _components_Spinner__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../components/Spinner */ "./resources/js/components/Spinner.vue");
+/* harmony import */ var _plugins_loader_views_Spinner__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../plugins/loader/views/Spinner */ "./resources/js/plugins/loader/views/Spinner.vue");
 //
 //
 //
@@ -12710,14 +4281,12 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "Projects",
   components: {
-    Spinner: _components_Spinner__WEBPACK_IMPORTED_MODULE_1__["default"]
+    Spinner: _plugins_loader_views_Spinner__WEBPACK_IMPORTED_MODULE_0__["default"]
   },
-  mixins: [_mixins_loader_loader__WEBPACK_IMPORTED_MODULE_0__["default"]],
   beforeRouteEnter: function beforeRouteEnter(to, from, next) {
     next(function (v) {
       v.$store.dispatch("setup/getProjects");
@@ -12741,8 +4310,7 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _mixins_loader_loader__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../mixins/loader/loader */ "./resources/js/mixins/loader/loader.js");
-/* harmony import */ var _components_Spinner__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../components/Spinner */ "./resources/js/components/Spinner.vue");
+/* harmony import */ var _plugins_loader_views_Spinner__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../plugins/loader/views/Spinner */ "./resources/js/plugins/loader/views/Spinner.vue");
 //
 //
 //
@@ -12789,14 +4357,12 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "Tasks",
   components: {
-    Spinner: _components_Spinner__WEBPACK_IMPORTED_MODULE_1__["default"]
+    Spinner: _plugins_loader_views_Spinner__WEBPACK_IMPORTED_MODULE_0__["default"]
   },
-  mixins: [_mixins_loader_loader__WEBPACK_IMPORTED_MODULE_0__["default"]],
   beforeRouteEnter: function beforeRouteEnter(to, from, next) {
     next(function (v) {
       v.$store.dispatch("setup/getTasks");
@@ -12820,11 +4386,9 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _components_Spinner__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../components/Spinner */ "./resources/js/components/Spinner.vue");
-/* harmony import */ var _mixins_loader_loader__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../mixins/loader/loader */ "./resources/js/mixins/loader/loader.js");
-/* harmony import */ var _plugins_paginator_paginator__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../plugins/paginator/paginator */ "./resources/js/plugins/paginator/paginator.js");
-/* harmony import */ var vuejs_datepicker__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! vuejs-datepicker */ "./node_modules/vuejs-datepicker/dist/vuejs-datepicker.esm.js");
-/* harmony import */ var _utilities__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../utilities */ "./resources/js/utilities/index.js");
+/* harmony import */ var vuejs_datepicker__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vuejs-datepicker */ "./node_modules/vuejs-datepicker/dist/vuejs-datepicker.esm.js");
+/* harmony import */ var _utilities__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../utilities */ "./resources/js/utilities/index.js");
+/* harmony import */ var _plugins_loader_views_Spinner__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../plugins/loader/views/Spinner */ "./resources/js/plugins/loader/views/Spinner.vue");
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
@@ -13233,15 +4797,12 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
 
 
-
-
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "TimesheetList",
   components: {
-    Spinner: _components_Spinner__WEBPACK_IMPORTED_MODULE_0__["default"],
-    Datepicker: vuejs_datepicker__WEBPACK_IMPORTED_MODULE_3__["default"]
+    Spinner: _plugins_loader_views_Spinner__WEBPACK_IMPORTED_MODULE_2__["default"],
+    Datepicker: vuejs_datepicker__WEBPACK_IMPORTED_MODULE_0__["default"]
   },
-  mixins: [_mixins_loader_loader__WEBPACK_IMPORTED_MODULE_1__["default"], _plugins_paginator_paginator__WEBPACK_IMPORTED_MODULE_2__["default"]],
   data: function data() {
     return {
       filter: "",
@@ -13398,7 +4959,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       var _this2 = this;
 
       /* Validate */
-      var res = _utilities__WEBPACK_IMPORTED_MODULE_4__["validator"].fields(this.timesheet, this.rules, this.timesheetError);
+      var res = _utilities__WEBPACK_IMPORTED_MODULE_1__["validator"].fields(this.timesheet, this.rules, this.timesheetError);
 
       if (res.hasErrors) {
         this.timesheetError = res.errors;
@@ -13419,7 +4980,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       }
 
       this.timesheet.set = true;
-      this.timesheet.Date = _utilities__WEBPACK_IMPORTED_MODULE_4__["helper"].prepareDate(this.timesheet.Date);
+      this.timesheet.Date = _utilities__WEBPACK_IMPORTED_MODULE_1__["helper"].prepareDate(this.timesheet.Date);
       this.$store.commit("timesheet/ADD_TIMESHEET", _objectSpread({}, this.timesheet));
 
       for (var key in this.timesheet) {
@@ -13506,9 +5067,8 @@ __webpack_require__.r(__webpack_exports__);
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _utilities__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../../utilities */ "./resources/js/utilities/index.js");
 /* harmony import */ var _components_Logo__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../../components/Logo */ "./resources/js/components/Logo.vue");
-/* harmony import */ var _mixins_loader_loader__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../mixins/loader/loader */ "./resources/js/mixins/loader/loader.js");
-/* harmony import */ var _partials_AuthFooter__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./partials/AuthFooter */ "./resources/js/plugins/auth/views/components/partials/AuthFooter.vue");
-/* harmony import */ var _components_Spinner__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../../components/Spinner */ "./resources/js/components/Spinner.vue");
+/* harmony import */ var _partials_AuthFooter__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./partials/AuthFooter */ "./resources/js/plugins/auth/views/components/partials/AuthFooter.vue");
+/* harmony import */ var _loader_views_Spinner__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../loader/views/Spinner */ "./resources/js/plugins/loader/views/Spinner.vue");
 //
 //
 //
@@ -13570,7 +5130,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-
 
 
 
@@ -13578,11 +5137,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "Login",
   components: {
-    Spinner: _components_Spinner__WEBPACK_IMPORTED_MODULE_4__["default"],
-    AuthFooter: _partials_AuthFooter__WEBPACK_IMPORTED_MODULE_3__["default"],
+    Spinner: _loader_views_Spinner__WEBPACK_IMPORTED_MODULE_3__["default"],
+    AuthFooter: _partials_AuthFooter__WEBPACK_IMPORTED_MODULE_2__["default"],
     Logo: _components_Logo__WEBPACK_IMPORTED_MODULE_1__["default"]
   },
-  mixins: [_mixins_loader_loader__WEBPACK_IMPORTED_MODULE_2__["default"]],
   data: function data() {
     return {
       formData: {
@@ -13827,6 +5385,334 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/plugins/loader/views/Bounce.vue?vue&type=script&lang=js&":
+/*!***************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/plugins/loader/views/Bounce.vue?vue&type=script&lang=js& ***!
+  \***************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["default"] = ({
+  name: "Bounce"
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/plugins/loader/views/ChasingDots.vue?vue&type=script&lang=js&":
+/*!********************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/plugins/loader/views/ChasingDots.vue?vue&type=script&lang=js& ***!
+  \********************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["default"] = ({
+  name: "ChasingDots"
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/plugins/loader/views/Circle.vue?vue&type=script&lang=js&":
+/*!***************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/plugins/loader/views/Circle.vue?vue&type=script&lang=js& ***!
+  \***************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["default"] = ({
+  name: "Circle"
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/plugins/loader/views/CubicGrid.vue?vue&type=script&lang=js&":
+/*!******************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/plugins/loader/views/CubicGrid.vue?vue&type=script&lang=js& ***!
+  \******************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["default"] = ({
+  name: "CubicGrid"
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/plugins/loader/views/FadingCircle.vue?vue&type=script&lang=js&":
+/*!*********************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/plugins/loader/views/FadingCircle.vue?vue&type=script&lang=js& ***!
+  \*********************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["default"] = ({
+  name: "FadingCircle"
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/plugins/loader/views/Pulse.vue?vue&type=script&lang=js&":
+/*!**************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/plugins/loader/views/Pulse.vue?vue&type=script&lang=js& ***!
+  \**************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["default"] = ({
+  name: "Pulse"
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/plugins/loader/views/RotatingPlane.vue?vue&type=script&lang=js&":
+/*!**********************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/plugins/loader/views/RotatingPlane.vue?vue&type=script&lang=js& ***!
+  \**********************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["default"] = ({
+  name: "RotatingPlane"
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/plugins/loader/views/Spinner.vue?vue&type=script&lang=js&":
+/*!****************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/plugins/loader/views/Spinner.vue?vue&type=script&lang=js& ***!
+  \****************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _Bounce__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Bounce */ "./resources/js/plugins/loader/views/Bounce.vue");
+/* harmony import */ var _Wave__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Wave */ "./resources/js/plugins/loader/views/Wave.vue");
+/* harmony import */ var _Circle__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Circle */ "./resources/js/plugins/loader/views/Circle.vue");
+/* harmony import */ var _Pulse__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Pulse */ "./resources/js/plugins/loader/views/Pulse.vue");
+/* harmony import */ var _ThreeBounce__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./ThreeBounce */ "./resources/js/plugins/loader/views/ThreeBounce.vue");
+/* harmony import */ var _RotatingPlane__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./RotatingPlane */ "./resources/js/plugins/loader/views/RotatingPlane.vue");
+/* harmony import */ var _FadingCircle__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./FadingCircle */ "./resources/js/plugins/loader/views/FadingCircle.vue");
+/* harmony import */ var _CubicGrid__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./CubicGrid */ "./resources/js/plugins/loader/views/CubicGrid.vue");
+/* harmony import */ var _ChasingDots__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./ChasingDots */ "./resources/js/plugins/loader/views/ChasingDots.vue");
+/* harmony import */ var _WanderingCubes__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./WanderingCubes */ "./resources/js/plugins/loader/views/WanderingCubes.vue");
+//
+//
+//
+//
+
+
+
+
+
+
+
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  name: "Spinner",
+  props: {
+    name: {
+      type: String,
+      "default": "bounce"
+    }
+  },
+  computed: {
+    spinner: function spinner() {
+      switch (this.name) {
+        case "bounce":
+          return _Bounce__WEBPACK_IMPORTED_MODULE_0__["default"];
+
+        case "wave":
+          return _Wave__WEBPACK_IMPORTED_MODULE_1__["default"];
+
+        case "circle":
+          return _Circle__WEBPACK_IMPORTED_MODULE_2__["default"];
+
+        case "pulse":
+          return _Pulse__WEBPACK_IMPORTED_MODULE_3__["default"];
+
+        case "three-bounce":
+          return _ThreeBounce__WEBPACK_IMPORTED_MODULE_4__["default"];
+
+        case "wandering-cubes":
+          return _WanderingCubes__WEBPACK_IMPORTED_MODULE_9__["default"];
+
+        case "rotating-plane":
+          return _RotatingPlane__WEBPACK_IMPORTED_MODULE_5__["default"];
+
+        case "fading-circle":
+          return _FadingCircle__WEBPACK_IMPORTED_MODULE_6__["default"];
+
+        case "cubic-grid":
+          return _CubicGrid__WEBPACK_IMPORTED_MODULE_7__["default"];
+
+        case "chasing-dots":
+          return _ChasingDots__WEBPACK_IMPORTED_MODULE_8__["default"];
+
+        default:
+          return _Bounce__WEBPACK_IMPORTED_MODULE_0__["default"];
+      }
+    }
+  }
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/plugins/loader/views/ThreeBounce.vue?vue&type=script&lang=js&":
+/*!********************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/plugins/loader/views/ThreeBounce.vue?vue&type=script&lang=js& ***!
+  \********************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["default"] = ({
+  name: "ThreeBounce"
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/plugins/loader/views/WanderingCubes.vue?vue&type=script&lang=js&":
+/*!***********************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/plugins/loader/views/WanderingCubes.vue?vue&type=script&lang=js& ***!
+  \***********************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["default"] = ({
+  name: "WanderingCubes"
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/plugins/loader/views/Wave.vue?vue&type=script&lang=js&":
+/*!*************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/plugins/loader/views/Wave.vue?vue&type=script&lang=js& ***!
+  \*************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["default"] = ({
+  name: "Wave"
+});
+
+/***/ }),
+
 /***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/plugins/paginator/paginate.vue?vue&type=script&lang=js&":
 /*!**************************************************************************************************************************************************************************!*\
   !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/plugins/paginator/paginate.vue?vue&type=script&lang=js& ***!
@@ -13919,18 +5805,33 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "Paginate",
-  props: {
-    meta: {
-      type: Object,
-      "default": null
-    }
-  },
   data: function data() {
     return {
       page: ""
     };
+  },
+  methods: {
+    navigate: function navigate(link) {
+      if (link) this.$parent.getData(link);
+    }
   }
 });
 
@@ -14062,6 +5963,170 @@ __webpack_require__.r(__webpack_exports__);
     }
   }
 });
+
+/***/ }),
+
+/***/ "./node_modules/base64-js/index.js":
+/*!*****************************************!*\
+  !*** ./node_modules/base64-js/index.js ***!
+  \*****************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+exports.byteLength = byteLength
+exports.toByteArray = toByteArray
+exports.fromByteArray = fromByteArray
+
+var lookup = []
+var revLookup = []
+var Arr = typeof Uint8Array !== 'undefined' ? Uint8Array : Array
+
+var code = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/'
+for (var i = 0, len = code.length; i < len; ++i) {
+  lookup[i] = code[i]
+  revLookup[code.charCodeAt(i)] = i
+}
+
+// Support decoding URL-safe base64 strings, as Node.js does.
+// See: https://en.wikipedia.org/wiki/Base64#URL_applications
+revLookup['-'.charCodeAt(0)] = 62
+revLookup['_'.charCodeAt(0)] = 63
+
+function getLens (b64) {
+  var len = b64.length
+
+  if (len % 4 > 0) {
+    throw new Error('Invalid string. Length must be a multiple of 4')
+  }
+
+  // Trim off extra bytes after placeholder bytes are found
+  // See: https://github.com/beatgammit/base64-js/issues/42
+  var validLen = b64.indexOf('=')
+  if (validLen === -1) validLen = len
+
+  var placeHoldersLen = validLen === len
+    ? 0
+    : 4 - (validLen % 4)
+
+  return [validLen, placeHoldersLen]
+}
+
+// base64 is 4/3 + up to two characters of the original data
+function byteLength (b64) {
+  var lens = getLens(b64)
+  var validLen = lens[0]
+  var placeHoldersLen = lens[1]
+  return ((validLen + placeHoldersLen) * 3 / 4) - placeHoldersLen
+}
+
+function _byteLength (b64, validLen, placeHoldersLen) {
+  return ((validLen + placeHoldersLen) * 3 / 4) - placeHoldersLen
+}
+
+function toByteArray (b64) {
+  var tmp
+  var lens = getLens(b64)
+  var validLen = lens[0]
+  var placeHoldersLen = lens[1]
+
+  var arr = new Arr(_byteLength(b64, validLen, placeHoldersLen))
+
+  var curByte = 0
+
+  // if there are placeholders, only get up to the last complete 4 chars
+  var len = placeHoldersLen > 0
+    ? validLen - 4
+    : validLen
+
+  var i
+  for (i = 0; i < len; i += 4) {
+    tmp =
+      (revLookup[b64.charCodeAt(i)] << 18) |
+      (revLookup[b64.charCodeAt(i + 1)] << 12) |
+      (revLookup[b64.charCodeAt(i + 2)] << 6) |
+      revLookup[b64.charCodeAt(i + 3)]
+    arr[curByte++] = (tmp >> 16) & 0xFF
+    arr[curByte++] = (tmp >> 8) & 0xFF
+    arr[curByte++] = tmp & 0xFF
+  }
+
+  if (placeHoldersLen === 2) {
+    tmp =
+      (revLookup[b64.charCodeAt(i)] << 2) |
+      (revLookup[b64.charCodeAt(i + 1)] >> 4)
+    arr[curByte++] = tmp & 0xFF
+  }
+
+  if (placeHoldersLen === 1) {
+    tmp =
+      (revLookup[b64.charCodeAt(i)] << 10) |
+      (revLookup[b64.charCodeAt(i + 1)] << 4) |
+      (revLookup[b64.charCodeAt(i + 2)] >> 2)
+    arr[curByte++] = (tmp >> 8) & 0xFF
+    arr[curByte++] = tmp & 0xFF
+  }
+
+  return arr
+}
+
+function tripletToBase64 (num) {
+  return lookup[num >> 18 & 0x3F] +
+    lookup[num >> 12 & 0x3F] +
+    lookup[num >> 6 & 0x3F] +
+    lookup[num & 0x3F]
+}
+
+function encodeChunk (uint8, start, end) {
+  var tmp
+  var output = []
+  for (var i = start; i < end; i += 3) {
+    tmp =
+      ((uint8[i] << 16) & 0xFF0000) +
+      ((uint8[i + 1] << 8) & 0xFF00) +
+      (uint8[i + 2] & 0xFF)
+    output.push(tripletToBase64(tmp))
+  }
+  return output.join('')
+}
+
+function fromByteArray (uint8) {
+  var tmp
+  var len = uint8.length
+  var extraBytes = len % 3 // if we have 1 byte left, pad 2 bytes
+  var parts = []
+  var maxChunkLength = 16383 // must be multiple of 3
+
+  // go through the array every three bytes, we'll deal with trailing stuff later
+  for (var i = 0, len2 = len - extraBytes; i < len2; i += maxChunkLength) {
+    parts.push(encodeChunk(
+      uint8, i, (i + maxChunkLength) > len2 ? len2 : (i + maxChunkLength)
+    ))
+  }
+
+  // pad the end with zeros, but make sure to not forget the extra bytes
+  if (extraBytes === 1) {
+    tmp = uint8[len - 1]
+    parts.push(
+      lookup[tmp >> 2] +
+      lookup[(tmp << 4) & 0x3F] +
+      '=='
+    )
+  } else if (extraBytes === 2) {
+    tmp = (uint8[len - 2] << 8) + uint8[len - 1]
+    parts.push(
+      lookup[tmp >> 10] +
+      lookup[(tmp >> 4) & 0x3F] +
+      lookup[(tmp << 2) & 0x3F] +
+      '='
+    )
+  }
+
+  return parts.join('')
+}
+
 
 /***/ }),
 
@@ -16768,6 +8833,2155 @@ __webpack_require__(/*! ../../js/affix.js */ "./node_modules/bootstrap/js/affix.
 
 }(jQuery);
 
+
+/***/ }),
+
+/***/ "./node_modules/buffer/index.js":
+/*!**************************************!*\
+  !*** ./node_modules/buffer/index.js ***!
+  \**************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/* WEBPACK VAR INJECTION */(function(global) {/*!
+ * The buffer module from node.js, for the browser.
+ *
+ * @author   Feross Aboukhadijeh <http://feross.org>
+ * @license  MIT
+ */
+/* eslint-disable no-proto */
+
+
+
+var base64 = __webpack_require__(/*! base64-js */ "./node_modules/base64-js/index.js")
+var ieee754 = __webpack_require__(/*! ieee754 */ "./node_modules/ieee754/index.js")
+var isArray = __webpack_require__(/*! isarray */ "./node_modules/isarray/index.js")
+
+exports.Buffer = Buffer
+exports.SlowBuffer = SlowBuffer
+exports.INSPECT_MAX_BYTES = 50
+
+/**
+ * If `Buffer.TYPED_ARRAY_SUPPORT`:
+ *   === true    Use Uint8Array implementation (fastest)
+ *   === false   Use Object implementation (most compatible, even IE6)
+ *
+ * Browsers that support typed arrays are IE 10+, Firefox 4+, Chrome 7+, Safari 5.1+,
+ * Opera 11.6+, iOS 4.2+.
+ *
+ * Due to various browser bugs, sometimes the Object implementation will be used even
+ * when the browser supports typed arrays.
+ *
+ * Note:
+ *
+ *   - Firefox 4-29 lacks support for adding new properties to `Uint8Array` instances,
+ *     See: https://bugzilla.mozilla.org/show_bug.cgi?id=695438.
+ *
+ *   - Chrome 9-10 is missing the `TypedArray.prototype.subarray` function.
+ *
+ *   - IE10 has a broken `TypedArray.prototype.subarray` function which returns arrays of
+ *     incorrect length in some situations.
+
+ * We detect these buggy browsers and set `Buffer.TYPED_ARRAY_SUPPORT` to `false` so they
+ * get the Object implementation, which is slower but behaves correctly.
+ */
+Buffer.TYPED_ARRAY_SUPPORT = global.TYPED_ARRAY_SUPPORT !== undefined
+  ? global.TYPED_ARRAY_SUPPORT
+  : typedArraySupport()
+
+/*
+ * Export kMaxLength after typed array support is determined.
+ */
+exports.kMaxLength = kMaxLength()
+
+function typedArraySupport () {
+  try {
+    var arr = new Uint8Array(1)
+    arr.__proto__ = {__proto__: Uint8Array.prototype, foo: function () { return 42 }}
+    return arr.foo() === 42 && // typed array instances can be augmented
+        typeof arr.subarray === 'function' && // chrome 9-10 lack `subarray`
+        arr.subarray(1, 1).byteLength === 0 // ie10 has broken `subarray`
+  } catch (e) {
+    return false
+  }
+}
+
+function kMaxLength () {
+  return Buffer.TYPED_ARRAY_SUPPORT
+    ? 0x7fffffff
+    : 0x3fffffff
+}
+
+function createBuffer (that, length) {
+  if (kMaxLength() < length) {
+    throw new RangeError('Invalid typed array length')
+  }
+  if (Buffer.TYPED_ARRAY_SUPPORT) {
+    // Return an augmented `Uint8Array` instance, for best performance
+    that = new Uint8Array(length)
+    that.__proto__ = Buffer.prototype
+  } else {
+    // Fallback: Return an object instance of the Buffer class
+    if (that === null) {
+      that = new Buffer(length)
+    }
+    that.length = length
+  }
+
+  return that
+}
+
+/**
+ * The Buffer constructor returns instances of `Uint8Array` that have their
+ * prototype changed to `Buffer.prototype`. Furthermore, `Buffer` is a subclass of
+ * `Uint8Array`, so the returned instances will have all the node `Buffer` methods
+ * and the `Uint8Array` methods. Square bracket notation works as expected -- it
+ * returns a single octet.
+ *
+ * The `Uint8Array` prototype remains unmodified.
+ */
+
+function Buffer (arg, encodingOrOffset, length) {
+  if (!Buffer.TYPED_ARRAY_SUPPORT && !(this instanceof Buffer)) {
+    return new Buffer(arg, encodingOrOffset, length)
+  }
+
+  // Common case.
+  if (typeof arg === 'number') {
+    if (typeof encodingOrOffset === 'string') {
+      throw new Error(
+        'If encoding is specified then the first argument must be a string'
+      )
+    }
+    return allocUnsafe(this, arg)
+  }
+  return from(this, arg, encodingOrOffset, length)
+}
+
+Buffer.poolSize = 8192 // not used by this implementation
+
+// TODO: Legacy, not needed anymore. Remove in next major version.
+Buffer._augment = function (arr) {
+  arr.__proto__ = Buffer.prototype
+  return arr
+}
+
+function from (that, value, encodingOrOffset, length) {
+  if (typeof value === 'number') {
+    throw new TypeError('"value" argument must not be a number')
+  }
+
+  if (typeof ArrayBuffer !== 'undefined' && value instanceof ArrayBuffer) {
+    return fromArrayBuffer(that, value, encodingOrOffset, length)
+  }
+
+  if (typeof value === 'string') {
+    return fromString(that, value, encodingOrOffset)
+  }
+
+  return fromObject(that, value)
+}
+
+/**
+ * Functionally equivalent to Buffer(arg, encoding) but throws a TypeError
+ * if value is a number.
+ * Buffer.from(str[, encoding])
+ * Buffer.from(array)
+ * Buffer.from(buffer)
+ * Buffer.from(arrayBuffer[, byteOffset[, length]])
+ **/
+Buffer.from = function (value, encodingOrOffset, length) {
+  return from(null, value, encodingOrOffset, length)
+}
+
+if (Buffer.TYPED_ARRAY_SUPPORT) {
+  Buffer.prototype.__proto__ = Uint8Array.prototype
+  Buffer.__proto__ = Uint8Array
+  if (typeof Symbol !== 'undefined' && Symbol.species &&
+      Buffer[Symbol.species] === Buffer) {
+    // Fix subarray() in ES2016. See: https://github.com/feross/buffer/pull/97
+    Object.defineProperty(Buffer, Symbol.species, {
+      value: null,
+      configurable: true
+    })
+  }
+}
+
+function assertSize (size) {
+  if (typeof size !== 'number') {
+    throw new TypeError('"size" argument must be a number')
+  } else if (size < 0) {
+    throw new RangeError('"size" argument must not be negative')
+  }
+}
+
+function alloc (that, size, fill, encoding) {
+  assertSize(size)
+  if (size <= 0) {
+    return createBuffer(that, size)
+  }
+  if (fill !== undefined) {
+    // Only pay attention to encoding if it's a string. This
+    // prevents accidentally sending in a number that would
+    // be interpretted as a start offset.
+    return typeof encoding === 'string'
+      ? createBuffer(that, size).fill(fill, encoding)
+      : createBuffer(that, size).fill(fill)
+  }
+  return createBuffer(that, size)
+}
+
+/**
+ * Creates a new filled Buffer instance.
+ * alloc(size[, fill[, encoding]])
+ **/
+Buffer.alloc = function (size, fill, encoding) {
+  return alloc(null, size, fill, encoding)
+}
+
+function allocUnsafe (that, size) {
+  assertSize(size)
+  that = createBuffer(that, size < 0 ? 0 : checked(size) | 0)
+  if (!Buffer.TYPED_ARRAY_SUPPORT) {
+    for (var i = 0; i < size; ++i) {
+      that[i] = 0
+    }
+  }
+  return that
+}
+
+/**
+ * Equivalent to Buffer(num), by default creates a non-zero-filled Buffer instance.
+ * */
+Buffer.allocUnsafe = function (size) {
+  return allocUnsafe(null, size)
+}
+/**
+ * Equivalent to SlowBuffer(num), by default creates a non-zero-filled Buffer instance.
+ */
+Buffer.allocUnsafeSlow = function (size) {
+  return allocUnsafe(null, size)
+}
+
+function fromString (that, string, encoding) {
+  if (typeof encoding !== 'string' || encoding === '') {
+    encoding = 'utf8'
+  }
+
+  if (!Buffer.isEncoding(encoding)) {
+    throw new TypeError('"encoding" must be a valid string encoding')
+  }
+
+  var length = byteLength(string, encoding) | 0
+  that = createBuffer(that, length)
+
+  var actual = that.write(string, encoding)
+
+  if (actual !== length) {
+    // Writing a hex string, for example, that contains invalid characters will
+    // cause everything after the first invalid character to be ignored. (e.g.
+    // 'abxxcd' will be treated as 'ab')
+    that = that.slice(0, actual)
+  }
+
+  return that
+}
+
+function fromArrayLike (that, array) {
+  var length = array.length < 0 ? 0 : checked(array.length) | 0
+  that = createBuffer(that, length)
+  for (var i = 0; i < length; i += 1) {
+    that[i] = array[i] & 255
+  }
+  return that
+}
+
+function fromArrayBuffer (that, array, byteOffset, length) {
+  array.byteLength // this throws if `array` is not a valid ArrayBuffer
+
+  if (byteOffset < 0 || array.byteLength < byteOffset) {
+    throw new RangeError('\'offset\' is out of bounds')
+  }
+
+  if (array.byteLength < byteOffset + (length || 0)) {
+    throw new RangeError('\'length\' is out of bounds')
+  }
+
+  if (byteOffset === undefined && length === undefined) {
+    array = new Uint8Array(array)
+  } else if (length === undefined) {
+    array = new Uint8Array(array, byteOffset)
+  } else {
+    array = new Uint8Array(array, byteOffset, length)
+  }
+
+  if (Buffer.TYPED_ARRAY_SUPPORT) {
+    // Return an augmented `Uint8Array` instance, for best performance
+    that = array
+    that.__proto__ = Buffer.prototype
+  } else {
+    // Fallback: Return an object instance of the Buffer class
+    that = fromArrayLike(that, array)
+  }
+  return that
+}
+
+function fromObject (that, obj) {
+  if (Buffer.isBuffer(obj)) {
+    var len = checked(obj.length) | 0
+    that = createBuffer(that, len)
+
+    if (that.length === 0) {
+      return that
+    }
+
+    obj.copy(that, 0, 0, len)
+    return that
+  }
+
+  if (obj) {
+    if ((typeof ArrayBuffer !== 'undefined' &&
+        obj.buffer instanceof ArrayBuffer) || 'length' in obj) {
+      if (typeof obj.length !== 'number' || isnan(obj.length)) {
+        return createBuffer(that, 0)
+      }
+      return fromArrayLike(that, obj)
+    }
+
+    if (obj.type === 'Buffer' && isArray(obj.data)) {
+      return fromArrayLike(that, obj.data)
+    }
+  }
+
+  throw new TypeError('First argument must be a string, Buffer, ArrayBuffer, Array, or array-like object.')
+}
+
+function checked (length) {
+  // Note: cannot use `length < kMaxLength()` here because that fails when
+  // length is NaN (which is otherwise coerced to zero.)
+  if (length >= kMaxLength()) {
+    throw new RangeError('Attempt to allocate Buffer larger than maximum ' +
+                         'size: 0x' + kMaxLength().toString(16) + ' bytes')
+  }
+  return length | 0
+}
+
+function SlowBuffer (length) {
+  if (+length != length) { // eslint-disable-line eqeqeq
+    length = 0
+  }
+  return Buffer.alloc(+length)
+}
+
+Buffer.isBuffer = function isBuffer (b) {
+  return !!(b != null && b._isBuffer)
+}
+
+Buffer.compare = function compare (a, b) {
+  if (!Buffer.isBuffer(a) || !Buffer.isBuffer(b)) {
+    throw new TypeError('Arguments must be Buffers')
+  }
+
+  if (a === b) return 0
+
+  var x = a.length
+  var y = b.length
+
+  for (var i = 0, len = Math.min(x, y); i < len; ++i) {
+    if (a[i] !== b[i]) {
+      x = a[i]
+      y = b[i]
+      break
+    }
+  }
+
+  if (x < y) return -1
+  if (y < x) return 1
+  return 0
+}
+
+Buffer.isEncoding = function isEncoding (encoding) {
+  switch (String(encoding).toLowerCase()) {
+    case 'hex':
+    case 'utf8':
+    case 'utf-8':
+    case 'ascii':
+    case 'latin1':
+    case 'binary':
+    case 'base64':
+    case 'ucs2':
+    case 'ucs-2':
+    case 'utf16le':
+    case 'utf-16le':
+      return true
+    default:
+      return false
+  }
+}
+
+Buffer.concat = function concat (list, length) {
+  if (!isArray(list)) {
+    throw new TypeError('"list" argument must be an Array of Buffers')
+  }
+
+  if (list.length === 0) {
+    return Buffer.alloc(0)
+  }
+
+  var i
+  if (length === undefined) {
+    length = 0
+    for (i = 0; i < list.length; ++i) {
+      length += list[i].length
+    }
+  }
+
+  var buffer = Buffer.allocUnsafe(length)
+  var pos = 0
+  for (i = 0; i < list.length; ++i) {
+    var buf = list[i]
+    if (!Buffer.isBuffer(buf)) {
+      throw new TypeError('"list" argument must be an Array of Buffers')
+    }
+    buf.copy(buffer, pos)
+    pos += buf.length
+  }
+  return buffer
+}
+
+function byteLength (string, encoding) {
+  if (Buffer.isBuffer(string)) {
+    return string.length
+  }
+  if (typeof ArrayBuffer !== 'undefined' && typeof ArrayBuffer.isView === 'function' &&
+      (ArrayBuffer.isView(string) || string instanceof ArrayBuffer)) {
+    return string.byteLength
+  }
+  if (typeof string !== 'string') {
+    string = '' + string
+  }
+
+  var len = string.length
+  if (len === 0) return 0
+
+  // Use a for loop to avoid recursion
+  var loweredCase = false
+  for (;;) {
+    switch (encoding) {
+      case 'ascii':
+      case 'latin1':
+      case 'binary':
+        return len
+      case 'utf8':
+      case 'utf-8':
+      case undefined:
+        return utf8ToBytes(string).length
+      case 'ucs2':
+      case 'ucs-2':
+      case 'utf16le':
+      case 'utf-16le':
+        return len * 2
+      case 'hex':
+        return len >>> 1
+      case 'base64':
+        return base64ToBytes(string).length
+      default:
+        if (loweredCase) return utf8ToBytes(string).length // assume utf8
+        encoding = ('' + encoding).toLowerCase()
+        loweredCase = true
+    }
+  }
+}
+Buffer.byteLength = byteLength
+
+function slowToString (encoding, start, end) {
+  var loweredCase = false
+
+  // No need to verify that "this.length <= MAX_UINT32" since it's a read-only
+  // property of a typed array.
+
+  // This behaves neither like String nor Uint8Array in that we set start/end
+  // to their upper/lower bounds if the value passed is out of range.
+  // undefined is handled specially as per ECMA-262 6th Edition,
+  // Section 13.3.3.7 Runtime Semantics: KeyedBindingInitialization.
+  if (start === undefined || start < 0) {
+    start = 0
+  }
+  // Return early if start > this.length. Done here to prevent potential uint32
+  // coercion fail below.
+  if (start > this.length) {
+    return ''
+  }
+
+  if (end === undefined || end > this.length) {
+    end = this.length
+  }
+
+  if (end <= 0) {
+    return ''
+  }
+
+  // Force coersion to uint32. This will also coerce falsey/NaN values to 0.
+  end >>>= 0
+  start >>>= 0
+
+  if (end <= start) {
+    return ''
+  }
+
+  if (!encoding) encoding = 'utf8'
+
+  while (true) {
+    switch (encoding) {
+      case 'hex':
+        return hexSlice(this, start, end)
+
+      case 'utf8':
+      case 'utf-8':
+        return utf8Slice(this, start, end)
+
+      case 'ascii':
+        return asciiSlice(this, start, end)
+
+      case 'latin1':
+      case 'binary':
+        return latin1Slice(this, start, end)
+
+      case 'base64':
+        return base64Slice(this, start, end)
+
+      case 'ucs2':
+      case 'ucs-2':
+      case 'utf16le':
+      case 'utf-16le':
+        return utf16leSlice(this, start, end)
+
+      default:
+        if (loweredCase) throw new TypeError('Unknown encoding: ' + encoding)
+        encoding = (encoding + '').toLowerCase()
+        loweredCase = true
+    }
+  }
+}
+
+// The property is used by `Buffer.isBuffer` and `is-buffer` (in Safari 5-7) to detect
+// Buffer instances.
+Buffer.prototype._isBuffer = true
+
+function swap (b, n, m) {
+  var i = b[n]
+  b[n] = b[m]
+  b[m] = i
+}
+
+Buffer.prototype.swap16 = function swap16 () {
+  var len = this.length
+  if (len % 2 !== 0) {
+    throw new RangeError('Buffer size must be a multiple of 16-bits')
+  }
+  for (var i = 0; i < len; i += 2) {
+    swap(this, i, i + 1)
+  }
+  return this
+}
+
+Buffer.prototype.swap32 = function swap32 () {
+  var len = this.length
+  if (len % 4 !== 0) {
+    throw new RangeError('Buffer size must be a multiple of 32-bits')
+  }
+  for (var i = 0; i < len; i += 4) {
+    swap(this, i, i + 3)
+    swap(this, i + 1, i + 2)
+  }
+  return this
+}
+
+Buffer.prototype.swap64 = function swap64 () {
+  var len = this.length
+  if (len % 8 !== 0) {
+    throw new RangeError('Buffer size must be a multiple of 64-bits')
+  }
+  for (var i = 0; i < len; i += 8) {
+    swap(this, i, i + 7)
+    swap(this, i + 1, i + 6)
+    swap(this, i + 2, i + 5)
+    swap(this, i + 3, i + 4)
+  }
+  return this
+}
+
+Buffer.prototype.toString = function toString () {
+  var length = this.length | 0
+  if (length === 0) return ''
+  if (arguments.length === 0) return utf8Slice(this, 0, length)
+  return slowToString.apply(this, arguments)
+}
+
+Buffer.prototype.equals = function equals (b) {
+  if (!Buffer.isBuffer(b)) throw new TypeError('Argument must be a Buffer')
+  if (this === b) return true
+  return Buffer.compare(this, b) === 0
+}
+
+Buffer.prototype.inspect = function inspect () {
+  var str = ''
+  var max = exports.INSPECT_MAX_BYTES
+  if (this.length > 0) {
+    str = this.toString('hex', 0, max).match(/.{2}/g).join(' ')
+    if (this.length > max) str += ' ... '
+  }
+  return '<Buffer ' + str + '>'
+}
+
+Buffer.prototype.compare = function compare (target, start, end, thisStart, thisEnd) {
+  if (!Buffer.isBuffer(target)) {
+    throw new TypeError('Argument must be a Buffer')
+  }
+
+  if (start === undefined) {
+    start = 0
+  }
+  if (end === undefined) {
+    end = target ? target.length : 0
+  }
+  if (thisStart === undefined) {
+    thisStart = 0
+  }
+  if (thisEnd === undefined) {
+    thisEnd = this.length
+  }
+
+  if (start < 0 || end > target.length || thisStart < 0 || thisEnd > this.length) {
+    throw new RangeError('out of range index')
+  }
+
+  if (thisStart >= thisEnd && start >= end) {
+    return 0
+  }
+  if (thisStart >= thisEnd) {
+    return -1
+  }
+  if (start >= end) {
+    return 1
+  }
+
+  start >>>= 0
+  end >>>= 0
+  thisStart >>>= 0
+  thisEnd >>>= 0
+
+  if (this === target) return 0
+
+  var x = thisEnd - thisStart
+  var y = end - start
+  var len = Math.min(x, y)
+
+  var thisCopy = this.slice(thisStart, thisEnd)
+  var targetCopy = target.slice(start, end)
+
+  for (var i = 0; i < len; ++i) {
+    if (thisCopy[i] !== targetCopy[i]) {
+      x = thisCopy[i]
+      y = targetCopy[i]
+      break
+    }
+  }
+
+  if (x < y) return -1
+  if (y < x) return 1
+  return 0
+}
+
+// Finds either the first index of `val` in `buffer` at offset >= `byteOffset`,
+// OR the last index of `val` in `buffer` at offset <= `byteOffset`.
+//
+// Arguments:
+// - buffer - a Buffer to search
+// - val - a string, Buffer, or number
+// - byteOffset - an index into `buffer`; will be clamped to an int32
+// - encoding - an optional encoding, relevant is val is a string
+// - dir - true for indexOf, false for lastIndexOf
+function bidirectionalIndexOf (buffer, val, byteOffset, encoding, dir) {
+  // Empty buffer means no match
+  if (buffer.length === 0) return -1
+
+  // Normalize byteOffset
+  if (typeof byteOffset === 'string') {
+    encoding = byteOffset
+    byteOffset = 0
+  } else if (byteOffset > 0x7fffffff) {
+    byteOffset = 0x7fffffff
+  } else if (byteOffset < -0x80000000) {
+    byteOffset = -0x80000000
+  }
+  byteOffset = +byteOffset  // Coerce to Number.
+  if (isNaN(byteOffset)) {
+    // byteOffset: it it's undefined, null, NaN, "foo", etc, search whole buffer
+    byteOffset = dir ? 0 : (buffer.length - 1)
+  }
+
+  // Normalize byteOffset: negative offsets start from the end of the buffer
+  if (byteOffset < 0) byteOffset = buffer.length + byteOffset
+  if (byteOffset >= buffer.length) {
+    if (dir) return -1
+    else byteOffset = buffer.length - 1
+  } else if (byteOffset < 0) {
+    if (dir) byteOffset = 0
+    else return -1
+  }
+
+  // Normalize val
+  if (typeof val === 'string') {
+    val = Buffer.from(val, encoding)
+  }
+
+  // Finally, search either indexOf (if dir is true) or lastIndexOf
+  if (Buffer.isBuffer(val)) {
+    // Special case: looking for empty string/buffer always fails
+    if (val.length === 0) {
+      return -1
+    }
+    return arrayIndexOf(buffer, val, byteOffset, encoding, dir)
+  } else if (typeof val === 'number') {
+    val = val & 0xFF // Search for a byte value [0-255]
+    if (Buffer.TYPED_ARRAY_SUPPORT &&
+        typeof Uint8Array.prototype.indexOf === 'function') {
+      if (dir) {
+        return Uint8Array.prototype.indexOf.call(buffer, val, byteOffset)
+      } else {
+        return Uint8Array.prototype.lastIndexOf.call(buffer, val, byteOffset)
+      }
+    }
+    return arrayIndexOf(buffer, [ val ], byteOffset, encoding, dir)
+  }
+
+  throw new TypeError('val must be string, number or Buffer')
+}
+
+function arrayIndexOf (arr, val, byteOffset, encoding, dir) {
+  var indexSize = 1
+  var arrLength = arr.length
+  var valLength = val.length
+
+  if (encoding !== undefined) {
+    encoding = String(encoding).toLowerCase()
+    if (encoding === 'ucs2' || encoding === 'ucs-2' ||
+        encoding === 'utf16le' || encoding === 'utf-16le') {
+      if (arr.length < 2 || val.length < 2) {
+        return -1
+      }
+      indexSize = 2
+      arrLength /= 2
+      valLength /= 2
+      byteOffset /= 2
+    }
+  }
+
+  function read (buf, i) {
+    if (indexSize === 1) {
+      return buf[i]
+    } else {
+      return buf.readUInt16BE(i * indexSize)
+    }
+  }
+
+  var i
+  if (dir) {
+    var foundIndex = -1
+    for (i = byteOffset; i < arrLength; i++) {
+      if (read(arr, i) === read(val, foundIndex === -1 ? 0 : i - foundIndex)) {
+        if (foundIndex === -1) foundIndex = i
+        if (i - foundIndex + 1 === valLength) return foundIndex * indexSize
+      } else {
+        if (foundIndex !== -1) i -= i - foundIndex
+        foundIndex = -1
+      }
+    }
+  } else {
+    if (byteOffset + valLength > arrLength) byteOffset = arrLength - valLength
+    for (i = byteOffset; i >= 0; i--) {
+      var found = true
+      for (var j = 0; j < valLength; j++) {
+        if (read(arr, i + j) !== read(val, j)) {
+          found = false
+          break
+        }
+      }
+      if (found) return i
+    }
+  }
+
+  return -1
+}
+
+Buffer.prototype.includes = function includes (val, byteOffset, encoding) {
+  return this.indexOf(val, byteOffset, encoding) !== -1
+}
+
+Buffer.prototype.indexOf = function indexOf (val, byteOffset, encoding) {
+  return bidirectionalIndexOf(this, val, byteOffset, encoding, true)
+}
+
+Buffer.prototype.lastIndexOf = function lastIndexOf (val, byteOffset, encoding) {
+  return bidirectionalIndexOf(this, val, byteOffset, encoding, false)
+}
+
+function hexWrite (buf, string, offset, length) {
+  offset = Number(offset) || 0
+  var remaining = buf.length - offset
+  if (!length) {
+    length = remaining
+  } else {
+    length = Number(length)
+    if (length > remaining) {
+      length = remaining
+    }
+  }
+
+  // must be an even number of digits
+  var strLen = string.length
+  if (strLen % 2 !== 0) throw new TypeError('Invalid hex string')
+
+  if (length > strLen / 2) {
+    length = strLen / 2
+  }
+  for (var i = 0; i < length; ++i) {
+    var parsed = parseInt(string.substr(i * 2, 2), 16)
+    if (isNaN(parsed)) return i
+    buf[offset + i] = parsed
+  }
+  return i
+}
+
+function utf8Write (buf, string, offset, length) {
+  return blitBuffer(utf8ToBytes(string, buf.length - offset), buf, offset, length)
+}
+
+function asciiWrite (buf, string, offset, length) {
+  return blitBuffer(asciiToBytes(string), buf, offset, length)
+}
+
+function latin1Write (buf, string, offset, length) {
+  return asciiWrite(buf, string, offset, length)
+}
+
+function base64Write (buf, string, offset, length) {
+  return blitBuffer(base64ToBytes(string), buf, offset, length)
+}
+
+function ucs2Write (buf, string, offset, length) {
+  return blitBuffer(utf16leToBytes(string, buf.length - offset), buf, offset, length)
+}
+
+Buffer.prototype.write = function write (string, offset, length, encoding) {
+  // Buffer#write(string)
+  if (offset === undefined) {
+    encoding = 'utf8'
+    length = this.length
+    offset = 0
+  // Buffer#write(string, encoding)
+  } else if (length === undefined && typeof offset === 'string') {
+    encoding = offset
+    length = this.length
+    offset = 0
+  // Buffer#write(string, offset[, length][, encoding])
+  } else if (isFinite(offset)) {
+    offset = offset | 0
+    if (isFinite(length)) {
+      length = length | 0
+      if (encoding === undefined) encoding = 'utf8'
+    } else {
+      encoding = length
+      length = undefined
+    }
+  // legacy write(string, encoding, offset, length) - remove in v0.13
+  } else {
+    throw new Error(
+      'Buffer.write(string, encoding, offset[, length]) is no longer supported'
+    )
+  }
+
+  var remaining = this.length - offset
+  if (length === undefined || length > remaining) length = remaining
+
+  if ((string.length > 0 && (length < 0 || offset < 0)) || offset > this.length) {
+    throw new RangeError('Attempt to write outside buffer bounds')
+  }
+
+  if (!encoding) encoding = 'utf8'
+
+  var loweredCase = false
+  for (;;) {
+    switch (encoding) {
+      case 'hex':
+        return hexWrite(this, string, offset, length)
+
+      case 'utf8':
+      case 'utf-8':
+        return utf8Write(this, string, offset, length)
+
+      case 'ascii':
+        return asciiWrite(this, string, offset, length)
+
+      case 'latin1':
+      case 'binary':
+        return latin1Write(this, string, offset, length)
+
+      case 'base64':
+        // Warning: maxLength not taken into account in base64Write
+        return base64Write(this, string, offset, length)
+
+      case 'ucs2':
+      case 'ucs-2':
+      case 'utf16le':
+      case 'utf-16le':
+        return ucs2Write(this, string, offset, length)
+
+      default:
+        if (loweredCase) throw new TypeError('Unknown encoding: ' + encoding)
+        encoding = ('' + encoding).toLowerCase()
+        loweredCase = true
+    }
+  }
+}
+
+Buffer.prototype.toJSON = function toJSON () {
+  return {
+    type: 'Buffer',
+    data: Array.prototype.slice.call(this._arr || this, 0)
+  }
+}
+
+function base64Slice (buf, start, end) {
+  if (start === 0 && end === buf.length) {
+    return base64.fromByteArray(buf)
+  } else {
+    return base64.fromByteArray(buf.slice(start, end))
+  }
+}
+
+function utf8Slice (buf, start, end) {
+  end = Math.min(buf.length, end)
+  var res = []
+
+  var i = start
+  while (i < end) {
+    var firstByte = buf[i]
+    var codePoint = null
+    var bytesPerSequence = (firstByte > 0xEF) ? 4
+      : (firstByte > 0xDF) ? 3
+      : (firstByte > 0xBF) ? 2
+      : 1
+
+    if (i + bytesPerSequence <= end) {
+      var secondByte, thirdByte, fourthByte, tempCodePoint
+
+      switch (bytesPerSequence) {
+        case 1:
+          if (firstByte < 0x80) {
+            codePoint = firstByte
+          }
+          break
+        case 2:
+          secondByte = buf[i + 1]
+          if ((secondByte & 0xC0) === 0x80) {
+            tempCodePoint = (firstByte & 0x1F) << 0x6 | (secondByte & 0x3F)
+            if (tempCodePoint > 0x7F) {
+              codePoint = tempCodePoint
+            }
+          }
+          break
+        case 3:
+          secondByte = buf[i + 1]
+          thirdByte = buf[i + 2]
+          if ((secondByte & 0xC0) === 0x80 && (thirdByte & 0xC0) === 0x80) {
+            tempCodePoint = (firstByte & 0xF) << 0xC | (secondByte & 0x3F) << 0x6 | (thirdByte & 0x3F)
+            if (tempCodePoint > 0x7FF && (tempCodePoint < 0xD800 || tempCodePoint > 0xDFFF)) {
+              codePoint = tempCodePoint
+            }
+          }
+          break
+        case 4:
+          secondByte = buf[i + 1]
+          thirdByte = buf[i + 2]
+          fourthByte = buf[i + 3]
+          if ((secondByte & 0xC0) === 0x80 && (thirdByte & 0xC0) === 0x80 && (fourthByte & 0xC0) === 0x80) {
+            tempCodePoint = (firstByte & 0xF) << 0x12 | (secondByte & 0x3F) << 0xC | (thirdByte & 0x3F) << 0x6 | (fourthByte & 0x3F)
+            if (tempCodePoint > 0xFFFF && tempCodePoint < 0x110000) {
+              codePoint = tempCodePoint
+            }
+          }
+      }
+    }
+
+    if (codePoint === null) {
+      // we did not generate a valid codePoint so insert a
+      // replacement char (U+FFFD) and advance only 1 byte
+      codePoint = 0xFFFD
+      bytesPerSequence = 1
+    } else if (codePoint > 0xFFFF) {
+      // encode to utf16 (surrogate pair dance)
+      codePoint -= 0x10000
+      res.push(codePoint >>> 10 & 0x3FF | 0xD800)
+      codePoint = 0xDC00 | codePoint & 0x3FF
+    }
+
+    res.push(codePoint)
+    i += bytesPerSequence
+  }
+
+  return decodeCodePointsArray(res)
+}
+
+// Based on http://stackoverflow.com/a/22747272/680742, the browser with
+// the lowest limit is Chrome, with 0x10000 args.
+// We go 1 magnitude less, for safety
+var MAX_ARGUMENTS_LENGTH = 0x1000
+
+function decodeCodePointsArray (codePoints) {
+  var len = codePoints.length
+  if (len <= MAX_ARGUMENTS_LENGTH) {
+    return String.fromCharCode.apply(String, codePoints) // avoid extra slice()
+  }
+
+  // Decode in chunks to avoid "call stack size exceeded".
+  var res = ''
+  var i = 0
+  while (i < len) {
+    res += String.fromCharCode.apply(
+      String,
+      codePoints.slice(i, i += MAX_ARGUMENTS_LENGTH)
+    )
+  }
+  return res
+}
+
+function asciiSlice (buf, start, end) {
+  var ret = ''
+  end = Math.min(buf.length, end)
+
+  for (var i = start; i < end; ++i) {
+    ret += String.fromCharCode(buf[i] & 0x7F)
+  }
+  return ret
+}
+
+function latin1Slice (buf, start, end) {
+  var ret = ''
+  end = Math.min(buf.length, end)
+
+  for (var i = start; i < end; ++i) {
+    ret += String.fromCharCode(buf[i])
+  }
+  return ret
+}
+
+function hexSlice (buf, start, end) {
+  var len = buf.length
+
+  if (!start || start < 0) start = 0
+  if (!end || end < 0 || end > len) end = len
+
+  var out = ''
+  for (var i = start; i < end; ++i) {
+    out += toHex(buf[i])
+  }
+  return out
+}
+
+function utf16leSlice (buf, start, end) {
+  var bytes = buf.slice(start, end)
+  var res = ''
+  for (var i = 0; i < bytes.length; i += 2) {
+    res += String.fromCharCode(bytes[i] + bytes[i + 1] * 256)
+  }
+  return res
+}
+
+Buffer.prototype.slice = function slice (start, end) {
+  var len = this.length
+  start = ~~start
+  end = end === undefined ? len : ~~end
+
+  if (start < 0) {
+    start += len
+    if (start < 0) start = 0
+  } else if (start > len) {
+    start = len
+  }
+
+  if (end < 0) {
+    end += len
+    if (end < 0) end = 0
+  } else if (end > len) {
+    end = len
+  }
+
+  if (end < start) end = start
+
+  var newBuf
+  if (Buffer.TYPED_ARRAY_SUPPORT) {
+    newBuf = this.subarray(start, end)
+    newBuf.__proto__ = Buffer.prototype
+  } else {
+    var sliceLen = end - start
+    newBuf = new Buffer(sliceLen, undefined)
+    for (var i = 0; i < sliceLen; ++i) {
+      newBuf[i] = this[i + start]
+    }
+  }
+
+  return newBuf
+}
+
+/*
+ * Need to make sure that buffer isn't trying to write out of bounds.
+ */
+function checkOffset (offset, ext, length) {
+  if ((offset % 1) !== 0 || offset < 0) throw new RangeError('offset is not uint')
+  if (offset + ext > length) throw new RangeError('Trying to access beyond buffer length')
+}
+
+Buffer.prototype.readUIntLE = function readUIntLE (offset, byteLength, noAssert) {
+  offset = offset | 0
+  byteLength = byteLength | 0
+  if (!noAssert) checkOffset(offset, byteLength, this.length)
+
+  var val = this[offset]
+  var mul = 1
+  var i = 0
+  while (++i < byteLength && (mul *= 0x100)) {
+    val += this[offset + i] * mul
+  }
+
+  return val
+}
+
+Buffer.prototype.readUIntBE = function readUIntBE (offset, byteLength, noAssert) {
+  offset = offset | 0
+  byteLength = byteLength | 0
+  if (!noAssert) {
+    checkOffset(offset, byteLength, this.length)
+  }
+
+  var val = this[offset + --byteLength]
+  var mul = 1
+  while (byteLength > 0 && (mul *= 0x100)) {
+    val += this[offset + --byteLength] * mul
+  }
+
+  return val
+}
+
+Buffer.prototype.readUInt8 = function readUInt8 (offset, noAssert) {
+  if (!noAssert) checkOffset(offset, 1, this.length)
+  return this[offset]
+}
+
+Buffer.prototype.readUInt16LE = function readUInt16LE (offset, noAssert) {
+  if (!noAssert) checkOffset(offset, 2, this.length)
+  return this[offset] | (this[offset + 1] << 8)
+}
+
+Buffer.prototype.readUInt16BE = function readUInt16BE (offset, noAssert) {
+  if (!noAssert) checkOffset(offset, 2, this.length)
+  return (this[offset] << 8) | this[offset + 1]
+}
+
+Buffer.prototype.readUInt32LE = function readUInt32LE (offset, noAssert) {
+  if (!noAssert) checkOffset(offset, 4, this.length)
+
+  return ((this[offset]) |
+      (this[offset + 1] << 8) |
+      (this[offset + 2] << 16)) +
+      (this[offset + 3] * 0x1000000)
+}
+
+Buffer.prototype.readUInt32BE = function readUInt32BE (offset, noAssert) {
+  if (!noAssert) checkOffset(offset, 4, this.length)
+
+  return (this[offset] * 0x1000000) +
+    ((this[offset + 1] << 16) |
+    (this[offset + 2] << 8) |
+    this[offset + 3])
+}
+
+Buffer.prototype.readIntLE = function readIntLE (offset, byteLength, noAssert) {
+  offset = offset | 0
+  byteLength = byteLength | 0
+  if (!noAssert) checkOffset(offset, byteLength, this.length)
+
+  var val = this[offset]
+  var mul = 1
+  var i = 0
+  while (++i < byteLength && (mul *= 0x100)) {
+    val += this[offset + i] * mul
+  }
+  mul *= 0x80
+
+  if (val >= mul) val -= Math.pow(2, 8 * byteLength)
+
+  return val
+}
+
+Buffer.prototype.readIntBE = function readIntBE (offset, byteLength, noAssert) {
+  offset = offset | 0
+  byteLength = byteLength | 0
+  if (!noAssert) checkOffset(offset, byteLength, this.length)
+
+  var i = byteLength
+  var mul = 1
+  var val = this[offset + --i]
+  while (i > 0 && (mul *= 0x100)) {
+    val += this[offset + --i] * mul
+  }
+  mul *= 0x80
+
+  if (val >= mul) val -= Math.pow(2, 8 * byteLength)
+
+  return val
+}
+
+Buffer.prototype.readInt8 = function readInt8 (offset, noAssert) {
+  if (!noAssert) checkOffset(offset, 1, this.length)
+  if (!(this[offset] & 0x80)) return (this[offset])
+  return ((0xff - this[offset] + 1) * -1)
+}
+
+Buffer.prototype.readInt16LE = function readInt16LE (offset, noAssert) {
+  if (!noAssert) checkOffset(offset, 2, this.length)
+  var val = this[offset] | (this[offset + 1] << 8)
+  return (val & 0x8000) ? val | 0xFFFF0000 : val
+}
+
+Buffer.prototype.readInt16BE = function readInt16BE (offset, noAssert) {
+  if (!noAssert) checkOffset(offset, 2, this.length)
+  var val = this[offset + 1] | (this[offset] << 8)
+  return (val & 0x8000) ? val | 0xFFFF0000 : val
+}
+
+Buffer.prototype.readInt32LE = function readInt32LE (offset, noAssert) {
+  if (!noAssert) checkOffset(offset, 4, this.length)
+
+  return (this[offset]) |
+    (this[offset + 1] << 8) |
+    (this[offset + 2] << 16) |
+    (this[offset + 3] << 24)
+}
+
+Buffer.prototype.readInt32BE = function readInt32BE (offset, noAssert) {
+  if (!noAssert) checkOffset(offset, 4, this.length)
+
+  return (this[offset] << 24) |
+    (this[offset + 1] << 16) |
+    (this[offset + 2] << 8) |
+    (this[offset + 3])
+}
+
+Buffer.prototype.readFloatLE = function readFloatLE (offset, noAssert) {
+  if (!noAssert) checkOffset(offset, 4, this.length)
+  return ieee754.read(this, offset, true, 23, 4)
+}
+
+Buffer.prototype.readFloatBE = function readFloatBE (offset, noAssert) {
+  if (!noAssert) checkOffset(offset, 4, this.length)
+  return ieee754.read(this, offset, false, 23, 4)
+}
+
+Buffer.prototype.readDoubleLE = function readDoubleLE (offset, noAssert) {
+  if (!noAssert) checkOffset(offset, 8, this.length)
+  return ieee754.read(this, offset, true, 52, 8)
+}
+
+Buffer.prototype.readDoubleBE = function readDoubleBE (offset, noAssert) {
+  if (!noAssert) checkOffset(offset, 8, this.length)
+  return ieee754.read(this, offset, false, 52, 8)
+}
+
+function checkInt (buf, value, offset, ext, max, min) {
+  if (!Buffer.isBuffer(buf)) throw new TypeError('"buffer" argument must be a Buffer instance')
+  if (value > max || value < min) throw new RangeError('"value" argument is out of bounds')
+  if (offset + ext > buf.length) throw new RangeError('Index out of range')
+}
+
+Buffer.prototype.writeUIntLE = function writeUIntLE (value, offset, byteLength, noAssert) {
+  value = +value
+  offset = offset | 0
+  byteLength = byteLength | 0
+  if (!noAssert) {
+    var maxBytes = Math.pow(2, 8 * byteLength) - 1
+    checkInt(this, value, offset, byteLength, maxBytes, 0)
+  }
+
+  var mul = 1
+  var i = 0
+  this[offset] = value & 0xFF
+  while (++i < byteLength && (mul *= 0x100)) {
+    this[offset + i] = (value / mul) & 0xFF
+  }
+
+  return offset + byteLength
+}
+
+Buffer.prototype.writeUIntBE = function writeUIntBE (value, offset, byteLength, noAssert) {
+  value = +value
+  offset = offset | 0
+  byteLength = byteLength | 0
+  if (!noAssert) {
+    var maxBytes = Math.pow(2, 8 * byteLength) - 1
+    checkInt(this, value, offset, byteLength, maxBytes, 0)
+  }
+
+  var i = byteLength - 1
+  var mul = 1
+  this[offset + i] = value & 0xFF
+  while (--i >= 0 && (mul *= 0x100)) {
+    this[offset + i] = (value / mul) & 0xFF
+  }
+
+  return offset + byteLength
+}
+
+Buffer.prototype.writeUInt8 = function writeUInt8 (value, offset, noAssert) {
+  value = +value
+  offset = offset | 0
+  if (!noAssert) checkInt(this, value, offset, 1, 0xff, 0)
+  if (!Buffer.TYPED_ARRAY_SUPPORT) value = Math.floor(value)
+  this[offset] = (value & 0xff)
+  return offset + 1
+}
+
+function objectWriteUInt16 (buf, value, offset, littleEndian) {
+  if (value < 0) value = 0xffff + value + 1
+  for (var i = 0, j = Math.min(buf.length - offset, 2); i < j; ++i) {
+    buf[offset + i] = (value & (0xff << (8 * (littleEndian ? i : 1 - i)))) >>>
+      (littleEndian ? i : 1 - i) * 8
+  }
+}
+
+Buffer.prototype.writeUInt16LE = function writeUInt16LE (value, offset, noAssert) {
+  value = +value
+  offset = offset | 0
+  if (!noAssert) checkInt(this, value, offset, 2, 0xffff, 0)
+  if (Buffer.TYPED_ARRAY_SUPPORT) {
+    this[offset] = (value & 0xff)
+    this[offset + 1] = (value >>> 8)
+  } else {
+    objectWriteUInt16(this, value, offset, true)
+  }
+  return offset + 2
+}
+
+Buffer.prototype.writeUInt16BE = function writeUInt16BE (value, offset, noAssert) {
+  value = +value
+  offset = offset | 0
+  if (!noAssert) checkInt(this, value, offset, 2, 0xffff, 0)
+  if (Buffer.TYPED_ARRAY_SUPPORT) {
+    this[offset] = (value >>> 8)
+    this[offset + 1] = (value & 0xff)
+  } else {
+    objectWriteUInt16(this, value, offset, false)
+  }
+  return offset + 2
+}
+
+function objectWriteUInt32 (buf, value, offset, littleEndian) {
+  if (value < 0) value = 0xffffffff + value + 1
+  for (var i = 0, j = Math.min(buf.length - offset, 4); i < j; ++i) {
+    buf[offset + i] = (value >>> (littleEndian ? i : 3 - i) * 8) & 0xff
+  }
+}
+
+Buffer.prototype.writeUInt32LE = function writeUInt32LE (value, offset, noAssert) {
+  value = +value
+  offset = offset | 0
+  if (!noAssert) checkInt(this, value, offset, 4, 0xffffffff, 0)
+  if (Buffer.TYPED_ARRAY_SUPPORT) {
+    this[offset + 3] = (value >>> 24)
+    this[offset + 2] = (value >>> 16)
+    this[offset + 1] = (value >>> 8)
+    this[offset] = (value & 0xff)
+  } else {
+    objectWriteUInt32(this, value, offset, true)
+  }
+  return offset + 4
+}
+
+Buffer.prototype.writeUInt32BE = function writeUInt32BE (value, offset, noAssert) {
+  value = +value
+  offset = offset | 0
+  if (!noAssert) checkInt(this, value, offset, 4, 0xffffffff, 0)
+  if (Buffer.TYPED_ARRAY_SUPPORT) {
+    this[offset] = (value >>> 24)
+    this[offset + 1] = (value >>> 16)
+    this[offset + 2] = (value >>> 8)
+    this[offset + 3] = (value & 0xff)
+  } else {
+    objectWriteUInt32(this, value, offset, false)
+  }
+  return offset + 4
+}
+
+Buffer.prototype.writeIntLE = function writeIntLE (value, offset, byteLength, noAssert) {
+  value = +value
+  offset = offset | 0
+  if (!noAssert) {
+    var limit = Math.pow(2, 8 * byteLength - 1)
+
+    checkInt(this, value, offset, byteLength, limit - 1, -limit)
+  }
+
+  var i = 0
+  var mul = 1
+  var sub = 0
+  this[offset] = value & 0xFF
+  while (++i < byteLength && (mul *= 0x100)) {
+    if (value < 0 && sub === 0 && this[offset + i - 1] !== 0) {
+      sub = 1
+    }
+    this[offset + i] = ((value / mul) >> 0) - sub & 0xFF
+  }
+
+  return offset + byteLength
+}
+
+Buffer.prototype.writeIntBE = function writeIntBE (value, offset, byteLength, noAssert) {
+  value = +value
+  offset = offset | 0
+  if (!noAssert) {
+    var limit = Math.pow(2, 8 * byteLength - 1)
+
+    checkInt(this, value, offset, byteLength, limit - 1, -limit)
+  }
+
+  var i = byteLength - 1
+  var mul = 1
+  var sub = 0
+  this[offset + i] = value & 0xFF
+  while (--i >= 0 && (mul *= 0x100)) {
+    if (value < 0 && sub === 0 && this[offset + i + 1] !== 0) {
+      sub = 1
+    }
+    this[offset + i] = ((value / mul) >> 0) - sub & 0xFF
+  }
+
+  return offset + byteLength
+}
+
+Buffer.prototype.writeInt8 = function writeInt8 (value, offset, noAssert) {
+  value = +value
+  offset = offset | 0
+  if (!noAssert) checkInt(this, value, offset, 1, 0x7f, -0x80)
+  if (!Buffer.TYPED_ARRAY_SUPPORT) value = Math.floor(value)
+  if (value < 0) value = 0xff + value + 1
+  this[offset] = (value & 0xff)
+  return offset + 1
+}
+
+Buffer.prototype.writeInt16LE = function writeInt16LE (value, offset, noAssert) {
+  value = +value
+  offset = offset | 0
+  if (!noAssert) checkInt(this, value, offset, 2, 0x7fff, -0x8000)
+  if (Buffer.TYPED_ARRAY_SUPPORT) {
+    this[offset] = (value & 0xff)
+    this[offset + 1] = (value >>> 8)
+  } else {
+    objectWriteUInt16(this, value, offset, true)
+  }
+  return offset + 2
+}
+
+Buffer.prototype.writeInt16BE = function writeInt16BE (value, offset, noAssert) {
+  value = +value
+  offset = offset | 0
+  if (!noAssert) checkInt(this, value, offset, 2, 0x7fff, -0x8000)
+  if (Buffer.TYPED_ARRAY_SUPPORT) {
+    this[offset] = (value >>> 8)
+    this[offset + 1] = (value & 0xff)
+  } else {
+    objectWriteUInt16(this, value, offset, false)
+  }
+  return offset + 2
+}
+
+Buffer.prototype.writeInt32LE = function writeInt32LE (value, offset, noAssert) {
+  value = +value
+  offset = offset | 0
+  if (!noAssert) checkInt(this, value, offset, 4, 0x7fffffff, -0x80000000)
+  if (Buffer.TYPED_ARRAY_SUPPORT) {
+    this[offset] = (value & 0xff)
+    this[offset + 1] = (value >>> 8)
+    this[offset + 2] = (value >>> 16)
+    this[offset + 3] = (value >>> 24)
+  } else {
+    objectWriteUInt32(this, value, offset, true)
+  }
+  return offset + 4
+}
+
+Buffer.prototype.writeInt32BE = function writeInt32BE (value, offset, noAssert) {
+  value = +value
+  offset = offset | 0
+  if (!noAssert) checkInt(this, value, offset, 4, 0x7fffffff, -0x80000000)
+  if (value < 0) value = 0xffffffff + value + 1
+  if (Buffer.TYPED_ARRAY_SUPPORT) {
+    this[offset] = (value >>> 24)
+    this[offset + 1] = (value >>> 16)
+    this[offset + 2] = (value >>> 8)
+    this[offset + 3] = (value & 0xff)
+  } else {
+    objectWriteUInt32(this, value, offset, false)
+  }
+  return offset + 4
+}
+
+function checkIEEE754 (buf, value, offset, ext, max, min) {
+  if (offset + ext > buf.length) throw new RangeError('Index out of range')
+  if (offset < 0) throw new RangeError('Index out of range')
+}
+
+function writeFloat (buf, value, offset, littleEndian, noAssert) {
+  if (!noAssert) {
+    checkIEEE754(buf, value, offset, 4, 3.4028234663852886e+38, -3.4028234663852886e+38)
+  }
+  ieee754.write(buf, value, offset, littleEndian, 23, 4)
+  return offset + 4
+}
+
+Buffer.prototype.writeFloatLE = function writeFloatLE (value, offset, noAssert) {
+  return writeFloat(this, value, offset, true, noAssert)
+}
+
+Buffer.prototype.writeFloatBE = function writeFloatBE (value, offset, noAssert) {
+  return writeFloat(this, value, offset, false, noAssert)
+}
+
+function writeDouble (buf, value, offset, littleEndian, noAssert) {
+  if (!noAssert) {
+    checkIEEE754(buf, value, offset, 8, 1.7976931348623157E+308, -1.7976931348623157E+308)
+  }
+  ieee754.write(buf, value, offset, littleEndian, 52, 8)
+  return offset + 8
+}
+
+Buffer.prototype.writeDoubleLE = function writeDoubleLE (value, offset, noAssert) {
+  return writeDouble(this, value, offset, true, noAssert)
+}
+
+Buffer.prototype.writeDoubleBE = function writeDoubleBE (value, offset, noAssert) {
+  return writeDouble(this, value, offset, false, noAssert)
+}
+
+// copy(targetBuffer, targetStart=0, sourceStart=0, sourceEnd=buffer.length)
+Buffer.prototype.copy = function copy (target, targetStart, start, end) {
+  if (!start) start = 0
+  if (!end && end !== 0) end = this.length
+  if (targetStart >= target.length) targetStart = target.length
+  if (!targetStart) targetStart = 0
+  if (end > 0 && end < start) end = start
+
+  // Copy 0 bytes; we're done
+  if (end === start) return 0
+  if (target.length === 0 || this.length === 0) return 0
+
+  // Fatal error conditions
+  if (targetStart < 0) {
+    throw new RangeError('targetStart out of bounds')
+  }
+  if (start < 0 || start >= this.length) throw new RangeError('sourceStart out of bounds')
+  if (end < 0) throw new RangeError('sourceEnd out of bounds')
+
+  // Are we oob?
+  if (end > this.length) end = this.length
+  if (target.length - targetStart < end - start) {
+    end = target.length - targetStart + start
+  }
+
+  var len = end - start
+  var i
+
+  if (this === target && start < targetStart && targetStart < end) {
+    // descending copy from end
+    for (i = len - 1; i >= 0; --i) {
+      target[i + targetStart] = this[i + start]
+    }
+  } else if (len < 1000 || !Buffer.TYPED_ARRAY_SUPPORT) {
+    // ascending copy from start
+    for (i = 0; i < len; ++i) {
+      target[i + targetStart] = this[i + start]
+    }
+  } else {
+    Uint8Array.prototype.set.call(
+      target,
+      this.subarray(start, start + len),
+      targetStart
+    )
+  }
+
+  return len
+}
+
+// Usage:
+//    buffer.fill(number[, offset[, end]])
+//    buffer.fill(buffer[, offset[, end]])
+//    buffer.fill(string[, offset[, end]][, encoding])
+Buffer.prototype.fill = function fill (val, start, end, encoding) {
+  // Handle string cases:
+  if (typeof val === 'string') {
+    if (typeof start === 'string') {
+      encoding = start
+      start = 0
+      end = this.length
+    } else if (typeof end === 'string') {
+      encoding = end
+      end = this.length
+    }
+    if (val.length === 1) {
+      var code = val.charCodeAt(0)
+      if (code < 256) {
+        val = code
+      }
+    }
+    if (encoding !== undefined && typeof encoding !== 'string') {
+      throw new TypeError('encoding must be a string')
+    }
+    if (typeof encoding === 'string' && !Buffer.isEncoding(encoding)) {
+      throw new TypeError('Unknown encoding: ' + encoding)
+    }
+  } else if (typeof val === 'number') {
+    val = val & 255
+  }
+
+  // Invalid ranges are not set to a default, so can range check early.
+  if (start < 0 || this.length < start || this.length < end) {
+    throw new RangeError('Out of range index')
+  }
+
+  if (end <= start) {
+    return this
+  }
+
+  start = start >>> 0
+  end = end === undefined ? this.length : end >>> 0
+
+  if (!val) val = 0
+
+  var i
+  if (typeof val === 'number') {
+    for (i = start; i < end; ++i) {
+      this[i] = val
+    }
+  } else {
+    var bytes = Buffer.isBuffer(val)
+      ? val
+      : utf8ToBytes(new Buffer(val, encoding).toString())
+    var len = bytes.length
+    for (i = 0; i < end - start; ++i) {
+      this[i + start] = bytes[i % len]
+    }
+  }
+
+  return this
+}
+
+// HELPER FUNCTIONS
+// ================
+
+var INVALID_BASE64_RE = /[^+\/0-9A-Za-z-_]/g
+
+function base64clean (str) {
+  // Node strips out invalid characters like \n and \t from the string, base64-js does not
+  str = stringtrim(str).replace(INVALID_BASE64_RE, '')
+  // Node converts strings with length < 2 to ''
+  if (str.length < 2) return ''
+  // Node allows for non-padded base64 strings (missing trailing ===), base64-js does not
+  while (str.length % 4 !== 0) {
+    str = str + '='
+  }
+  return str
+}
+
+function stringtrim (str) {
+  if (str.trim) return str.trim()
+  return str.replace(/^\s+|\s+$/g, '')
+}
+
+function toHex (n) {
+  if (n < 16) return '0' + n.toString(16)
+  return n.toString(16)
+}
+
+function utf8ToBytes (string, units) {
+  units = units || Infinity
+  var codePoint
+  var length = string.length
+  var leadSurrogate = null
+  var bytes = []
+
+  for (var i = 0; i < length; ++i) {
+    codePoint = string.charCodeAt(i)
+
+    // is surrogate component
+    if (codePoint > 0xD7FF && codePoint < 0xE000) {
+      // last char was a lead
+      if (!leadSurrogate) {
+        // no lead yet
+        if (codePoint > 0xDBFF) {
+          // unexpected trail
+          if ((units -= 3) > -1) bytes.push(0xEF, 0xBF, 0xBD)
+          continue
+        } else if (i + 1 === length) {
+          // unpaired lead
+          if ((units -= 3) > -1) bytes.push(0xEF, 0xBF, 0xBD)
+          continue
+        }
+
+        // valid lead
+        leadSurrogate = codePoint
+
+        continue
+      }
+
+      // 2 leads in a row
+      if (codePoint < 0xDC00) {
+        if ((units -= 3) > -1) bytes.push(0xEF, 0xBF, 0xBD)
+        leadSurrogate = codePoint
+        continue
+      }
+
+      // valid surrogate pair
+      codePoint = (leadSurrogate - 0xD800 << 10 | codePoint - 0xDC00) + 0x10000
+    } else if (leadSurrogate) {
+      // valid bmp char, but last char was a lead
+      if ((units -= 3) > -1) bytes.push(0xEF, 0xBF, 0xBD)
+    }
+
+    leadSurrogate = null
+
+    // encode utf8
+    if (codePoint < 0x80) {
+      if ((units -= 1) < 0) break
+      bytes.push(codePoint)
+    } else if (codePoint < 0x800) {
+      if ((units -= 2) < 0) break
+      bytes.push(
+        codePoint >> 0x6 | 0xC0,
+        codePoint & 0x3F | 0x80
+      )
+    } else if (codePoint < 0x10000) {
+      if ((units -= 3) < 0) break
+      bytes.push(
+        codePoint >> 0xC | 0xE0,
+        codePoint >> 0x6 & 0x3F | 0x80,
+        codePoint & 0x3F | 0x80
+      )
+    } else if (codePoint < 0x110000) {
+      if ((units -= 4) < 0) break
+      bytes.push(
+        codePoint >> 0x12 | 0xF0,
+        codePoint >> 0xC & 0x3F | 0x80,
+        codePoint >> 0x6 & 0x3F | 0x80,
+        codePoint & 0x3F | 0x80
+      )
+    } else {
+      throw new Error('Invalid code point')
+    }
+  }
+
+  return bytes
+}
+
+function asciiToBytes (str) {
+  var byteArray = []
+  for (var i = 0; i < str.length; ++i) {
+    // Node's code seems to be doing this and not & 0x7F..
+    byteArray.push(str.charCodeAt(i) & 0xFF)
+  }
+  return byteArray
+}
+
+function utf16leToBytes (str, units) {
+  var c, hi, lo
+  var byteArray = []
+  for (var i = 0; i < str.length; ++i) {
+    if ((units -= 2) < 0) break
+
+    c = str.charCodeAt(i)
+    hi = c >> 8
+    lo = c % 256
+    byteArray.push(lo)
+    byteArray.push(hi)
+  }
+
+  return byteArray
+}
+
+function base64ToBytes (str) {
+  return base64.toByteArray(base64clean(str))
+}
+
+function blitBuffer (src, dst, offset, length) {
+  for (var i = 0; i < length; ++i) {
+    if ((i + offset >= dst.length) || (i >= src.length)) break
+    dst[i + offset] = src[i]
+  }
+  return i
+}
+
+function isnan (val) {
+  return val !== val // eslint-disable-line no-self-compare
+}
+
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../webpack/buildin/global.js */ "./node_modules/webpack/buildin/global.js")))
+
+/***/ }),
+
+/***/ "./node_modules/charm/index.js":
+/*!*************************************!*\
+  !*** ./node_modules/charm/index.js ***!
+  \*************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/* WEBPACK VAR INJECTION */(function(process) {var tty = __webpack_require__(/*! tty */ "./node_modules/tty-browserify/index.js");
+var encode = __webpack_require__(/*! ./lib/encode */ "./node_modules/charm/lib/encode.js");
+var Stream = __webpack_require__(/*! stream */ "./node_modules/stream-browserify/index.js").Stream;
+
+var exports = module.exports = function () {
+    var input = null;
+    function setInput (s) {
+        if (input) throw new Error('multiple inputs specified')
+        else input = s
+    }
+    
+    var output = null;
+    function setOutput (s) {
+        if (output) throw new Error('multiple outputs specified')
+        else output = s
+    }
+    
+    for (var i = 0; i < arguments.length; i++) {
+        var arg = arguments[i];
+        if (!arg) continue;
+        if (arg.readable) setInput(arg)
+        else if (arg.stdin || arg.input) setInput(arg.stdin || arg.input)
+        
+        if (arg.writable) setOutput(arg)
+        else if (arg.stdout || arg.output) setOutput(arg.stdout || arg.output)
+        
+    }
+    
+    if (input && typeof input.fd === 'number' && tty.isatty(input.fd)) {
+        if (process.stdin.setRawMode) {
+            process.stdin.setRawMode(true);
+        }
+        else tty.setRawMode(true);
+    }
+    
+    var charm = new Charm;
+    if (input) {
+        input.pipe(charm);
+    }
+    
+    if (output) {
+        charm.pipe(output);
+    }
+    
+    charm.once('^C', process.exit);
+    charm.once('end', function () {
+      if (input) {
+          if (typeof input.fd === 'number' && tty.isatty(input.fd)) {
+            if (process.stdin.setRawMode) {
+                process.stdin.setRawMode(false);
+            }
+            else tty.setRawMode(false);
+          }
+          input.destroy();
+      }
+    });
+
+    return charm;
+};
+
+var Charm = exports.Charm = function Charm () {
+    this.writable = true;
+    this.readable = true;
+    this.pending = [];
+}
+
+Charm.prototype = new Stream;
+
+Charm.prototype.write = function (buf) {
+    var self = this;
+    
+    if (self.pending.length) {
+        var codes = extractCodes(buf);
+        var matched = false;
+        
+        for (var i = 0; i < codes.length; i++) {
+            for (var j = 0; j < self.pending.length; j++) {
+                var cb = self.pending[j];
+                if (cb(codes[i])) {
+                    matched = true;
+                    self.pending.splice(j, 1);
+                    break;
+                }
+            }
+        }
+        
+        if (matched) return;
+    }
+    
+    if (buf.length === 1) {
+        if (buf[0] === 3) self.emit('^C');
+        if (buf[0] === 4) self.emit('^D');
+    }
+    
+    self.emit('data', buf);
+    
+    return self;
+};
+
+
+Charm.prototype.destroy = function () {
+    this.end();
+};
+
+Charm.prototype.end = function (buf) {
+    if (buf) this.write(buf);
+    this.emit('end');
+};
+
+Charm.prototype.reset = function (cb) {
+    this.write(encode('c'));
+    return this;
+};
+
+Charm.prototype.position = function (x, y) {
+    // get/set absolute coordinates
+    if (typeof x === 'function') {
+        var cb = x;
+        this.pending.push(function (buf) {
+            if (buf[0] === 27 && buf[1] === encode.ord('[')
+            && buf[buf.length-1] === encode.ord('R')) {
+                var pos = buf.toString()
+                    .slice(2,-1)
+                    .split(';')
+                    .map(Number)
+                ;
+                cb(pos[1], pos[0]);
+                return true;
+            }
+        });
+        this.write(encode('[6n'));
+    }
+    else {
+        this.write(encode(
+            '[' + Math.floor(y) + ';' + Math.floor(x) + 'f'
+        ));
+    }
+    return this;
+};
+
+Charm.prototype.move = function (x, y) {
+    // set relative coordinates
+    var bufs = [];
+    
+    if (y < 0) this.up(-y)
+    else if (y > 0) this.down(y)
+    
+    if (x > 0) this.right(x)
+    else if (x < 0) this.left(-x)
+    
+    return this;
+};
+
+Charm.prototype.up = function (y) {
+    if (y === undefined) y = 1;
+    this.write(encode('[' + Math.floor(y) + 'A'));
+    return this;
+};
+
+Charm.prototype.down = function (y) {
+    if (y === undefined) y = 1;
+    this.write(encode('[' + Math.floor(y) + 'B'));
+    return this;
+};
+
+Charm.prototype.right = function (x) {
+    if (x === undefined) x = 1;
+    this.write(encode('[' + Math.floor(x) + 'C'));
+    return this;
+};
+
+Charm.prototype.left = function (x) {
+    if (x === undefined) x = 1;
+    this.write(encode('[' + Math.floor(x) + 'D'));
+    return this;
+};
+
+Charm.prototype.column = function (x) {
+    this.write(encode('[' + Math.floor(x) + 'G'));
+    return this;
+};
+
+Charm.prototype.push = function (withAttributes) {
+    this.write(encode(withAttributes ? '7' : '[s'));
+    return this;
+};
+
+Charm.prototype.pop = function (withAttributes) {
+    this.write(encode(withAttributes ? '8' : '[u'));
+    return this;
+};
+
+Charm.prototype.erase = function (s) {
+    if (s === 'end' || s === '$') {
+        this.write(encode('[K'));
+    }
+    else if (s === 'start' || s === '^') {
+        this.write(encode('[1K'));
+    }
+    else if (s === 'line') {
+        this.write(encode('[2K'));
+    }
+    else if (s === 'down') {
+        this.write(encode('[J'));
+    }
+    else if (s === 'up') {
+        this.write(encode('[1J'));
+    }
+    else if (s === 'screen') {
+        this.write(encode('[1J'));
+    }
+    else {
+        this.emit('error', new Error('Unknown erase type: ' + s));
+    }
+    return this;
+};
+
+Charm.prototype.display = function (attr) {
+    var c = {
+        reset : 0,
+        bright : 1,
+        dim : 2,
+        underscore : 4,
+        blink : 5,
+        reverse : 7,
+        hidden : 8
+    }[attr];
+    if (c === undefined) {
+        this.emit('error', new Error('Unknown attribute: ' + attr));
+    }
+    this.write(encode('[' + c + 'm'));
+    return this;
+};
+
+Charm.prototype.foreground = function (color) {
+    if (typeof color === 'number') {
+        if (color < 0 || color >= 256) {
+            this.emit('error', new Error('Color out of range: ' + color));
+        }
+        this.write(encode('[38;5;' + color + 'm'));
+    }
+    else {
+        var c = {
+            black : 30,
+            red : 31,
+            green : 32,
+            yellow : 33,
+            blue : 34,
+            magenta : 35,
+            cyan : 36,
+            white : 37
+        }[color.toLowerCase()];
+        
+        if (!c) this.emit('error', new Error('Unknown color: ' + color));
+        this.write(encode('[' + c + 'm'));
+    }
+    return this;
+};
+
+Charm.prototype.background = function (color) {
+    if (typeof color === 'number') {
+        if (color < 0 || color >= 256) {
+            this.emit('error', new Error('Color out of range: ' + color));
+        }
+        this.write(encode('[48;5;' + color + 'm'));
+    }
+    else {
+        var c = {
+          black : 40,
+          red : 41,
+          green : 42,
+          yellow : 43,
+          blue : 44,
+          magenta : 45,
+          cyan : 46,
+          white : 47
+        }[color.toLowerCase()];
+        
+        if (!c) this.emit('error', new Error('Unknown color: ' + color));
+        this.write(encode('[' + c + 'm'));
+    }
+    return this;
+};
+
+Charm.prototype.cursor = function (visible) {
+    this.write(encode(visible ? '[?25h' : '[?25l'));
+    return this;
+};
+
+var extractCodes = exports.extractCodes = function (buf) {
+    var codes = [];
+    var start = -1;
+    
+    for (var i = 0; i < buf.length; i++) {
+        if (buf[i] === 27) {
+            if (start >= 0) codes.push(buf.slice(start, i));
+            start = i;
+        }
+        else if (start >= 0 && i === buf.length - 1) {
+            codes.push(buf.slice(start));
+        }
+    }
+    
+    return codes;
+}
+
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../process/browser.js */ "./node_modules/process/browser.js")))
+
+/***/ }),
+
+/***/ "./node_modules/charm/lib/encode.js":
+/*!******************************************!*\
+  !*** ./node_modules/charm/lib/encode.js ***!
+  \******************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/* WEBPACK VAR INJECTION */(function(Buffer) {var encode = module.exports = function (xs) {
+    function bytes (s) {
+        if (typeof s === 'string') {
+            return s.split('').map(ord);
+        }
+        else if (Array.isArray(s)) {
+            return s.reduce(function (acc, c) {
+                return acc.concat(bytes(c));
+            }, []);
+        }
+    }
+    
+    return new Buffer([ 0x1b ].concat(bytes(xs)));
+};
+
+var ord = encode.ord = function ord (c) {
+    return c.charCodeAt(0)
+};
+
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../../buffer/index.js */ "./node_modules/buffer/index.js").Buffer))
 
 /***/ }),
 
@@ -32932,6 +27146,125 @@ return src;
 
 /***/ }),
 
+/***/ "./node_modules/core-util-is/lib/util.js":
+/*!***********************************************!*\
+  !*** ./node_modules/core-util-is/lib/util.js ***!
+  \***********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/* WEBPACK VAR INJECTION */(function(Buffer) {// Copyright Joyent, Inc. and other Node contributors.
+//
+// Permission is hereby granted, free of charge, to any person obtaining a
+// copy of this software and associated documentation files (the
+// "Software"), to deal in the Software without restriction, including
+// without limitation the rights to use, copy, modify, merge, publish,
+// distribute, sublicense, and/or sell copies of the Software, and to permit
+// persons to whom the Software is furnished to do so, subject to the
+// following conditions:
+//
+// The above copyright notice and this permission notice shall be included
+// in all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+// OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN
+// NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+// DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+// OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
+// USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+// NOTE: These type checking functions intentionally don't use `instanceof`
+// because it is fragile and can be easily faked with `Object.create()`.
+
+function isArray(arg) {
+  if (Array.isArray) {
+    return Array.isArray(arg);
+  }
+  return objectToString(arg) === '[object Array]';
+}
+exports.isArray = isArray;
+
+function isBoolean(arg) {
+  return typeof arg === 'boolean';
+}
+exports.isBoolean = isBoolean;
+
+function isNull(arg) {
+  return arg === null;
+}
+exports.isNull = isNull;
+
+function isNullOrUndefined(arg) {
+  return arg == null;
+}
+exports.isNullOrUndefined = isNullOrUndefined;
+
+function isNumber(arg) {
+  return typeof arg === 'number';
+}
+exports.isNumber = isNumber;
+
+function isString(arg) {
+  return typeof arg === 'string';
+}
+exports.isString = isString;
+
+function isSymbol(arg) {
+  return typeof arg === 'symbol';
+}
+exports.isSymbol = isSymbol;
+
+function isUndefined(arg) {
+  return arg === void 0;
+}
+exports.isUndefined = isUndefined;
+
+function isRegExp(re) {
+  return objectToString(re) === '[object RegExp]';
+}
+exports.isRegExp = isRegExp;
+
+function isObject(arg) {
+  return typeof arg === 'object' && arg !== null;
+}
+exports.isObject = isObject;
+
+function isDate(d) {
+  return objectToString(d) === '[object Date]';
+}
+exports.isDate = isDate;
+
+function isError(e) {
+  return (objectToString(e) === '[object Error]' || e instanceof Error);
+}
+exports.isError = isError;
+
+function isFunction(arg) {
+  return typeof arg === 'function';
+}
+exports.isFunction = isFunction;
+
+function isPrimitive(arg) {
+  return arg === null ||
+         typeof arg === 'boolean' ||
+         typeof arg === 'number' ||
+         typeof arg === 'string' ||
+         typeof arg === 'symbol' ||  // ES6 symbol
+         typeof arg === 'undefined';
+}
+exports.isPrimitive = isPrimitive;
+
+exports.isBuffer = Buffer.isBuffer;
+
+function objectToString(o) {
+  return Object.prototype.toString.call(o);
+}
+
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../../buffer/index.js */ "./node_modules/buffer/index.js").Buffer))
+
+/***/ }),
+
 /***/ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/app/layout/AppPage.vue?vue&type=style&index=0&id=18c7ae77&scoped=true&lang=css&":
 /*!*************************************************************************************************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/css-loader??ref--6-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--6-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/app/layout/AppPage.vue?vue&type=style&index=0&id=18c7ae77&scoped=true&lang=css& ***!
@@ -33052,6 +27385,464 @@ function toComment(sourceMap) {
 	var data = 'sourceMappingURL=data:application/json;charset=utf-8;base64,' + base64;
 
 	return '/*# ' + data + ' */';
+}
+
+
+/***/ }),
+
+/***/ "./node_modules/events/events.js":
+/*!***************************************!*\
+  !*** ./node_modules/events/events.js ***!
+  \***************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+// Copyright Joyent, Inc. and other Node contributors.
+//
+// Permission is hereby granted, free of charge, to any person obtaining a
+// copy of this software and associated documentation files (the
+// "Software"), to deal in the Software without restriction, including
+// without limitation the rights to use, copy, modify, merge, publish,
+// distribute, sublicense, and/or sell copies of the Software, and to permit
+// persons to whom the Software is furnished to do so, subject to the
+// following conditions:
+//
+// The above copyright notice and this permission notice shall be included
+// in all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+// OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN
+// NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+// DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+// OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
+// USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+
+
+var R = typeof Reflect === 'object' ? Reflect : null
+var ReflectApply = R && typeof R.apply === 'function'
+  ? R.apply
+  : function ReflectApply(target, receiver, args) {
+    return Function.prototype.apply.call(target, receiver, args);
+  }
+
+var ReflectOwnKeys
+if (R && typeof R.ownKeys === 'function') {
+  ReflectOwnKeys = R.ownKeys
+} else if (Object.getOwnPropertySymbols) {
+  ReflectOwnKeys = function ReflectOwnKeys(target) {
+    return Object.getOwnPropertyNames(target)
+      .concat(Object.getOwnPropertySymbols(target));
+  };
+} else {
+  ReflectOwnKeys = function ReflectOwnKeys(target) {
+    return Object.getOwnPropertyNames(target);
+  };
+}
+
+function ProcessEmitWarning(warning) {
+  if (console && console.warn) console.warn(warning);
+}
+
+var NumberIsNaN = Number.isNaN || function NumberIsNaN(value) {
+  return value !== value;
+}
+
+function EventEmitter() {
+  EventEmitter.init.call(this);
+}
+module.exports = EventEmitter;
+
+// Backwards-compat with node 0.10.x
+EventEmitter.EventEmitter = EventEmitter;
+
+EventEmitter.prototype._events = undefined;
+EventEmitter.prototype._eventsCount = 0;
+EventEmitter.prototype._maxListeners = undefined;
+
+// By default EventEmitters will print a warning if more than 10 listeners are
+// added to it. This is a useful default which helps finding memory leaks.
+var defaultMaxListeners = 10;
+
+function checkListener(listener) {
+  if (typeof listener !== 'function') {
+    throw new TypeError('The "listener" argument must be of type Function. Received type ' + typeof listener);
+  }
+}
+
+Object.defineProperty(EventEmitter, 'defaultMaxListeners', {
+  enumerable: true,
+  get: function() {
+    return defaultMaxListeners;
+  },
+  set: function(arg) {
+    if (typeof arg !== 'number' || arg < 0 || NumberIsNaN(arg)) {
+      throw new RangeError('The value of "defaultMaxListeners" is out of range. It must be a non-negative number. Received ' + arg + '.');
+    }
+    defaultMaxListeners = arg;
+  }
+});
+
+EventEmitter.init = function() {
+
+  if (this._events === undefined ||
+      this._events === Object.getPrototypeOf(this)._events) {
+    this._events = Object.create(null);
+    this._eventsCount = 0;
+  }
+
+  this._maxListeners = this._maxListeners || undefined;
+};
+
+// Obviously not all Emitters should be limited to 10. This function allows
+// that to be increased. Set to zero for unlimited.
+EventEmitter.prototype.setMaxListeners = function setMaxListeners(n) {
+  if (typeof n !== 'number' || n < 0 || NumberIsNaN(n)) {
+    throw new RangeError('The value of "n" is out of range. It must be a non-negative number. Received ' + n + '.');
+  }
+  this._maxListeners = n;
+  return this;
+};
+
+function _getMaxListeners(that) {
+  if (that._maxListeners === undefined)
+    return EventEmitter.defaultMaxListeners;
+  return that._maxListeners;
+}
+
+EventEmitter.prototype.getMaxListeners = function getMaxListeners() {
+  return _getMaxListeners(this);
+};
+
+EventEmitter.prototype.emit = function emit(type) {
+  var args = [];
+  for (var i = 1; i < arguments.length; i++) args.push(arguments[i]);
+  var doError = (type === 'error');
+
+  var events = this._events;
+  if (events !== undefined)
+    doError = (doError && events.error === undefined);
+  else if (!doError)
+    return false;
+
+  // If there is no 'error' event listener then throw.
+  if (doError) {
+    var er;
+    if (args.length > 0)
+      er = args[0];
+    if (er instanceof Error) {
+      // Note: The comments on the `throw` lines are intentional, they show
+      // up in Node's output if this results in an unhandled exception.
+      throw er; // Unhandled 'error' event
+    }
+    // At least give some kind of context to the user
+    var err = new Error('Unhandled error.' + (er ? ' (' + er.message + ')' : ''));
+    err.context = er;
+    throw err; // Unhandled 'error' event
+  }
+
+  var handler = events[type];
+
+  if (handler === undefined)
+    return false;
+
+  if (typeof handler === 'function') {
+    ReflectApply(handler, this, args);
+  } else {
+    var len = handler.length;
+    var listeners = arrayClone(handler, len);
+    for (var i = 0; i < len; ++i)
+      ReflectApply(listeners[i], this, args);
+  }
+
+  return true;
+};
+
+function _addListener(target, type, listener, prepend) {
+  var m;
+  var events;
+  var existing;
+
+  checkListener(listener);
+
+  events = target._events;
+  if (events === undefined) {
+    events = target._events = Object.create(null);
+    target._eventsCount = 0;
+  } else {
+    // To avoid recursion in the case that type === "newListener"! Before
+    // adding it to the listeners, first emit "newListener".
+    if (events.newListener !== undefined) {
+      target.emit('newListener', type,
+                  listener.listener ? listener.listener : listener);
+
+      // Re-assign `events` because a newListener handler could have caused the
+      // this._events to be assigned to a new object
+      events = target._events;
+    }
+    existing = events[type];
+  }
+
+  if (existing === undefined) {
+    // Optimize the case of one listener. Don't need the extra array object.
+    existing = events[type] = listener;
+    ++target._eventsCount;
+  } else {
+    if (typeof existing === 'function') {
+      // Adding the second element, need to change to array.
+      existing = events[type] =
+        prepend ? [listener, existing] : [existing, listener];
+      // If we've already got an array, just append.
+    } else if (prepend) {
+      existing.unshift(listener);
+    } else {
+      existing.push(listener);
+    }
+
+    // Check for listener leak
+    m = _getMaxListeners(target);
+    if (m > 0 && existing.length > m && !existing.warned) {
+      existing.warned = true;
+      // No error code for this since it is a Warning
+      // eslint-disable-next-line no-restricted-syntax
+      var w = new Error('Possible EventEmitter memory leak detected. ' +
+                          existing.length + ' ' + String(type) + ' listeners ' +
+                          'added. Use emitter.setMaxListeners() to ' +
+                          'increase limit');
+      w.name = 'MaxListenersExceededWarning';
+      w.emitter = target;
+      w.type = type;
+      w.count = existing.length;
+      ProcessEmitWarning(w);
+    }
+  }
+
+  return target;
+}
+
+EventEmitter.prototype.addListener = function addListener(type, listener) {
+  return _addListener(this, type, listener, false);
+};
+
+EventEmitter.prototype.on = EventEmitter.prototype.addListener;
+
+EventEmitter.prototype.prependListener =
+    function prependListener(type, listener) {
+      return _addListener(this, type, listener, true);
+    };
+
+function onceWrapper() {
+  if (!this.fired) {
+    this.target.removeListener(this.type, this.wrapFn);
+    this.fired = true;
+    if (arguments.length === 0)
+      return this.listener.call(this.target);
+    return this.listener.apply(this.target, arguments);
+  }
+}
+
+function _onceWrap(target, type, listener) {
+  var state = { fired: false, wrapFn: undefined, target: target, type: type, listener: listener };
+  var wrapped = onceWrapper.bind(state);
+  wrapped.listener = listener;
+  state.wrapFn = wrapped;
+  return wrapped;
+}
+
+EventEmitter.prototype.once = function once(type, listener) {
+  checkListener(listener);
+  this.on(type, _onceWrap(this, type, listener));
+  return this;
+};
+
+EventEmitter.prototype.prependOnceListener =
+    function prependOnceListener(type, listener) {
+      checkListener(listener);
+      this.prependListener(type, _onceWrap(this, type, listener));
+      return this;
+    };
+
+// Emits a 'removeListener' event if and only if the listener was removed.
+EventEmitter.prototype.removeListener =
+    function removeListener(type, listener) {
+      var list, events, position, i, originalListener;
+
+      checkListener(listener);
+
+      events = this._events;
+      if (events === undefined)
+        return this;
+
+      list = events[type];
+      if (list === undefined)
+        return this;
+
+      if (list === listener || list.listener === listener) {
+        if (--this._eventsCount === 0)
+          this._events = Object.create(null);
+        else {
+          delete events[type];
+          if (events.removeListener)
+            this.emit('removeListener', type, list.listener || listener);
+        }
+      } else if (typeof list !== 'function') {
+        position = -1;
+
+        for (i = list.length - 1; i >= 0; i--) {
+          if (list[i] === listener || list[i].listener === listener) {
+            originalListener = list[i].listener;
+            position = i;
+            break;
+          }
+        }
+
+        if (position < 0)
+          return this;
+
+        if (position === 0)
+          list.shift();
+        else {
+          spliceOne(list, position);
+        }
+
+        if (list.length === 1)
+          events[type] = list[0];
+
+        if (events.removeListener !== undefined)
+          this.emit('removeListener', type, originalListener || listener);
+      }
+
+      return this;
+    };
+
+EventEmitter.prototype.off = EventEmitter.prototype.removeListener;
+
+EventEmitter.prototype.removeAllListeners =
+    function removeAllListeners(type) {
+      var listeners, events, i;
+
+      events = this._events;
+      if (events === undefined)
+        return this;
+
+      // not listening for removeListener, no need to emit
+      if (events.removeListener === undefined) {
+        if (arguments.length === 0) {
+          this._events = Object.create(null);
+          this._eventsCount = 0;
+        } else if (events[type] !== undefined) {
+          if (--this._eventsCount === 0)
+            this._events = Object.create(null);
+          else
+            delete events[type];
+        }
+        return this;
+      }
+
+      // emit removeListener for all listeners on all events
+      if (arguments.length === 0) {
+        var keys = Object.keys(events);
+        var key;
+        for (i = 0; i < keys.length; ++i) {
+          key = keys[i];
+          if (key === 'removeListener') continue;
+          this.removeAllListeners(key);
+        }
+        this.removeAllListeners('removeListener');
+        this._events = Object.create(null);
+        this._eventsCount = 0;
+        return this;
+      }
+
+      listeners = events[type];
+
+      if (typeof listeners === 'function') {
+        this.removeListener(type, listeners);
+      } else if (listeners !== undefined) {
+        // LIFO order
+        for (i = listeners.length - 1; i >= 0; i--) {
+          this.removeListener(type, listeners[i]);
+        }
+      }
+
+      return this;
+    };
+
+function _listeners(target, type, unwrap) {
+  var events = target._events;
+
+  if (events === undefined)
+    return [];
+
+  var evlistener = events[type];
+  if (evlistener === undefined)
+    return [];
+
+  if (typeof evlistener === 'function')
+    return unwrap ? [evlistener.listener || evlistener] : [evlistener];
+
+  return unwrap ?
+    unwrapListeners(evlistener) : arrayClone(evlistener, evlistener.length);
+}
+
+EventEmitter.prototype.listeners = function listeners(type) {
+  return _listeners(this, type, true);
+};
+
+EventEmitter.prototype.rawListeners = function rawListeners(type) {
+  return _listeners(this, type, false);
+};
+
+EventEmitter.listenerCount = function(emitter, type) {
+  if (typeof emitter.listenerCount === 'function') {
+    return emitter.listenerCount(type);
+  } else {
+    return listenerCount.call(emitter, type);
+  }
+};
+
+EventEmitter.prototype.listenerCount = listenerCount;
+function listenerCount(type) {
+  var events = this._events;
+
+  if (events !== undefined) {
+    var evlistener = events[type];
+
+    if (typeof evlistener === 'function') {
+      return 1;
+    } else if (evlistener !== undefined) {
+      return evlistener.length;
+    }
+  }
+
+  return 0;
+}
+
+EventEmitter.prototype.eventNames = function eventNames() {
+  return this._eventsCount > 0 ? ReflectOwnKeys(this._events) : [];
+};
+
+function arrayClone(arr, n) {
+  var copy = new Array(n);
+  for (var i = 0; i < n; ++i)
+    copy[i] = arr[i];
+  return copy;
+}
+
+function spliceOne(list, index) {
+  for (; index + 1 < list.length; index++)
+    list[index] = list[index + 1];
+  list.pop();
+}
+
+function unwrapListeners(arr) {
+  var ret = new Array(arr.length);
+  for (var i = 0; i < ret.length; ++i) {
+    ret[i] = arr[i].listener || arr[i];
+  }
+  return ret;
 }
 
 
@@ -33186,6 +27977,155 @@ var Flatted = (function (Primitive, primitive) {
 /* harmony default export */ __webpack_exports__["default"] = (Flatted);
 var parse = Flatted.parse;
 var stringify = Flatted.stringify;
+
+
+/***/ }),
+
+/***/ "./node_modules/ieee754/index.js":
+/*!***************************************!*\
+  !*** ./node_modules/ieee754/index.js ***!
+  \***************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+exports.read = function (buffer, offset, isLE, mLen, nBytes) {
+  var e, m
+  var eLen = (nBytes * 8) - mLen - 1
+  var eMax = (1 << eLen) - 1
+  var eBias = eMax >> 1
+  var nBits = -7
+  var i = isLE ? (nBytes - 1) : 0
+  var d = isLE ? -1 : 1
+  var s = buffer[offset + i]
+
+  i += d
+
+  e = s & ((1 << (-nBits)) - 1)
+  s >>= (-nBits)
+  nBits += eLen
+  for (; nBits > 0; e = (e * 256) + buffer[offset + i], i += d, nBits -= 8) {}
+
+  m = e & ((1 << (-nBits)) - 1)
+  e >>= (-nBits)
+  nBits += mLen
+  for (; nBits > 0; m = (m * 256) + buffer[offset + i], i += d, nBits -= 8) {}
+
+  if (e === 0) {
+    e = 1 - eBias
+  } else if (e === eMax) {
+    return m ? NaN : ((s ? -1 : 1) * Infinity)
+  } else {
+    m = m + Math.pow(2, mLen)
+    e = e - eBias
+  }
+  return (s ? -1 : 1) * m * Math.pow(2, e - mLen)
+}
+
+exports.write = function (buffer, value, offset, isLE, mLen, nBytes) {
+  var e, m, c
+  var eLen = (nBytes * 8) - mLen - 1
+  var eMax = (1 << eLen) - 1
+  var eBias = eMax >> 1
+  var rt = (mLen === 23 ? Math.pow(2, -24) - Math.pow(2, -77) : 0)
+  var i = isLE ? 0 : (nBytes - 1)
+  var d = isLE ? 1 : -1
+  var s = value < 0 || (value === 0 && 1 / value < 0) ? 1 : 0
+
+  value = Math.abs(value)
+
+  if (isNaN(value) || value === Infinity) {
+    m = isNaN(value) ? 1 : 0
+    e = eMax
+  } else {
+    e = Math.floor(Math.log(value) / Math.LN2)
+    if (value * (c = Math.pow(2, -e)) < 1) {
+      e--
+      c *= 2
+    }
+    if (e + eBias >= 1) {
+      value += rt / c
+    } else {
+      value += rt * Math.pow(2, 1 - eBias)
+    }
+    if (value * c >= 2) {
+      e++
+      c /= 2
+    }
+
+    if (e + eBias >= eMax) {
+      m = 0
+      e = eMax
+    } else if (e + eBias >= 1) {
+      m = ((value * c) - 1) * Math.pow(2, mLen)
+      e = e + eBias
+    } else {
+      m = value * Math.pow(2, eBias - 1) * Math.pow(2, mLen)
+      e = 0
+    }
+  }
+
+  for (; mLen >= 8; buffer[offset + i] = m & 0xff, i += d, m /= 256, mLen -= 8) {}
+
+  e = (e << mLen) | m
+  eLen += mLen
+  for (; eLen > 0; buffer[offset + i] = e & 0xff, i += d, e /= 256, eLen -= 8) {}
+
+  buffer[offset + i - d] |= s * 128
+}
+
+
+/***/ }),
+
+/***/ "./node_modules/inherits/inherits_browser.js":
+/*!***************************************************!*\
+  !*** ./node_modules/inherits/inherits_browser.js ***!
+  \***************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+if (typeof Object.create === 'function') {
+  // implementation from standard node.js 'util' module
+  module.exports = function inherits(ctor, superCtor) {
+    if (superCtor) {
+      ctor.super_ = superCtor
+      ctor.prototype = Object.create(superCtor.prototype, {
+        constructor: {
+          value: ctor,
+          enumerable: false,
+          writable: true,
+          configurable: true
+        }
+      })
+    }
+  };
+} else {
+  // old school shim for old browsers
+  module.exports = function inherits(ctor, superCtor) {
+    if (superCtor) {
+      ctor.super_ = superCtor
+      var TempCtor = function () {}
+      TempCtor.prototype = superCtor.prototype
+      ctor.prototype = new TempCtor()
+      ctor.prototype.constructor = ctor
+    }
+  }
+}
+
+
+/***/ }),
+
+/***/ "./node_modules/isarray/index.js":
+/*!***************************************!*\
+  !*** ./node_modules/isarray/index.js ***!
+  \***************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+var toString = {}.toString;
+
+module.exports = Array.isArray || function (arr) {
+  return toString.call(arr) == '[object Array]';
+};
 
 
 /***/ }),
@@ -69900,6 +64840,1229 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
 
 /***/ }),
 
+/***/ "./node_modules/pace-js/pace.js":
+/*!**************************************!*\
+  !*** ./node_modules/pace-js/pace.js ***!
+  \**************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;(function() {
+  var AjaxMonitor, Bar, DocumentMonitor, ElementMonitor, ElementTracker, EventLagMonitor, Evented, Events, NoTargetError, Pace, RequestIntercept, SOURCE_KEYS, Scaler, SocketRequestTracker, XHRRequestTracker, animation, avgAmplitude, bar, cancelAnimation, cancelAnimationFrame, defaultOptions, extend, extendNative, getFromDOM, getIntercept, handlePushState, ignoreStack, init, now, options, requestAnimationFrame, result, runAnimation, scalers, shouldIgnoreURL, shouldTrack, source, sources, uniScaler, _WebSocket, _XDomainRequest, _XMLHttpRequest, _i, _intercept, _len, _pushState, _ref, _ref1, _replaceState,
+    __slice = [].slice,
+    __hasProp = {}.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+    __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
+
+  defaultOptions = {
+    catchupTime: 100,
+    initialRate: .03,
+    minTime: 250,
+    ghostTime: 100,
+    maxProgressPerFrame: 20,
+    easeFactor: 1.25,
+    startOnPageLoad: true,
+    restartOnPushState: true,
+    restartOnRequestAfter: 500,
+    target: 'body',
+    elements: {
+      checkInterval: 100,
+      selectors: ['body']
+    },
+    eventLag: {
+      minSamples: 10,
+      sampleCount: 3,
+      lagThreshold: 3
+    },
+    ajax: {
+      trackMethods: ['GET'],
+      trackWebSockets: true,
+      ignoreURLs: []
+    }
+  };
+
+  now = function() {
+    var _ref;
+    return (_ref = typeof performance !== "undefined" && performance !== null ? typeof performance.now === "function" ? performance.now() : void 0 : void 0) != null ? _ref : +(new Date);
+  };
+
+  requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
+
+  cancelAnimationFrame = window.cancelAnimationFrame || window.mozCancelAnimationFrame;
+
+  if (requestAnimationFrame == null) {
+    requestAnimationFrame = function(fn) {
+      return setTimeout(fn, 50);
+    };
+    cancelAnimationFrame = function(id) {
+      return clearTimeout(id);
+    };
+  }
+
+  runAnimation = function(fn) {
+    var last, tick;
+    last = now();
+    tick = function() {
+      var diff;
+      diff = now() - last;
+      if (diff >= 33) {
+        last = now();
+        return fn(diff, function() {
+          return requestAnimationFrame(tick);
+        });
+      } else {
+        return setTimeout(tick, 33 - diff);
+      }
+    };
+    return tick();
+  };
+
+  result = function() {
+    var args, key, obj;
+    obj = arguments[0], key = arguments[1], args = 3 <= arguments.length ? __slice.call(arguments, 2) : [];
+    if (typeof obj[key] === 'function') {
+      return obj[key].apply(obj, args);
+    } else {
+      return obj[key];
+    }
+  };
+
+  extend = function() {
+    var key, out, source, sources, val, _i, _len;
+    out = arguments[0], sources = 2 <= arguments.length ? __slice.call(arguments, 1) : [];
+    for (_i = 0, _len = sources.length; _i < _len; _i++) {
+      source = sources[_i];
+      if (source) {
+        for (key in source) {
+          if (!__hasProp.call(source, key)) continue;
+          val = source[key];
+          if ((out[key] != null) && typeof out[key] === 'object' && (val != null) && typeof val === 'object') {
+            extend(out[key], val);
+          } else {
+            out[key] = val;
+          }
+        }
+      }
+    }
+    return out;
+  };
+
+  avgAmplitude = function(arr) {
+    var count, sum, v, _i, _len;
+    sum = count = 0;
+    for (_i = 0, _len = arr.length; _i < _len; _i++) {
+      v = arr[_i];
+      sum += Math.abs(v);
+      count++;
+    }
+    return sum / count;
+  };
+
+  getFromDOM = function(key, json) {
+    var data, e, el;
+    if (key == null) {
+      key = 'options';
+    }
+    if (json == null) {
+      json = true;
+    }
+    el = document.querySelector("[data-pace-" + key + "]");
+    if (!el) {
+      return;
+    }
+    data = el.getAttribute("data-pace-" + key);
+    if (!json) {
+      return data;
+    }
+    try {
+      return JSON.parse(data);
+    } catch (_error) {
+      e = _error;
+      return typeof console !== "undefined" && console !== null ? console.error("Error parsing inline pace options", e) : void 0;
+    }
+  };
+
+  Evented = (function() {
+    function Evented() {}
+
+    Evented.prototype.on = function(event, handler, ctx, once) {
+      var _base;
+      if (once == null) {
+        once = false;
+      }
+      if (this.bindings == null) {
+        this.bindings = {};
+      }
+      if ((_base = this.bindings)[event] == null) {
+        _base[event] = [];
+      }
+      return this.bindings[event].push({
+        handler: handler,
+        ctx: ctx,
+        once: once
+      });
+    };
+
+    Evented.prototype.once = function(event, handler, ctx) {
+      return this.on(event, handler, ctx, true);
+    };
+
+    Evented.prototype.off = function(event, handler) {
+      var i, _ref, _results;
+      if (((_ref = this.bindings) != null ? _ref[event] : void 0) == null) {
+        return;
+      }
+      if (handler == null) {
+        return delete this.bindings[event];
+      } else {
+        i = 0;
+        _results = [];
+        while (i < this.bindings[event].length) {
+          if (this.bindings[event][i].handler === handler) {
+            _results.push(this.bindings[event].splice(i, 1));
+          } else {
+            _results.push(i++);
+          }
+        }
+        return _results;
+      }
+    };
+
+    Evented.prototype.trigger = function() {
+      var args, ctx, event, handler, i, once, _ref, _ref1, _results;
+      event = arguments[0], args = 2 <= arguments.length ? __slice.call(arguments, 1) : [];
+      if ((_ref = this.bindings) != null ? _ref[event] : void 0) {
+        i = 0;
+        _results = [];
+        while (i < this.bindings[event].length) {
+          _ref1 = this.bindings[event][i], handler = _ref1.handler, ctx = _ref1.ctx, once = _ref1.once;
+          handler.apply(ctx != null ? ctx : this, args);
+          if (once) {
+            _results.push(this.bindings[event].splice(i, 1));
+          } else {
+            _results.push(i++);
+          }
+        }
+        return _results;
+      }
+    };
+
+    return Evented;
+
+  })();
+
+  Pace = window.Pace || {};
+
+  window.Pace = Pace;
+
+  extend(Pace, Evented.prototype);
+
+  options = Pace.options = extend({}, defaultOptions, window.paceOptions, getFromDOM());
+
+  _ref = ['ajax', 'document', 'eventLag', 'elements'];
+  for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+    source = _ref[_i];
+    if (options[source] === true) {
+      options[source] = defaultOptions[source];
+    }
+  }
+
+  NoTargetError = (function(_super) {
+    __extends(NoTargetError, _super);
+
+    function NoTargetError() {
+      _ref1 = NoTargetError.__super__.constructor.apply(this, arguments);
+      return _ref1;
+    }
+
+    return NoTargetError;
+
+  })(Error);
+
+  Bar = (function() {
+    function Bar() {
+      this.progress = 0;
+    }
+
+    Bar.prototype.getElement = function() {
+      var targetElement;
+      if (this.el == null) {
+        targetElement = document.querySelector(options.target);
+        if (!targetElement) {
+          throw new NoTargetError;
+        }
+        this.el = document.createElement('div');
+        this.el.className = "pace pace-active";
+        document.body.className = document.body.className.replace(/pace-done/g, '');
+        document.body.className += ' pace-running';
+        this.el.innerHTML = '<div class="pace-progress">\n  <div class="pace-progress-inner"></div>\n</div>\n<div class="pace-activity"></div>';
+        if (targetElement.firstChild != null) {
+          targetElement.insertBefore(this.el, targetElement.firstChild);
+        } else {
+          targetElement.appendChild(this.el);
+        }
+      }
+      return this.el;
+    };
+
+    Bar.prototype.finish = function() {
+      var el;
+      el = this.getElement();
+      el.className = el.className.replace('pace-active', '');
+      el.className += ' pace-inactive';
+      document.body.className = document.body.className.replace('pace-running', '');
+      return document.body.className += ' pace-done';
+    };
+
+    Bar.prototype.update = function(prog) {
+      this.progress = prog;
+      return this.render();
+    };
+
+    Bar.prototype.destroy = function() {
+      try {
+        this.getElement().parentNode.removeChild(this.getElement());
+      } catch (_error) {
+        NoTargetError = _error;
+      }
+      return this.el = void 0;
+    };
+
+    Bar.prototype.render = function() {
+      var el, key, progressStr, transform, _j, _len1, _ref2;
+      if (document.querySelector(options.target) == null) {
+        return false;
+      }
+      el = this.getElement();
+      transform = "translate3d(" + this.progress + "%, 0, 0)";
+      _ref2 = ['webkitTransform', 'msTransform', 'transform'];
+      for (_j = 0, _len1 = _ref2.length; _j < _len1; _j++) {
+        key = _ref2[_j];
+        el.children[0].style[key] = transform;
+      }
+      if (!this.lastRenderedProgress || this.lastRenderedProgress | 0 !== this.progress | 0) {
+        el.children[0].setAttribute('data-progress-text', "" + (this.progress | 0) + "%");
+        if (this.progress >= 100) {
+          progressStr = '99';
+        } else {
+          progressStr = this.progress < 10 ? "0" : "";
+          progressStr += this.progress | 0;
+        }
+        el.children[0].setAttribute('data-progress', "" + progressStr);
+      }
+      return this.lastRenderedProgress = this.progress;
+    };
+
+    Bar.prototype.done = function() {
+      return this.progress >= 100;
+    };
+
+    return Bar;
+
+  })();
+
+  Events = (function() {
+    function Events() {
+      this.bindings = {};
+    }
+
+    Events.prototype.trigger = function(name, val) {
+      var binding, _j, _len1, _ref2, _results;
+      if (this.bindings[name] != null) {
+        _ref2 = this.bindings[name];
+        _results = [];
+        for (_j = 0, _len1 = _ref2.length; _j < _len1; _j++) {
+          binding = _ref2[_j];
+          _results.push(binding.call(this, val));
+        }
+        return _results;
+      }
+    };
+
+    Events.prototype.on = function(name, fn) {
+      var _base;
+      if ((_base = this.bindings)[name] == null) {
+        _base[name] = [];
+      }
+      return this.bindings[name].push(fn);
+    };
+
+    return Events;
+
+  })();
+
+  _XMLHttpRequest = window.XMLHttpRequest;
+
+  _XDomainRequest = window.XDomainRequest;
+
+  _WebSocket = window.WebSocket;
+
+  extendNative = function(to, from) {
+    var e, key, _results;
+    _results = [];
+    for (key in from.prototype) {
+      try {
+        if ((to[key] == null) && typeof from[key] !== 'function') {
+          if (typeof Object.defineProperty === 'function') {
+            _results.push(Object.defineProperty(to, key, {
+              get: function() {
+                return from.prototype[key];
+              },
+              configurable: true,
+              enumerable: true
+            }));
+          } else {
+            _results.push(to[key] = from.prototype[key]);
+          }
+        } else {
+          _results.push(void 0);
+        }
+      } catch (_error) {
+        e = _error;
+      }
+    }
+    return _results;
+  };
+
+  ignoreStack = [];
+
+  Pace.ignore = function() {
+    var args, fn, ret;
+    fn = arguments[0], args = 2 <= arguments.length ? __slice.call(arguments, 1) : [];
+    ignoreStack.unshift('ignore');
+    ret = fn.apply(null, args);
+    ignoreStack.shift();
+    return ret;
+  };
+
+  Pace.track = function() {
+    var args, fn, ret;
+    fn = arguments[0], args = 2 <= arguments.length ? __slice.call(arguments, 1) : [];
+    ignoreStack.unshift('track');
+    ret = fn.apply(null, args);
+    ignoreStack.shift();
+    return ret;
+  };
+
+  shouldTrack = function(method) {
+    var _ref2;
+    if (method == null) {
+      method = 'GET';
+    }
+    if (ignoreStack[0] === 'track') {
+      return 'force';
+    }
+    if (!ignoreStack.length && options.ajax) {
+      if (method === 'socket' && options.ajax.trackWebSockets) {
+        return true;
+      } else if (_ref2 = method.toUpperCase(), __indexOf.call(options.ajax.trackMethods, _ref2) >= 0) {
+        return true;
+      }
+    }
+    return false;
+  };
+
+  RequestIntercept = (function(_super) {
+    __extends(RequestIntercept, _super);
+
+    function RequestIntercept() {
+      var monitorXHR,
+        _this = this;
+      RequestIntercept.__super__.constructor.apply(this, arguments);
+      monitorXHR = function(req) {
+        var _open;
+        _open = req.open;
+        return req.open = function(type, url, async) {
+          if (shouldTrack(type)) {
+            _this.trigger('request', {
+              type: type,
+              url: url,
+              request: req
+            });
+          }
+          return _open.apply(req, arguments);
+        };
+      };
+      window.XMLHttpRequest = function(flags) {
+        var req;
+        req = new _XMLHttpRequest(flags);
+        monitorXHR(req);
+        return req;
+      };
+      try {
+        extendNative(window.XMLHttpRequest, _XMLHttpRequest);
+      } catch (_error) {}
+      if (_XDomainRequest != null) {
+        window.XDomainRequest = function() {
+          var req;
+          req = new _XDomainRequest;
+          monitorXHR(req);
+          return req;
+        };
+        try {
+          extendNative(window.XDomainRequest, _XDomainRequest);
+        } catch (_error) {}
+      }
+      if ((_WebSocket != null) && options.ajax.trackWebSockets) {
+        window.WebSocket = function(url, protocols) {
+          var req;
+          if (protocols != null) {
+            req = new _WebSocket(url, protocols);
+          } else {
+            req = new _WebSocket(url);
+          }
+          if (shouldTrack('socket')) {
+            _this.trigger('request', {
+              type: 'socket',
+              url: url,
+              protocols: protocols,
+              request: req
+            });
+          }
+          return req;
+        };
+        try {
+          extendNative(window.WebSocket, _WebSocket);
+        } catch (_error) {}
+      }
+    }
+
+    return RequestIntercept;
+
+  })(Events);
+
+  _intercept = null;
+
+  getIntercept = function() {
+    if (_intercept == null) {
+      _intercept = new RequestIntercept;
+    }
+    return _intercept;
+  };
+
+  shouldIgnoreURL = function(url) {
+    var pattern, _j, _len1, _ref2;
+    _ref2 = options.ajax.ignoreURLs;
+    for (_j = 0, _len1 = _ref2.length; _j < _len1; _j++) {
+      pattern = _ref2[_j];
+      if (typeof pattern === 'string') {
+        if (url.indexOf(pattern) !== -1) {
+          return true;
+        }
+      } else {
+        if (pattern.test(url)) {
+          return true;
+        }
+      }
+    }
+    return false;
+  };
+
+  getIntercept().on('request', function(_arg) {
+    var after, args, request, type, url;
+    type = _arg.type, request = _arg.request, url = _arg.url;
+    if (shouldIgnoreURL(url)) {
+      return;
+    }
+    if (!Pace.running && (options.restartOnRequestAfter !== false || shouldTrack(type) === 'force')) {
+      args = arguments;
+      after = options.restartOnRequestAfter || 0;
+      if (typeof after === 'boolean') {
+        after = 0;
+      }
+      return setTimeout(function() {
+        var stillActive, _j, _len1, _ref2, _ref3, _results;
+        if (type === 'socket') {
+          stillActive = request.readyState < 2;
+        } else {
+          stillActive = (0 < (_ref2 = request.readyState) && _ref2 < 4);
+        }
+        if (stillActive) {
+          Pace.restart();
+          _ref3 = Pace.sources;
+          _results = [];
+          for (_j = 0, _len1 = _ref3.length; _j < _len1; _j++) {
+            source = _ref3[_j];
+            if (source instanceof AjaxMonitor) {
+              source.watch.apply(source, args);
+              break;
+            } else {
+              _results.push(void 0);
+            }
+          }
+          return _results;
+        }
+      }, after);
+    }
+  });
+
+  AjaxMonitor = (function() {
+    function AjaxMonitor() {
+      var _this = this;
+      this.elements = [];
+      getIntercept().on('request', function() {
+        return _this.watch.apply(_this, arguments);
+      });
+    }
+
+    AjaxMonitor.prototype.watch = function(_arg) {
+      var request, tracker, type, url;
+      type = _arg.type, request = _arg.request, url = _arg.url;
+      if (shouldIgnoreURL(url)) {
+        return;
+      }
+      if (type === 'socket') {
+        tracker = new SocketRequestTracker(request);
+      } else {
+        tracker = new XHRRequestTracker(request);
+      }
+      return this.elements.push(tracker);
+    };
+
+    return AjaxMonitor;
+
+  })();
+
+  XHRRequestTracker = (function() {
+    function XHRRequestTracker(request) {
+      var event, size, _j, _len1, _onreadystatechange, _ref2,
+        _this = this;
+      this.progress = 0;
+      if (window.ProgressEvent != null) {
+        size = null;
+        request.addEventListener('progress', function(evt) {
+          if (evt.lengthComputable) {
+            return _this.progress = 100 * evt.loaded / evt.total;
+          } else {
+            return _this.progress = _this.progress + (100 - _this.progress) / 2;
+          }
+        }, false);
+        _ref2 = ['load', 'abort', 'timeout', 'error'];
+        for (_j = 0, _len1 = _ref2.length; _j < _len1; _j++) {
+          event = _ref2[_j];
+          request.addEventListener(event, function() {
+            return _this.progress = 100;
+          }, false);
+        }
+      } else {
+        _onreadystatechange = request.onreadystatechange;
+        request.onreadystatechange = function() {
+          var _ref3;
+          if ((_ref3 = request.readyState) === 0 || _ref3 === 4) {
+            _this.progress = 100;
+          } else if (request.readyState === 3) {
+            _this.progress = 50;
+          }
+          return typeof _onreadystatechange === "function" ? _onreadystatechange.apply(null, arguments) : void 0;
+        };
+      }
+    }
+
+    return XHRRequestTracker;
+
+  })();
+
+  SocketRequestTracker = (function() {
+    function SocketRequestTracker(request) {
+      var event, _j, _len1, _ref2,
+        _this = this;
+      this.progress = 0;
+      _ref2 = ['error', 'open'];
+      for (_j = 0, _len1 = _ref2.length; _j < _len1; _j++) {
+        event = _ref2[_j];
+        request.addEventListener(event, function() {
+          return _this.progress = 100;
+        }, false);
+      }
+    }
+
+    return SocketRequestTracker;
+
+  })();
+
+  ElementMonitor = (function() {
+    function ElementMonitor(options) {
+      var selector, _j, _len1, _ref2;
+      if (options == null) {
+        options = {};
+      }
+      this.elements = [];
+      if (options.selectors == null) {
+        options.selectors = [];
+      }
+      _ref2 = options.selectors;
+      for (_j = 0, _len1 = _ref2.length; _j < _len1; _j++) {
+        selector = _ref2[_j];
+        this.elements.push(new ElementTracker(selector));
+      }
+    }
+
+    return ElementMonitor;
+
+  })();
+
+  ElementTracker = (function() {
+    function ElementTracker(selector) {
+      this.selector = selector;
+      this.progress = 0;
+      this.check();
+    }
+
+    ElementTracker.prototype.check = function() {
+      var _this = this;
+      if (document.querySelector(this.selector)) {
+        return this.done();
+      } else {
+        return setTimeout((function() {
+          return _this.check();
+        }), options.elements.checkInterval);
+      }
+    };
+
+    ElementTracker.prototype.done = function() {
+      return this.progress = 100;
+    };
+
+    return ElementTracker;
+
+  })();
+
+  DocumentMonitor = (function() {
+    DocumentMonitor.prototype.states = {
+      loading: 0,
+      interactive: 50,
+      complete: 100
+    };
+
+    function DocumentMonitor() {
+      var _onreadystatechange, _ref2,
+        _this = this;
+      this.progress = (_ref2 = this.states[document.readyState]) != null ? _ref2 : 100;
+      _onreadystatechange = document.onreadystatechange;
+      document.onreadystatechange = function() {
+        if (_this.states[document.readyState] != null) {
+          _this.progress = _this.states[document.readyState];
+        }
+        return typeof _onreadystatechange === "function" ? _onreadystatechange.apply(null, arguments) : void 0;
+      };
+    }
+
+    return DocumentMonitor;
+
+  })();
+
+  EventLagMonitor = (function() {
+    function EventLagMonitor() {
+      var avg, interval, last, points, samples,
+        _this = this;
+      this.progress = 0;
+      avg = 0;
+      samples = [];
+      points = 0;
+      last = now();
+      interval = setInterval(function() {
+        var diff;
+        diff = now() - last - 50;
+        last = now();
+        samples.push(diff);
+        if (samples.length > options.eventLag.sampleCount) {
+          samples.shift();
+        }
+        avg = avgAmplitude(samples);
+        if (++points >= options.eventLag.minSamples && avg < options.eventLag.lagThreshold) {
+          _this.progress = 100;
+          return clearInterval(interval);
+        } else {
+          return _this.progress = 100 * (3 / (avg + 3));
+        }
+      }, 50);
+    }
+
+    return EventLagMonitor;
+
+  })();
+
+  Scaler = (function() {
+    function Scaler(source) {
+      this.source = source;
+      this.last = this.sinceLastUpdate = 0;
+      this.rate = options.initialRate;
+      this.catchup = 0;
+      this.progress = this.lastProgress = 0;
+      if (this.source != null) {
+        this.progress = result(this.source, 'progress');
+      }
+    }
+
+    Scaler.prototype.tick = function(frameTime, val) {
+      var scaling;
+      if (val == null) {
+        val = result(this.source, 'progress');
+      }
+      if (val >= 100) {
+        this.done = true;
+      }
+      if (val === this.last) {
+        this.sinceLastUpdate += frameTime;
+      } else {
+        if (this.sinceLastUpdate) {
+          this.rate = (val - this.last) / this.sinceLastUpdate;
+        }
+        this.catchup = (val - this.progress) / options.catchupTime;
+        this.sinceLastUpdate = 0;
+        this.last = val;
+      }
+      if (val > this.progress) {
+        this.progress += this.catchup * frameTime;
+      }
+      scaling = 1 - Math.pow(this.progress / 100, options.easeFactor);
+      this.progress += scaling * this.rate * frameTime;
+      this.progress = Math.min(this.lastProgress + options.maxProgressPerFrame, this.progress);
+      this.progress = Math.max(0, this.progress);
+      this.progress = Math.min(100, this.progress);
+      this.lastProgress = this.progress;
+      return this.progress;
+    };
+
+    return Scaler;
+
+  })();
+
+  sources = null;
+
+  scalers = null;
+
+  bar = null;
+
+  uniScaler = null;
+
+  animation = null;
+
+  cancelAnimation = null;
+
+  Pace.running = false;
+
+  handlePushState = function() {
+    if (options.restartOnPushState) {
+      return Pace.restart();
+    }
+  };
+
+  if (window.history.pushState != null) {
+    _pushState = window.history.pushState;
+    window.history.pushState = function() {
+      handlePushState();
+      return _pushState.apply(window.history, arguments);
+    };
+  }
+
+  if (window.history.replaceState != null) {
+    _replaceState = window.history.replaceState;
+    window.history.replaceState = function() {
+      handlePushState();
+      return _replaceState.apply(window.history, arguments);
+    };
+  }
+
+  SOURCE_KEYS = {
+    ajax: AjaxMonitor,
+    elements: ElementMonitor,
+    document: DocumentMonitor,
+    eventLag: EventLagMonitor
+  };
+
+  (init = function() {
+    var type, _j, _k, _len1, _len2, _ref2, _ref3, _ref4;
+    Pace.sources = sources = [];
+    _ref2 = ['ajax', 'elements', 'document', 'eventLag'];
+    for (_j = 0, _len1 = _ref2.length; _j < _len1; _j++) {
+      type = _ref2[_j];
+      if (options[type] !== false) {
+        sources.push(new SOURCE_KEYS[type](options[type]));
+      }
+    }
+    _ref4 = (_ref3 = options.extraSources) != null ? _ref3 : [];
+    for (_k = 0, _len2 = _ref4.length; _k < _len2; _k++) {
+      source = _ref4[_k];
+      sources.push(new source(options));
+    }
+    Pace.bar = bar = new Bar;
+    scalers = [];
+    return uniScaler = new Scaler;
+  })();
+
+  Pace.stop = function() {
+    Pace.trigger('stop');
+    Pace.running = false;
+    bar.destroy();
+    cancelAnimation = true;
+    if (animation != null) {
+      if (typeof cancelAnimationFrame === "function") {
+        cancelAnimationFrame(animation);
+      }
+      animation = null;
+    }
+    return init();
+  };
+
+  Pace.restart = function() {
+    Pace.trigger('restart');
+    Pace.stop();
+    return Pace.start();
+  };
+
+  Pace.go = function() {
+    var start;
+    Pace.running = true;
+    bar.render();
+    start = now();
+    cancelAnimation = false;
+    return animation = runAnimation(function(frameTime, enqueueNextFrame) {
+      var avg, count, done, element, elements, i, j, remaining, scaler, scalerList, sum, _j, _k, _len1, _len2, _ref2;
+      remaining = 100 - bar.progress;
+      count = sum = 0;
+      done = true;
+      for (i = _j = 0, _len1 = sources.length; _j < _len1; i = ++_j) {
+        source = sources[i];
+        scalerList = scalers[i] != null ? scalers[i] : scalers[i] = [];
+        elements = (_ref2 = source.elements) != null ? _ref2 : [source];
+        for (j = _k = 0, _len2 = elements.length; _k < _len2; j = ++_k) {
+          element = elements[j];
+          scaler = scalerList[j] != null ? scalerList[j] : scalerList[j] = new Scaler(element);
+          done &= scaler.done;
+          if (scaler.done) {
+            continue;
+          }
+          count++;
+          sum += scaler.tick(frameTime);
+        }
+      }
+      avg = sum / count;
+      bar.update(uniScaler.tick(frameTime, avg));
+      if (bar.done() || done || cancelAnimation) {
+        bar.update(100);
+        Pace.trigger('done');
+        return setTimeout(function() {
+          bar.finish();
+          Pace.running = false;
+          return Pace.trigger('hide');
+        }, Math.max(options.ghostTime, Math.max(options.minTime - (now() - start), 0)));
+      } else {
+        return enqueueNextFrame();
+      }
+    });
+  };
+
+  Pace.start = function(_options) {
+    extend(options, _options);
+    Pace.running = true;
+    try {
+      bar.render();
+    } catch (_error) {
+      NoTargetError = _error;
+    }
+    if (!document.querySelector('.pace')) {
+      return setTimeout(Pace.start, 50);
+    } else {
+      Pace.trigger('start');
+      return Pace.go();
+    }
+  };
+
+  if (true) {
+    !(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(/*! pace */ "./node_modules/pace/pace.js")], __WEBPACK_AMD_DEFINE_RESULT__ = (function() {
+      return Pace;
+    }).apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+  } else {}
+
+}).call(this);
+
+
+/***/ }),
+
+/***/ "./node_modules/pace/pace.js":
+/*!***********************************!*\
+  !*** ./node_modules/pace/pace.js ***!
+  \***********************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/* WEBPACK VAR INJECTION */(function(process) {/**
+ * Pace
+ *
+ * A progress bar for the command-line.
+ *
+ * Example usage:
+ *
+ *     var total = 50000,
+ *         count = 0,
+ *         pace = require('pace')(total);
+ *
+ *     while (count++ < total) {
+ *       pace.op();
+ *
+ *       // Cause some work to be done.
+ *       for (var i = 0; i < 1000000; i++) {
+ *         count = count;
+ *       }
+ *     }
+ */
+
+// Module dependencies.
+var charm = __webpack_require__(/*! charm */ "./node_modules/charm/index.js");
+
+/**
+ * Pace 'class'.
+ */
+function Pace(options) {
+  options = options || {};
+
+  // Total number of items to process.
+  if (!options.total) {
+    throw new Error('You MUST specify the total number of operations that will be processed.');
+  }
+  this.total = options.total;
+
+  // Current item number.
+  this.current = 0;
+
+  // Maximum percent of total time the progressbar is allowed to take during processing.
+  // Defaults to 0.5%
+  this.max_burden = options.maxBurden || 0.5;
+
+  // Whether to show current burden %.
+  this.show_burden = options.showBurden || false;
+
+  // Internal time tracking properties.
+  this.started = false;
+  this.size = 50;
+  this.inner_time = 0;
+  this.outer_time = 0;
+  this.elapsed = 0;
+  this.time_start = 0;
+  this.time_end = 0;
+  this.time_left = 0;
+  this.time_burden = 0;
+  this.skip_steps = 0;
+  this.skipped = 0;
+  this.aborted = false;
+
+  // Setup charm.
+  this.charm = charm();
+  this.charm.pipe(process.stdout);
+
+  // Prepare the output.
+  this.charm.write("\n\n\n");
+}
+
+/**
+ * Export a factory function for new pace instances.
+ */
+module.exports = function(options) {
+  if (typeof options === 'number') {
+    options = {
+      total: options
+    };
+  }
+  return new Pace(options);
+};
+
+/**
+ * An operation has been emitted.
+ */
+Pace.prototype.op = function op(count) {
+  if (count) {
+    this.current = count;
+  }
+  else {
+    this.current++;
+  }
+
+  if (this.burdenReached()) {
+    return;
+  }
+
+  // Record the start time of the whole task.
+  if (!this.started) {
+    this.started = new Date().getTime();
+  }
+
+  // Record start time.
+  this.time_start = new Date().getTime();
+
+  this.updateTimes();
+  this.clear();
+  this.outputProgress();
+  this.outputStats();
+  this.outputTimes();
+
+  // The task is complete.
+  if (this.current >= this.total) {
+    this.finished();
+  }
+
+  // Record end time.
+  this.time_end = new Date().getTime();
+  this.inner_time = this.time_end - this.time_start;
+};
+
+/**
+ * Update times.
+ */
+Pace.prototype.updateTimes = function updateTimes() {
+  this.elapsed = this.time_start - this.started;
+  if (this.time_end > 0) {
+    this.outer_time = this.time_start - this.time_end;
+  }
+  if (this.inner_time > 0 && this.outer_time > 0) {
+    // Set Current Burden
+    this.time_burden = (this.inner_time / (this.inner_time + this.outer_time)) * 100;
+
+    // Estimate time left.
+    this.time_left = (this.elapsed / this.current) * (this.total - this.current);
+
+    if (this.time_left < 0) this.time_left = 0;
+  }
+  // If our "burden" is too high, increase the skip steps.
+  if (this.time_burden > this.max_burden && (this.skip_steps < (this.total / this.size))) {
+    this.skip_steps = Math.floor(++this.skip_steps * 1.3);
+  }
+};
+
+/**
+ * Move the cursor back to the beginning and clear old output.
+ */
+Pace.prototype.clear = function clear() {
+  this.charm.erase('line').up(1).erase('line').up(1).erase('line').write("\r");
+};
+
+/**
+ * Output the progress bar.
+ */
+Pace.prototype.outputProgress = function outputProgress() {
+  this.charm.write('Processing: ');
+  this.charm.foreground('green').background('green');
+  for (var i = 0; i < ((this.current / this.total) * this.size) - 1 ; i++) {
+     this.charm.write(' ');
+  }
+  this.charm.foreground('white').background('white');
+  while (i < this.size - 1) {
+    this.charm.write(' ');
+    i++;
+  }
+  this.charm.display('reset').down(1).left(100);
+};
+
+/**
+ * Output numerical progress stats.
+ */
+Pace.prototype.outputStats = function outputStats() {
+  this.perc = (this.current/this.total)*100;
+  this.perc = padLeft(this.perc.toFixed(2), 2);
+  this.charm.write('            ').display('bright').write(this.perc + '%').display('reset');
+  this.total_len = formatNumber(this.total).length;
+  this.charm.write('   ').display('bright').write(padLeft(formatNumber(this.current), this.total_len)).display('reset');
+  this.charm.write('/' + formatNumber(this.total));
+
+  // Output burden.
+  if (this.show_burden) {
+    this.charm.write('    ').display('bright').write('Burden: ').display('reset');
+    this.charm.write(this.time_burden.toFixed(2) + '% / ' + this.skip_steps);
+  }
+
+  this.charm.display('reset').down(1).left(100);
+};
+
+/**
+ * Output times.
+ */
+Pace.prototype.outputTimes = function outputTimes() {
+  // Output times.
+  var hours = Math.floor(this.elapsed / (1000 * 60 * 60));
+  var min = Math.floor(((this.elapsed / 1000) % (60 * 60)) / 60);
+  var sec = Math.floor((this.elapsed / 1000) % 60);
+
+  this.charm.write('            ').display('bright').write('Elapsed: ').display('reset');
+  this.charm.write(hours + 'h ' + min + 'm ' + sec + 's');
+
+  if (this.time_left){
+    hours = Math.floor(this.time_left / (1000 * 60 * 60));
+    min = Math.floor(((this.time_left / 1000) % (60 * 60)) / 60);
+    sec = Math.ceil((this.time_left / 1000) % 60);
+
+    this.charm.write('   ').display('bright').write('Remaining: ').display('reset');
+    this.charm.write(hours + 'h ' + min + 'm ' + sec + 's');
+  }
+};
+
+/**
+ * The progress has finished.
+ */
+Pace.prototype.finished = function finished() {
+  this.charm.write("\n\n");
+  this.charm.write('Finished!');
+  this.charm.write("\n\n");
+};
+
+/**
+ * Check if the burden threshold has been reached.
+ */
+Pace.prototype.burdenReached = function burdenReached() {
+  // Skip this cycle if the burden has determined we should.
+  if ((this.skip_steps > 0) && (this.current < this.total)) {
+    if (this.skipped < this.skip_steps) {
+      this.skipped++;
+      return true;
+    }
+    else {
+      this.skipped = 0;
+    }
+  }
+  return false;
+};
+
+
+/**
+ * Utility functions.
+ */
+
+// Left-pad a string.
+function padLeft(str, length, pad) {
+  pad = pad || ' ';
+  while (str.length < length)
+    str = pad + str;
+  return str;
+}
+
+// Ported from php.js. Same has php's number_format().
+function formatNumber(number, decimals, dec_point, thousands_sep) {
+  number = (number + '').replace(/[^0-9+\-Ee.]/g, '');
+  var n = !isFinite(+number) ? 0 : +number,
+    prec = !isFinite(+decimals) ? 0 : Math.abs(decimals),
+    sep = (typeof thousands_sep === 'undefined') ? ',' : thousands_sep,
+    dec = (typeof dec_point === 'undefined') ? '.' : dec_point,
+    s = '',
+    toFixedFix = function (n, prec) {
+      var k = Math.pow(10, prec);
+      return '' + Math.round(n * k) / k;
+    };
+  // Fix for IE parseFloat(0.55).toFixed(0) = 0;
+  s = (prec ? toFixedFix(n, prec) : '' + Math.round(n)).split('.');
+  if (s[0].length > 3) {
+    s[0] = s[0].replace(/\B(?=(?:\d{3})+(?!\d))/g, sep);
+  }
+  if ((s[1] || '').length < prec) {
+    s[1] = s[1] || '';
+    s[1] += new Array(prec - s[1].length + 1).join('0');
+  }
+  return s.join(dec);
+}
+
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../process/browser.js */ "./node_modules/process/browser.js")))
+
+/***/ }),
+
 /***/ "./node_modules/popper.js/dist/esm/popper.js":
 /*!***************************************************!*\
   !*** ./node_modules/popper.js/dist/esm/popper.js ***!
@@ -72530,6 +68693,64 @@ Popper.Defaults = Defaults;
 
 /***/ }),
 
+/***/ "./node_modules/process-nextick-args/index.js":
+/*!****************************************************!*\
+  !*** ./node_modules/process-nextick-args/index.js ***!
+  \****************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/* WEBPACK VAR INJECTION */(function(process) {
+
+if (typeof process === 'undefined' ||
+    !process.version ||
+    process.version.indexOf('v0.') === 0 ||
+    process.version.indexOf('v1.') === 0 && process.version.indexOf('v1.8.') !== 0) {
+  module.exports = { nextTick: nextTick };
+} else {
+  module.exports = process
+}
+
+function nextTick(fn, arg1, arg2, arg3) {
+  if (typeof fn !== 'function') {
+    throw new TypeError('"callback" argument must be a function');
+  }
+  var len = arguments.length;
+  var args, i;
+  switch (len) {
+  case 0:
+  case 1:
+    return process.nextTick(fn);
+  case 2:
+    return process.nextTick(function afterTickOne() {
+      fn.call(null, arg1);
+    });
+  case 3:
+    return process.nextTick(function afterTickTwo() {
+      fn.call(null, arg1, arg2);
+    });
+  case 4:
+    return process.nextTick(function afterTickThree() {
+      fn.call(null, arg1, arg2, arg3);
+    });
+  default:
+    args = new Array(len - 1);
+    i = 0;
+    while (i < args.length) {
+      args[i++] = arguments[i];
+    }
+    return process.nextTick(function afterTick() {
+      fn.apply(null, args);
+    });
+  }
+}
+
+
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../process/browser.js */ "./node_modules/process/browser.js")))
+
+/***/ }),
+
 /***/ "./node_modules/process/browser.js":
 /*!*****************************************!*\
   !*** ./node_modules/process/browser.js ***!
@@ -72721,6 +68942,2414 @@ process.chdir = function (dir) {
     throw new Error('process.chdir is not supported');
 };
 process.umask = function() { return 0; };
+
+
+/***/ }),
+
+/***/ "./node_modules/readable-stream/duplex-browser.js":
+/*!********************************************************!*\
+  !*** ./node_modules/readable-stream/duplex-browser.js ***!
+  \********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__(/*! ./lib/_stream_duplex.js */ "./node_modules/readable-stream/lib/_stream_duplex.js");
+
+
+/***/ }),
+
+/***/ "./node_modules/readable-stream/lib/_stream_duplex.js":
+/*!************************************************************!*\
+  !*** ./node_modules/readable-stream/lib/_stream_duplex.js ***!
+  \************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+// Copyright Joyent, Inc. and other Node contributors.
+//
+// Permission is hereby granted, free of charge, to any person obtaining a
+// copy of this software and associated documentation files (the
+// "Software"), to deal in the Software without restriction, including
+// without limitation the rights to use, copy, modify, merge, publish,
+// distribute, sublicense, and/or sell copies of the Software, and to permit
+// persons to whom the Software is furnished to do so, subject to the
+// following conditions:
+//
+// The above copyright notice and this permission notice shall be included
+// in all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+// OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN
+// NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+// DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+// OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
+// USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+// a duplex stream is just a stream that is both readable and writable.
+// Since JS doesn't have multiple prototypal inheritance, this class
+// prototypally inherits from Readable, and then parasitically from
+// Writable.
+
+
+
+/*<replacement>*/
+
+var pna = __webpack_require__(/*! process-nextick-args */ "./node_modules/process-nextick-args/index.js");
+/*</replacement>*/
+
+/*<replacement>*/
+var objectKeys = Object.keys || function (obj) {
+  var keys = [];
+  for (var key in obj) {
+    keys.push(key);
+  }return keys;
+};
+/*</replacement>*/
+
+module.exports = Duplex;
+
+/*<replacement>*/
+var util = Object.create(__webpack_require__(/*! core-util-is */ "./node_modules/core-util-is/lib/util.js"));
+util.inherits = __webpack_require__(/*! inherits */ "./node_modules/inherits/inherits_browser.js");
+/*</replacement>*/
+
+var Readable = __webpack_require__(/*! ./_stream_readable */ "./node_modules/readable-stream/lib/_stream_readable.js");
+var Writable = __webpack_require__(/*! ./_stream_writable */ "./node_modules/readable-stream/lib/_stream_writable.js");
+
+util.inherits(Duplex, Readable);
+
+{
+  // avoid scope creep, the keys array can then be collected
+  var keys = objectKeys(Writable.prototype);
+  for (var v = 0; v < keys.length; v++) {
+    var method = keys[v];
+    if (!Duplex.prototype[method]) Duplex.prototype[method] = Writable.prototype[method];
+  }
+}
+
+function Duplex(options) {
+  if (!(this instanceof Duplex)) return new Duplex(options);
+
+  Readable.call(this, options);
+  Writable.call(this, options);
+
+  if (options && options.readable === false) this.readable = false;
+
+  if (options && options.writable === false) this.writable = false;
+
+  this.allowHalfOpen = true;
+  if (options && options.allowHalfOpen === false) this.allowHalfOpen = false;
+
+  this.once('end', onend);
+}
+
+Object.defineProperty(Duplex.prototype, 'writableHighWaterMark', {
+  // making it explicit this property is not enumerable
+  // because otherwise some prototype manipulation in
+  // userland will fail
+  enumerable: false,
+  get: function () {
+    return this._writableState.highWaterMark;
+  }
+});
+
+// the no-half-open enforcer
+function onend() {
+  // if we allow half-open state, or if the writable side ended,
+  // then we're ok.
+  if (this.allowHalfOpen || this._writableState.ended) return;
+
+  // no more data can be written.
+  // But allow more writes to happen in this tick.
+  pna.nextTick(onEndNT, this);
+}
+
+function onEndNT(self) {
+  self.end();
+}
+
+Object.defineProperty(Duplex.prototype, 'destroyed', {
+  get: function () {
+    if (this._readableState === undefined || this._writableState === undefined) {
+      return false;
+    }
+    return this._readableState.destroyed && this._writableState.destroyed;
+  },
+  set: function (value) {
+    // we ignore the value if the stream
+    // has not been initialized yet
+    if (this._readableState === undefined || this._writableState === undefined) {
+      return;
+    }
+
+    // backward compatibility, the user is explicitly
+    // managing destroyed
+    this._readableState.destroyed = value;
+    this._writableState.destroyed = value;
+  }
+});
+
+Duplex.prototype._destroy = function (err, cb) {
+  this.push(null);
+  this.end();
+
+  pna.nextTick(cb, err);
+};
+
+/***/ }),
+
+/***/ "./node_modules/readable-stream/lib/_stream_passthrough.js":
+/*!*****************************************************************!*\
+  !*** ./node_modules/readable-stream/lib/_stream_passthrough.js ***!
+  \*****************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+// Copyright Joyent, Inc. and other Node contributors.
+//
+// Permission is hereby granted, free of charge, to any person obtaining a
+// copy of this software and associated documentation files (the
+// "Software"), to deal in the Software without restriction, including
+// without limitation the rights to use, copy, modify, merge, publish,
+// distribute, sublicense, and/or sell copies of the Software, and to permit
+// persons to whom the Software is furnished to do so, subject to the
+// following conditions:
+//
+// The above copyright notice and this permission notice shall be included
+// in all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+// OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN
+// NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+// DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+// OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
+// USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+// a passthrough stream.
+// basically just the most minimal sort of Transform stream.
+// Every written chunk gets output as-is.
+
+
+
+module.exports = PassThrough;
+
+var Transform = __webpack_require__(/*! ./_stream_transform */ "./node_modules/readable-stream/lib/_stream_transform.js");
+
+/*<replacement>*/
+var util = Object.create(__webpack_require__(/*! core-util-is */ "./node_modules/core-util-is/lib/util.js"));
+util.inherits = __webpack_require__(/*! inherits */ "./node_modules/inherits/inherits_browser.js");
+/*</replacement>*/
+
+util.inherits(PassThrough, Transform);
+
+function PassThrough(options) {
+  if (!(this instanceof PassThrough)) return new PassThrough(options);
+
+  Transform.call(this, options);
+}
+
+PassThrough.prototype._transform = function (chunk, encoding, cb) {
+  cb(null, chunk);
+};
+
+/***/ }),
+
+/***/ "./node_modules/readable-stream/lib/_stream_readable.js":
+/*!**************************************************************!*\
+  !*** ./node_modules/readable-stream/lib/_stream_readable.js ***!
+  \**************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/* WEBPACK VAR INJECTION */(function(global, process) {// Copyright Joyent, Inc. and other Node contributors.
+//
+// Permission is hereby granted, free of charge, to any person obtaining a
+// copy of this software and associated documentation files (the
+// "Software"), to deal in the Software without restriction, including
+// without limitation the rights to use, copy, modify, merge, publish,
+// distribute, sublicense, and/or sell copies of the Software, and to permit
+// persons to whom the Software is furnished to do so, subject to the
+// following conditions:
+//
+// The above copyright notice and this permission notice shall be included
+// in all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+// OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN
+// NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+// DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+// OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
+// USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+
+
+/*<replacement>*/
+
+var pna = __webpack_require__(/*! process-nextick-args */ "./node_modules/process-nextick-args/index.js");
+/*</replacement>*/
+
+module.exports = Readable;
+
+/*<replacement>*/
+var isArray = __webpack_require__(/*! isarray */ "./node_modules/isarray/index.js");
+/*</replacement>*/
+
+/*<replacement>*/
+var Duplex;
+/*</replacement>*/
+
+Readable.ReadableState = ReadableState;
+
+/*<replacement>*/
+var EE = __webpack_require__(/*! events */ "./node_modules/events/events.js").EventEmitter;
+
+var EElistenerCount = function (emitter, type) {
+  return emitter.listeners(type).length;
+};
+/*</replacement>*/
+
+/*<replacement>*/
+var Stream = __webpack_require__(/*! ./internal/streams/stream */ "./node_modules/readable-stream/lib/internal/streams/stream-browser.js");
+/*</replacement>*/
+
+/*<replacement>*/
+
+var Buffer = __webpack_require__(/*! safe-buffer */ "./node_modules/safe-buffer/index.js").Buffer;
+var OurUint8Array = global.Uint8Array || function () {};
+function _uint8ArrayToBuffer(chunk) {
+  return Buffer.from(chunk);
+}
+function _isUint8Array(obj) {
+  return Buffer.isBuffer(obj) || obj instanceof OurUint8Array;
+}
+
+/*</replacement>*/
+
+/*<replacement>*/
+var util = Object.create(__webpack_require__(/*! core-util-is */ "./node_modules/core-util-is/lib/util.js"));
+util.inherits = __webpack_require__(/*! inherits */ "./node_modules/inherits/inherits_browser.js");
+/*</replacement>*/
+
+/*<replacement>*/
+var debugUtil = __webpack_require__(/*! util */ 1);
+var debug = void 0;
+if (debugUtil && debugUtil.debuglog) {
+  debug = debugUtil.debuglog('stream');
+} else {
+  debug = function () {};
+}
+/*</replacement>*/
+
+var BufferList = __webpack_require__(/*! ./internal/streams/BufferList */ "./node_modules/readable-stream/lib/internal/streams/BufferList.js");
+var destroyImpl = __webpack_require__(/*! ./internal/streams/destroy */ "./node_modules/readable-stream/lib/internal/streams/destroy.js");
+var StringDecoder;
+
+util.inherits(Readable, Stream);
+
+var kProxyEvents = ['error', 'close', 'destroy', 'pause', 'resume'];
+
+function prependListener(emitter, event, fn) {
+  // Sadly this is not cacheable as some libraries bundle their own
+  // event emitter implementation with them.
+  if (typeof emitter.prependListener === 'function') return emitter.prependListener(event, fn);
+
+  // This is a hack to make sure that our error handler is attached before any
+  // userland ones.  NEVER DO THIS. This is here only because this code needs
+  // to continue to work with older versions of Node.js that do not include
+  // the prependListener() method. The goal is to eventually remove this hack.
+  if (!emitter._events || !emitter._events[event]) emitter.on(event, fn);else if (isArray(emitter._events[event])) emitter._events[event].unshift(fn);else emitter._events[event] = [fn, emitter._events[event]];
+}
+
+function ReadableState(options, stream) {
+  Duplex = Duplex || __webpack_require__(/*! ./_stream_duplex */ "./node_modules/readable-stream/lib/_stream_duplex.js");
+
+  options = options || {};
+
+  // Duplex streams are both readable and writable, but share
+  // the same options object.
+  // However, some cases require setting options to different
+  // values for the readable and the writable sides of the duplex stream.
+  // These options can be provided separately as readableXXX and writableXXX.
+  var isDuplex = stream instanceof Duplex;
+
+  // object stream flag. Used to make read(n) ignore n and to
+  // make all the buffer merging and length checks go away
+  this.objectMode = !!options.objectMode;
+
+  if (isDuplex) this.objectMode = this.objectMode || !!options.readableObjectMode;
+
+  // the point at which it stops calling _read() to fill the buffer
+  // Note: 0 is a valid value, means "don't call _read preemptively ever"
+  var hwm = options.highWaterMark;
+  var readableHwm = options.readableHighWaterMark;
+  var defaultHwm = this.objectMode ? 16 : 16 * 1024;
+
+  if (hwm || hwm === 0) this.highWaterMark = hwm;else if (isDuplex && (readableHwm || readableHwm === 0)) this.highWaterMark = readableHwm;else this.highWaterMark = defaultHwm;
+
+  // cast to ints.
+  this.highWaterMark = Math.floor(this.highWaterMark);
+
+  // A linked list is used to store data chunks instead of an array because the
+  // linked list can remove elements from the beginning faster than
+  // array.shift()
+  this.buffer = new BufferList();
+  this.length = 0;
+  this.pipes = null;
+  this.pipesCount = 0;
+  this.flowing = null;
+  this.ended = false;
+  this.endEmitted = false;
+  this.reading = false;
+
+  // a flag to be able to tell if the event 'readable'/'data' is emitted
+  // immediately, or on a later tick.  We set this to true at first, because
+  // any actions that shouldn't happen until "later" should generally also
+  // not happen before the first read call.
+  this.sync = true;
+
+  // whenever we return null, then we set a flag to say
+  // that we're awaiting a 'readable' event emission.
+  this.needReadable = false;
+  this.emittedReadable = false;
+  this.readableListening = false;
+  this.resumeScheduled = false;
+
+  // has it been destroyed
+  this.destroyed = false;
+
+  // Crypto is kind of old and crusty.  Historically, its default string
+  // encoding is 'binary' so we have to make this configurable.
+  // Everything else in the universe uses 'utf8', though.
+  this.defaultEncoding = options.defaultEncoding || 'utf8';
+
+  // the number of writers that are awaiting a drain event in .pipe()s
+  this.awaitDrain = 0;
+
+  // if true, a maybeReadMore has been scheduled
+  this.readingMore = false;
+
+  this.decoder = null;
+  this.encoding = null;
+  if (options.encoding) {
+    if (!StringDecoder) StringDecoder = __webpack_require__(/*! string_decoder/ */ "./node_modules/string_decoder/lib/string_decoder.js").StringDecoder;
+    this.decoder = new StringDecoder(options.encoding);
+    this.encoding = options.encoding;
+  }
+}
+
+function Readable(options) {
+  Duplex = Duplex || __webpack_require__(/*! ./_stream_duplex */ "./node_modules/readable-stream/lib/_stream_duplex.js");
+
+  if (!(this instanceof Readable)) return new Readable(options);
+
+  this._readableState = new ReadableState(options, this);
+
+  // legacy
+  this.readable = true;
+
+  if (options) {
+    if (typeof options.read === 'function') this._read = options.read;
+
+    if (typeof options.destroy === 'function') this._destroy = options.destroy;
+  }
+
+  Stream.call(this);
+}
+
+Object.defineProperty(Readable.prototype, 'destroyed', {
+  get: function () {
+    if (this._readableState === undefined) {
+      return false;
+    }
+    return this._readableState.destroyed;
+  },
+  set: function (value) {
+    // we ignore the value if the stream
+    // has not been initialized yet
+    if (!this._readableState) {
+      return;
+    }
+
+    // backward compatibility, the user is explicitly
+    // managing destroyed
+    this._readableState.destroyed = value;
+  }
+});
+
+Readable.prototype.destroy = destroyImpl.destroy;
+Readable.prototype._undestroy = destroyImpl.undestroy;
+Readable.prototype._destroy = function (err, cb) {
+  this.push(null);
+  cb(err);
+};
+
+// Manually shove something into the read() buffer.
+// This returns true if the highWaterMark has not been hit yet,
+// similar to how Writable.write() returns true if you should
+// write() some more.
+Readable.prototype.push = function (chunk, encoding) {
+  var state = this._readableState;
+  var skipChunkCheck;
+
+  if (!state.objectMode) {
+    if (typeof chunk === 'string') {
+      encoding = encoding || state.defaultEncoding;
+      if (encoding !== state.encoding) {
+        chunk = Buffer.from(chunk, encoding);
+        encoding = '';
+      }
+      skipChunkCheck = true;
+    }
+  } else {
+    skipChunkCheck = true;
+  }
+
+  return readableAddChunk(this, chunk, encoding, false, skipChunkCheck);
+};
+
+// Unshift should *always* be something directly out of read()
+Readable.prototype.unshift = function (chunk) {
+  return readableAddChunk(this, chunk, null, true, false);
+};
+
+function readableAddChunk(stream, chunk, encoding, addToFront, skipChunkCheck) {
+  var state = stream._readableState;
+  if (chunk === null) {
+    state.reading = false;
+    onEofChunk(stream, state);
+  } else {
+    var er;
+    if (!skipChunkCheck) er = chunkInvalid(state, chunk);
+    if (er) {
+      stream.emit('error', er);
+    } else if (state.objectMode || chunk && chunk.length > 0) {
+      if (typeof chunk !== 'string' && !state.objectMode && Object.getPrototypeOf(chunk) !== Buffer.prototype) {
+        chunk = _uint8ArrayToBuffer(chunk);
+      }
+
+      if (addToFront) {
+        if (state.endEmitted) stream.emit('error', new Error('stream.unshift() after end event'));else addChunk(stream, state, chunk, true);
+      } else if (state.ended) {
+        stream.emit('error', new Error('stream.push() after EOF'));
+      } else {
+        state.reading = false;
+        if (state.decoder && !encoding) {
+          chunk = state.decoder.write(chunk);
+          if (state.objectMode || chunk.length !== 0) addChunk(stream, state, chunk, false);else maybeReadMore(stream, state);
+        } else {
+          addChunk(stream, state, chunk, false);
+        }
+      }
+    } else if (!addToFront) {
+      state.reading = false;
+    }
+  }
+
+  return needMoreData(state);
+}
+
+function addChunk(stream, state, chunk, addToFront) {
+  if (state.flowing && state.length === 0 && !state.sync) {
+    stream.emit('data', chunk);
+    stream.read(0);
+  } else {
+    // update the buffer info.
+    state.length += state.objectMode ? 1 : chunk.length;
+    if (addToFront) state.buffer.unshift(chunk);else state.buffer.push(chunk);
+
+    if (state.needReadable) emitReadable(stream);
+  }
+  maybeReadMore(stream, state);
+}
+
+function chunkInvalid(state, chunk) {
+  var er;
+  if (!_isUint8Array(chunk) && typeof chunk !== 'string' && chunk !== undefined && !state.objectMode) {
+    er = new TypeError('Invalid non-string/buffer chunk');
+  }
+  return er;
+}
+
+// if it's past the high water mark, we can push in some more.
+// Also, if we have no data yet, we can stand some
+// more bytes.  This is to work around cases where hwm=0,
+// such as the repl.  Also, if the push() triggered a
+// readable event, and the user called read(largeNumber) such that
+// needReadable was set, then we ought to push more, so that another
+// 'readable' event will be triggered.
+function needMoreData(state) {
+  return !state.ended && (state.needReadable || state.length < state.highWaterMark || state.length === 0);
+}
+
+Readable.prototype.isPaused = function () {
+  return this._readableState.flowing === false;
+};
+
+// backwards compatibility.
+Readable.prototype.setEncoding = function (enc) {
+  if (!StringDecoder) StringDecoder = __webpack_require__(/*! string_decoder/ */ "./node_modules/string_decoder/lib/string_decoder.js").StringDecoder;
+  this._readableState.decoder = new StringDecoder(enc);
+  this._readableState.encoding = enc;
+  return this;
+};
+
+// Don't raise the hwm > 8MB
+var MAX_HWM = 0x800000;
+function computeNewHighWaterMark(n) {
+  if (n >= MAX_HWM) {
+    n = MAX_HWM;
+  } else {
+    // Get the next highest power of 2 to prevent increasing hwm excessively in
+    // tiny amounts
+    n--;
+    n |= n >>> 1;
+    n |= n >>> 2;
+    n |= n >>> 4;
+    n |= n >>> 8;
+    n |= n >>> 16;
+    n++;
+  }
+  return n;
+}
+
+// This function is designed to be inlinable, so please take care when making
+// changes to the function body.
+function howMuchToRead(n, state) {
+  if (n <= 0 || state.length === 0 && state.ended) return 0;
+  if (state.objectMode) return 1;
+  if (n !== n) {
+    // Only flow one buffer at a time
+    if (state.flowing && state.length) return state.buffer.head.data.length;else return state.length;
+  }
+  // If we're asking for more than the current hwm, then raise the hwm.
+  if (n > state.highWaterMark) state.highWaterMark = computeNewHighWaterMark(n);
+  if (n <= state.length) return n;
+  // Don't have enough
+  if (!state.ended) {
+    state.needReadable = true;
+    return 0;
+  }
+  return state.length;
+}
+
+// you can override either this method, or the async _read(n) below.
+Readable.prototype.read = function (n) {
+  debug('read', n);
+  n = parseInt(n, 10);
+  var state = this._readableState;
+  var nOrig = n;
+
+  if (n !== 0) state.emittedReadable = false;
+
+  // if we're doing read(0) to trigger a readable event, but we
+  // already have a bunch of data in the buffer, then just trigger
+  // the 'readable' event and move on.
+  if (n === 0 && state.needReadable && (state.length >= state.highWaterMark || state.ended)) {
+    debug('read: emitReadable', state.length, state.ended);
+    if (state.length === 0 && state.ended) endReadable(this);else emitReadable(this);
+    return null;
+  }
+
+  n = howMuchToRead(n, state);
+
+  // if we've ended, and we're now clear, then finish it up.
+  if (n === 0 && state.ended) {
+    if (state.length === 0) endReadable(this);
+    return null;
+  }
+
+  // All the actual chunk generation logic needs to be
+  // *below* the call to _read.  The reason is that in certain
+  // synthetic stream cases, such as passthrough streams, _read
+  // may be a completely synchronous operation which may change
+  // the state of the read buffer, providing enough data when
+  // before there was *not* enough.
+  //
+  // So, the steps are:
+  // 1. Figure out what the state of things will be after we do
+  // a read from the buffer.
+  //
+  // 2. If that resulting state will trigger a _read, then call _read.
+  // Note that this may be asynchronous, or synchronous.  Yes, it is
+  // deeply ugly to write APIs this way, but that still doesn't mean
+  // that the Readable class should behave improperly, as streams are
+  // designed to be sync/async agnostic.
+  // Take note if the _read call is sync or async (ie, if the read call
+  // has returned yet), so that we know whether or not it's safe to emit
+  // 'readable' etc.
+  //
+  // 3. Actually pull the requested chunks out of the buffer and return.
+
+  // if we need a readable event, then we need to do some reading.
+  var doRead = state.needReadable;
+  debug('need readable', doRead);
+
+  // if we currently have less than the highWaterMark, then also read some
+  if (state.length === 0 || state.length - n < state.highWaterMark) {
+    doRead = true;
+    debug('length less than watermark', doRead);
+  }
+
+  // however, if we've ended, then there's no point, and if we're already
+  // reading, then it's unnecessary.
+  if (state.ended || state.reading) {
+    doRead = false;
+    debug('reading or ended', doRead);
+  } else if (doRead) {
+    debug('do read');
+    state.reading = true;
+    state.sync = true;
+    // if the length is currently zero, then we *need* a readable event.
+    if (state.length === 0) state.needReadable = true;
+    // call internal read method
+    this._read(state.highWaterMark);
+    state.sync = false;
+    // If _read pushed data synchronously, then `reading` will be false,
+    // and we need to re-evaluate how much data we can return to the user.
+    if (!state.reading) n = howMuchToRead(nOrig, state);
+  }
+
+  var ret;
+  if (n > 0) ret = fromList(n, state);else ret = null;
+
+  if (ret === null) {
+    state.needReadable = true;
+    n = 0;
+  } else {
+    state.length -= n;
+  }
+
+  if (state.length === 0) {
+    // If we have nothing in the buffer, then we want to know
+    // as soon as we *do* get something into the buffer.
+    if (!state.ended) state.needReadable = true;
+
+    // If we tried to read() past the EOF, then emit end on the next tick.
+    if (nOrig !== n && state.ended) endReadable(this);
+  }
+
+  if (ret !== null) this.emit('data', ret);
+
+  return ret;
+};
+
+function onEofChunk(stream, state) {
+  if (state.ended) return;
+  if (state.decoder) {
+    var chunk = state.decoder.end();
+    if (chunk && chunk.length) {
+      state.buffer.push(chunk);
+      state.length += state.objectMode ? 1 : chunk.length;
+    }
+  }
+  state.ended = true;
+
+  // emit 'readable' now to make sure it gets picked up.
+  emitReadable(stream);
+}
+
+// Don't emit readable right away in sync mode, because this can trigger
+// another read() call => stack overflow.  This way, it might trigger
+// a nextTick recursion warning, but that's not so bad.
+function emitReadable(stream) {
+  var state = stream._readableState;
+  state.needReadable = false;
+  if (!state.emittedReadable) {
+    debug('emitReadable', state.flowing);
+    state.emittedReadable = true;
+    if (state.sync) pna.nextTick(emitReadable_, stream);else emitReadable_(stream);
+  }
+}
+
+function emitReadable_(stream) {
+  debug('emit readable');
+  stream.emit('readable');
+  flow(stream);
+}
+
+// at this point, the user has presumably seen the 'readable' event,
+// and called read() to consume some data.  that may have triggered
+// in turn another _read(n) call, in which case reading = true if
+// it's in progress.
+// However, if we're not ended, or reading, and the length < hwm,
+// then go ahead and try to read some more preemptively.
+function maybeReadMore(stream, state) {
+  if (!state.readingMore) {
+    state.readingMore = true;
+    pna.nextTick(maybeReadMore_, stream, state);
+  }
+}
+
+function maybeReadMore_(stream, state) {
+  var len = state.length;
+  while (!state.reading && !state.flowing && !state.ended && state.length < state.highWaterMark) {
+    debug('maybeReadMore read 0');
+    stream.read(0);
+    if (len === state.length)
+      // didn't get any data, stop spinning.
+      break;else len = state.length;
+  }
+  state.readingMore = false;
+}
+
+// abstract method.  to be overridden in specific implementation classes.
+// call cb(er, data) where data is <= n in length.
+// for virtual (non-string, non-buffer) streams, "length" is somewhat
+// arbitrary, and perhaps not very meaningful.
+Readable.prototype._read = function (n) {
+  this.emit('error', new Error('_read() is not implemented'));
+};
+
+Readable.prototype.pipe = function (dest, pipeOpts) {
+  var src = this;
+  var state = this._readableState;
+
+  switch (state.pipesCount) {
+    case 0:
+      state.pipes = dest;
+      break;
+    case 1:
+      state.pipes = [state.pipes, dest];
+      break;
+    default:
+      state.pipes.push(dest);
+      break;
+  }
+  state.pipesCount += 1;
+  debug('pipe count=%d opts=%j', state.pipesCount, pipeOpts);
+
+  var doEnd = (!pipeOpts || pipeOpts.end !== false) && dest !== process.stdout && dest !== process.stderr;
+
+  var endFn = doEnd ? onend : unpipe;
+  if (state.endEmitted) pna.nextTick(endFn);else src.once('end', endFn);
+
+  dest.on('unpipe', onunpipe);
+  function onunpipe(readable, unpipeInfo) {
+    debug('onunpipe');
+    if (readable === src) {
+      if (unpipeInfo && unpipeInfo.hasUnpiped === false) {
+        unpipeInfo.hasUnpiped = true;
+        cleanup();
+      }
+    }
+  }
+
+  function onend() {
+    debug('onend');
+    dest.end();
+  }
+
+  // when the dest drains, it reduces the awaitDrain counter
+  // on the source.  This would be more elegant with a .once()
+  // handler in flow(), but adding and removing repeatedly is
+  // too slow.
+  var ondrain = pipeOnDrain(src);
+  dest.on('drain', ondrain);
+
+  var cleanedUp = false;
+  function cleanup() {
+    debug('cleanup');
+    // cleanup event handlers once the pipe is broken
+    dest.removeListener('close', onclose);
+    dest.removeListener('finish', onfinish);
+    dest.removeListener('drain', ondrain);
+    dest.removeListener('error', onerror);
+    dest.removeListener('unpipe', onunpipe);
+    src.removeListener('end', onend);
+    src.removeListener('end', unpipe);
+    src.removeListener('data', ondata);
+
+    cleanedUp = true;
+
+    // if the reader is waiting for a drain event from this
+    // specific writer, then it would cause it to never start
+    // flowing again.
+    // So, if this is awaiting a drain, then we just call it now.
+    // If we don't know, then assume that we are waiting for one.
+    if (state.awaitDrain && (!dest._writableState || dest._writableState.needDrain)) ondrain();
+  }
+
+  // If the user pushes more data while we're writing to dest then we'll end up
+  // in ondata again. However, we only want to increase awaitDrain once because
+  // dest will only emit one 'drain' event for the multiple writes.
+  // => Introduce a guard on increasing awaitDrain.
+  var increasedAwaitDrain = false;
+  src.on('data', ondata);
+  function ondata(chunk) {
+    debug('ondata');
+    increasedAwaitDrain = false;
+    var ret = dest.write(chunk);
+    if (false === ret && !increasedAwaitDrain) {
+      // If the user unpiped during `dest.write()`, it is possible
+      // to get stuck in a permanently paused state if that write
+      // also returned false.
+      // => Check whether `dest` is still a piping destination.
+      if ((state.pipesCount === 1 && state.pipes === dest || state.pipesCount > 1 && indexOf(state.pipes, dest) !== -1) && !cleanedUp) {
+        debug('false write response, pause', src._readableState.awaitDrain);
+        src._readableState.awaitDrain++;
+        increasedAwaitDrain = true;
+      }
+      src.pause();
+    }
+  }
+
+  // if the dest has an error, then stop piping into it.
+  // however, don't suppress the throwing behavior for this.
+  function onerror(er) {
+    debug('onerror', er);
+    unpipe();
+    dest.removeListener('error', onerror);
+    if (EElistenerCount(dest, 'error') === 0) dest.emit('error', er);
+  }
+
+  // Make sure our error handler is attached before userland ones.
+  prependListener(dest, 'error', onerror);
+
+  // Both close and finish should trigger unpipe, but only once.
+  function onclose() {
+    dest.removeListener('finish', onfinish);
+    unpipe();
+  }
+  dest.once('close', onclose);
+  function onfinish() {
+    debug('onfinish');
+    dest.removeListener('close', onclose);
+    unpipe();
+  }
+  dest.once('finish', onfinish);
+
+  function unpipe() {
+    debug('unpipe');
+    src.unpipe(dest);
+  }
+
+  // tell the dest that it's being piped to
+  dest.emit('pipe', src);
+
+  // start the flow if it hasn't been started already.
+  if (!state.flowing) {
+    debug('pipe resume');
+    src.resume();
+  }
+
+  return dest;
+};
+
+function pipeOnDrain(src) {
+  return function () {
+    var state = src._readableState;
+    debug('pipeOnDrain', state.awaitDrain);
+    if (state.awaitDrain) state.awaitDrain--;
+    if (state.awaitDrain === 0 && EElistenerCount(src, 'data')) {
+      state.flowing = true;
+      flow(src);
+    }
+  };
+}
+
+Readable.prototype.unpipe = function (dest) {
+  var state = this._readableState;
+  var unpipeInfo = { hasUnpiped: false };
+
+  // if we're not piping anywhere, then do nothing.
+  if (state.pipesCount === 0) return this;
+
+  // just one destination.  most common case.
+  if (state.pipesCount === 1) {
+    // passed in one, but it's not the right one.
+    if (dest && dest !== state.pipes) return this;
+
+    if (!dest) dest = state.pipes;
+
+    // got a match.
+    state.pipes = null;
+    state.pipesCount = 0;
+    state.flowing = false;
+    if (dest) dest.emit('unpipe', this, unpipeInfo);
+    return this;
+  }
+
+  // slow case. multiple pipe destinations.
+
+  if (!dest) {
+    // remove all.
+    var dests = state.pipes;
+    var len = state.pipesCount;
+    state.pipes = null;
+    state.pipesCount = 0;
+    state.flowing = false;
+
+    for (var i = 0; i < len; i++) {
+      dests[i].emit('unpipe', this, unpipeInfo);
+    }return this;
+  }
+
+  // try to find the right one.
+  var index = indexOf(state.pipes, dest);
+  if (index === -1) return this;
+
+  state.pipes.splice(index, 1);
+  state.pipesCount -= 1;
+  if (state.pipesCount === 1) state.pipes = state.pipes[0];
+
+  dest.emit('unpipe', this, unpipeInfo);
+
+  return this;
+};
+
+// set up data events if they are asked for
+// Ensure readable listeners eventually get something
+Readable.prototype.on = function (ev, fn) {
+  var res = Stream.prototype.on.call(this, ev, fn);
+
+  if (ev === 'data') {
+    // Start flowing on next tick if stream isn't explicitly paused
+    if (this._readableState.flowing !== false) this.resume();
+  } else if (ev === 'readable') {
+    var state = this._readableState;
+    if (!state.endEmitted && !state.readableListening) {
+      state.readableListening = state.needReadable = true;
+      state.emittedReadable = false;
+      if (!state.reading) {
+        pna.nextTick(nReadingNextTick, this);
+      } else if (state.length) {
+        emitReadable(this);
+      }
+    }
+  }
+
+  return res;
+};
+Readable.prototype.addListener = Readable.prototype.on;
+
+function nReadingNextTick(self) {
+  debug('readable nexttick read 0');
+  self.read(0);
+}
+
+// pause() and resume() are remnants of the legacy readable stream API
+// If the user uses them, then switch into old mode.
+Readable.prototype.resume = function () {
+  var state = this._readableState;
+  if (!state.flowing) {
+    debug('resume');
+    state.flowing = true;
+    resume(this, state);
+  }
+  return this;
+};
+
+function resume(stream, state) {
+  if (!state.resumeScheduled) {
+    state.resumeScheduled = true;
+    pna.nextTick(resume_, stream, state);
+  }
+}
+
+function resume_(stream, state) {
+  if (!state.reading) {
+    debug('resume read 0');
+    stream.read(0);
+  }
+
+  state.resumeScheduled = false;
+  state.awaitDrain = 0;
+  stream.emit('resume');
+  flow(stream);
+  if (state.flowing && !state.reading) stream.read(0);
+}
+
+Readable.prototype.pause = function () {
+  debug('call pause flowing=%j', this._readableState.flowing);
+  if (false !== this._readableState.flowing) {
+    debug('pause');
+    this._readableState.flowing = false;
+    this.emit('pause');
+  }
+  return this;
+};
+
+function flow(stream) {
+  var state = stream._readableState;
+  debug('flow', state.flowing);
+  while (state.flowing && stream.read() !== null) {}
+}
+
+// wrap an old-style stream as the async data source.
+// This is *not* part of the readable stream interface.
+// It is an ugly unfortunate mess of history.
+Readable.prototype.wrap = function (stream) {
+  var _this = this;
+
+  var state = this._readableState;
+  var paused = false;
+
+  stream.on('end', function () {
+    debug('wrapped end');
+    if (state.decoder && !state.ended) {
+      var chunk = state.decoder.end();
+      if (chunk && chunk.length) _this.push(chunk);
+    }
+
+    _this.push(null);
+  });
+
+  stream.on('data', function (chunk) {
+    debug('wrapped data');
+    if (state.decoder) chunk = state.decoder.write(chunk);
+
+    // don't skip over falsy values in objectMode
+    if (state.objectMode && (chunk === null || chunk === undefined)) return;else if (!state.objectMode && (!chunk || !chunk.length)) return;
+
+    var ret = _this.push(chunk);
+    if (!ret) {
+      paused = true;
+      stream.pause();
+    }
+  });
+
+  // proxy all the other methods.
+  // important when wrapping filters and duplexes.
+  for (var i in stream) {
+    if (this[i] === undefined && typeof stream[i] === 'function') {
+      this[i] = function (method) {
+        return function () {
+          return stream[method].apply(stream, arguments);
+        };
+      }(i);
+    }
+  }
+
+  // proxy certain important events.
+  for (var n = 0; n < kProxyEvents.length; n++) {
+    stream.on(kProxyEvents[n], this.emit.bind(this, kProxyEvents[n]));
+  }
+
+  // when we try to consume some more bytes, simply unpause the
+  // underlying stream.
+  this._read = function (n) {
+    debug('wrapped _read', n);
+    if (paused) {
+      paused = false;
+      stream.resume();
+    }
+  };
+
+  return this;
+};
+
+Object.defineProperty(Readable.prototype, 'readableHighWaterMark', {
+  // making it explicit this property is not enumerable
+  // because otherwise some prototype manipulation in
+  // userland will fail
+  enumerable: false,
+  get: function () {
+    return this._readableState.highWaterMark;
+  }
+});
+
+// exposed for testing purposes only.
+Readable._fromList = fromList;
+
+// Pluck off n bytes from an array of buffers.
+// Length is the combined lengths of all the buffers in the list.
+// This function is designed to be inlinable, so please take care when making
+// changes to the function body.
+function fromList(n, state) {
+  // nothing buffered
+  if (state.length === 0) return null;
+
+  var ret;
+  if (state.objectMode) ret = state.buffer.shift();else if (!n || n >= state.length) {
+    // read it all, truncate the list
+    if (state.decoder) ret = state.buffer.join('');else if (state.buffer.length === 1) ret = state.buffer.head.data;else ret = state.buffer.concat(state.length);
+    state.buffer.clear();
+  } else {
+    // read part of list
+    ret = fromListPartial(n, state.buffer, state.decoder);
+  }
+
+  return ret;
+}
+
+// Extracts only enough buffered data to satisfy the amount requested.
+// This function is designed to be inlinable, so please take care when making
+// changes to the function body.
+function fromListPartial(n, list, hasStrings) {
+  var ret;
+  if (n < list.head.data.length) {
+    // slice is the same for buffers and strings
+    ret = list.head.data.slice(0, n);
+    list.head.data = list.head.data.slice(n);
+  } else if (n === list.head.data.length) {
+    // first chunk is a perfect match
+    ret = list.shift();
+  } else {
+    // result spans more than one buffer
+    ret = hasStrings ? copyFromBufferString(n, list) : copyFromBuffer(n, list);
+  }
+  return ret;
+}
+
+// Copies a specified amount of characters from the list of buffered data
+// chunks.
+// This function is designed to be inlinable, so please take care when making
+// changes to the function body.
+function copyFromBufferString(n, list) {
+  var p = list.head;
+  var c = 1;
+  var ret = p.data;
+  n -= ret.length;
+  while (p = p.next) {
+    var str = p.data;
+    var nb = n > str.length ? str.length : n;
+    if (nb === str.length) ret += str;else ret += str.slice(0, n);
+    n -= nb;
+    if (n === 0) {
+      if (nb === str.length) {
+        ++c;
+        if (p.next) list.head = p.next;else list.head = list.tail = null;
+      } else {
+        list.head = p;
+        p.data = str.slice(nb);
+      }
+      break;
+    }
+    ++c;
+  }
+  list.length -= c;
+  return ret;
+}
+
+// Copies a specified amount of bytes from the list of buffered data chunks.
+// This function is designed to be inlinable, so please take care when making
+// changes to the function body.
+function copyFromBuffer(n, list) {
+  var ret = Buffer.allocUnsafe(n);
+  var p = list.head;
+  var c = 1;
+  p.data.copy(ret);
+  n -= p.data.length;
+  while (p = p.next) {
+    var buf = p.data;
+    var nb = n > buf.length ? buf.length : n;
+    buf.copy(ret, ret.length - n, 0, nb);
+    n -= nb;
+    if (n === 0) {
+      if (nb === buf.length) {
+        ++c;
+        if (p.next) list.head = p.next;else list.head = list.tail = null;
+      } else {
+        list.head = p;
+        p.data = buf.slice(nb);
+      }
+      break;
+    }
+    ++c;
+  }
+  list.length -= c;
+  return ret;
+}
+
+function endReadable(stream) {
+  var state = stream._readableState;
+
+  // If we get here before consuming all the bytes, then that is a
+  // bug in node.  Should never happen.
+  if (state.length > 0) throw new Error('"endReadable()" called on non-empty stream');
+
+  if (!state.endEmitted) {
+    state.ended = true;
+    pna.nextTick(endReadableNT, state, stream);
+  }
+}
+
+function endReadableNT(state, stream) {
+  // Check that we didn't get one last unshift.
+  if (!state.endEmitted && state.length === 0) {
+    state.endEmitted = true;
+    stream.readable = false;
+    stream.emit('end');
+  }
+}
+
+function indexOf(xs, x) {
+  for (var i = 0, l = xs.length; i < l; i++) {
+    if (xs[i] === x) return i;
+  }
+  return -1;
+}
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../../webpack/buildin/global.js */ "./node_modules/webpack/buildin/global.js"), __webpack_require__(/*! ./../../process/browser.js */ "./node_modules/process/browser.js")))
+
+/***/ }),
+
+/***/ "./node_modules/readable-stream/lib/_stream_transform.js":
+/*!***************************************************************!*\
+  !*** ./node_modules/readable-stream/lib/_stream_transform.js ***!
+  \***************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+// Copyright Joyent, Inc. and other Node contributors.
+//
+// Permission is hereby granted, free of charge, to any person obtaining a
+// copy of this software and associated documentation files (the
+// "Software"), to deal in the Software without restriction, including
+// without limitation the rights to use, copy, modify, merge, publish,
+// distribute, sublicense, and/or sell copies of the Software, and to permit
+// persons to whom the Software is furnished to do so, subject to the
+// following conditions:
+//
+// The above copyright notice and this permission notice shall be included
+// in all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+// OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN
+// NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+// DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+// OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
+// USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+// a transform stream is a readable/writable stream where you do
+// something with the data.  Sometimes it's called a "filter",
+// but that's not a great name for it, since that implies a thing where
+// some bits pass through, and others are simply ignored.  (That would
+// be a valid example of a transform, of course.)
+//
+// While the output is causally related to the input, it's not a
+// necessarily symmetric or synchronous transformation.  For example,
+// a zlib stream might take multiple plain-text writes(), and then
+// emit a single compressed chunk some time in the future.
+//
+// Here's how this works:
+//
+// The Transform stream has all the aspects of the readable and writable
+// stream classes.  When you write(chunk), that calls _write(chunk,cb)
+// internally, and returns false if there's a lot of pending writes
+// buffered up.  When you call read(), that calls _read(n) until
+// there's enough pending readable data buffered up.
+//
+// In a transform stream, the written data is placed in a buffer.  When
+// _read(n) is called, it transforms the queued up data, calling the
+// buffered _write cb's as it consumes chunks.  If consuming a single
+// written chunk would result in multiple output chunks, then the first
+// outputted bit calls the readcb, and subsequent chunks just go into
+// the read buffer, and will cause it to emit 'readable' if necessary.
+//
+// This way, back-pressure is actually determined by the reading side,
+// since _read has to be called to start processing a new chunk.  However,
+// a pathological inflate type of transform can cause excessive buffering
+// here.  For example, imagine a stream where every byte of input is
+// interpreted as an integer from 0-255, and then results in that many
+// bytes of output.  Writing the 4 bytes {ff,ff,ff,ff} would result in
+// 1kb of data being output.  In this case, you could write a very small
+// amount of input, and end up with a very large amount of output.  In
+// such a pathological inflating mechanism, there'd be no way to tell
+// the system to stop doing the transform.  A single 4MB write could
+// cause the system to run out of memory.
+//
+// However, even in such a pathological case, only a single written chunk
+// would be consumed, and then the rest would wait (un-transformed) until
+// the results of the previous transformed chunk were consumed.
+
+
+
+module.exports = Transform;
+
+var Duplex = __webpack_require__(/*! ./_stream_duplex */ "./node_modules/readable-stream/lib/_stream_duplex.js");
+
+/*<replacement>*/
+var util = Object.create(__webpack_require__(/*! core-util-is */ "./node_modules/core-util-is/lib/util.js"));
+util.inherits = __webpack_require__(/*! inherits */ "./node_modules/inherits/inherits_browser.js");
+/*</replacement>*/
+
+util.inherits(Transform, Duplex);
+
+function afterTransform(er, data) {
+  var ts = this._transformState;
+  ts.transforming = false;
+
+  var cb = ts.writecb;
+
+  if (!cb) {
+    return this.emit('error', new Error('write callback called multiple times'));
+  }
+
+  ts.writechunk = null;
+  ts.writecb = null;
+
+  if (data != null) // single equals check for both `null` and `undefined`
+    this.push(data);
+
+  cb(er);
+
+  var rs = this._readableState;
+  rs.reading = false;
+  if (rs.needReadable || rs.length < rs.highWaterMark) {
+    this._read(rs.highWaterMark);
+  }
+}
+
+function Transform(options) {
+  if (!(this instanceof Transform)) return new Transform(options);
+
+  Duplex.call(this, options);
+
+  this._transformState = {
+    afterTransform: afterTransform.bind(this),
+    needTransform: false,
+    transforming: false,
+    writecb: null,
+    writechunk: null,
+    writeencoding: null
+  };
+
+  // start out asking for a readable event once data is transformed.
+  this._readableState.needReadable = true;
+
+  // we have implemented the _read method, and done the other things
+  // that Readable wants before the first _read call, so unset the
+  // sync guard flag.
+  this._readableState.sync = false;
+
+  if (options) {
+    if (typeof options.transform === 'function') this._transform = options.transform;
+
+    if (typeof options.flush === 'function') this._flush = options.flush;
+  }
+
+  // When the writable side finishes, then flush out anything remaining.
+  this.on('prefinish', prefinish);
+}
+
+function prefinish() {
+  var _this = this;
+
+  if (typeof this._flush === 'function') {
+    this._flush(function (er, data) {
+      done(_this, er, data);
+    });
+  } else {
+    done(this, null, null);
+  }
+}
+
+Transform.prototype.push = function (chunk, encoding) {
+  this._transformState.needTransform = false;
+  return Duplex.prototype.push.call(this, chunk, encoding);
+};
+
+// This is the part where you do stuff!
+// override this function in implementation classes.
+// 'chunk' is an input chunk.
+//
+// Call `push(newChunk)` to pass along transformed output
+// to the readable side.  You may call 'push' zero or more times.
+//
+// Call `cb(err)` when you are done with this chunk.  If you pass
+// an error, then that'll put the hurt on the whole operation.  If you
+// never call cb(), then you'll never get another chunk.
+Transform.prototype._transform = function (chunk, encoding, cb) {
+  throw new Error('_transform() is not implemented');
+};
+
+Transform.prototype._write = function (chunk, encoding, cb) {
+  var ts = this._transformState;
+  ts.writecb = cb;
+  ts.writechunk = chunk;
+  ts.writeencoding = encoding;
+  if (!ts.transforming) {
+    var rs = this._readableState;
+    if (ts.needTransform || rs.needReadable || rs.length < rs.highWaterMark) this._read(rs.highWaterMark);
+  }
+};
+
+// Doesn't matter what the args are here.
+// _transform does all the work.
+// That we got here means that the readable side wants more data.
+Transform.prototype._read = function (n) {
+  var ts = this._transformState;
+
+  if (ts.writechunk !== null && ts.writecb && !ts.transforming) {
+    ts.transforming = true;
+    this._transform(ts.writechunk, ts.writeencoding, ts.afterTransform);
+  } else {
+    // mark that we need a transform, so that any data that comes in
+    // will get processed, now that we've asked for it.
+    ts.needTransform = true;
+  }
+};
+
+Transform.prototype._destroy = function (err, cb) {
+  var _this2 = this;
+
+  Duplex.prototype._destroy.call(this, err, function (err2) {
+    cb(err2);
+    _this2.emit('close');
+  });
+};
+
+function done(stream, er, data) {
+  if (er) return stream.emit('error', er);
+
+  if (data != null) // single equals check for both `null` and `undefined`
+    stream.push(data);
+
+  // if there's nothing in the write buffer, then that means
+  // that nothing more will ever be provided
+  if (stream._writableState.length) throw new Error('Calling transform done when ws.length != 0');
+
+  if (stream._transformState.transforming) throw new Error('Calling transform done when still transforming');
+
+  return stream.push(null);
+}
+
+/***/ }),
+
+/***/ "./node_modules/readable-stream/lib/_stream_writable.js":
+/*!**************************************************************!*\
+  !*** ./node_modules/readable-stream/lib/_stream_writable.js ***!
+  \**************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/* WEBPACK VAR INJECTION */(function(process, setImmediate, global) {// Copyright Joyent, Inc. and other Node contributors.
+//
+// Permission is hereby granted, free of charge, to any person obtaining a
+// copy of this software and associated documentation files (the
+// "Software"), to deal in the Software without restriction, including
+// without limitation the rights to use, copy, modify, merge, publish,
+// distribute, sublicense, and/or sell copies of the Software, and to permit
+// persons to whom the Software is furnished to do so, subject to the
+// following conditions:
+//
+// The above copyright notice and this permission notice shall be included
+// in all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+// OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN
+// NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+// DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+// OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
+// USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+// A bit simpler than readable streams.
+// Implement an async ._write(chunk, encoding, cb), and it'll handle all
+// the drain event emission and buffering.
+
+
+
+/*<replacement>*/
+
+var pna = __webpack_require__(/*! process-nextick-args */ "./node_modules/process-nextick-args/index.js");
+/*</replacement>*/
+
+module.exports = Writable;
+
+/* <replacement> */
+function WriteReq(chunk, encoding, cb) {
+  this.chunk = chunk;
+  this.encoding = encoding;
+  this.callback = cb;
+  this.next = null;
+}
+
+// It seems a linked list but it is not
+// there will be only 2 of these for each stream
+function CorkedRequest(state) {
+  var _this = this;
+
+  this.next = null;
+  this.entry = null;
+  this.finish = function () {
+    onCorkedFinish(_this, state);
+  };
+}
+/* </replacement> */
+
+/*<replacement>*/
+var asyncWrite = !process.browser && ['v0.10', 'v0.9.'].indexOf(process.version.slice(0, 5)) > -1 ? setImmediate : pna.nextTick;
+/*</replacement>*/
+
+/*<replacement>*/
+var Duplex;
+/*</replacement>*/
+
+Writable.WritableState = WritableState;
+
+/*<replacement>*/
+var util = Object.create(__webpack_require__(/*! core-util-is */ "./node_modules/core-util-is/lib/util.js"));
+util.inherits = __webpack_require__(/*! inherits */ "./node_modules/inherits/inherits_browser.js");
+/*</replacement>*/
+
+/*<replacement>*/
+var internalUtil = {
+  deprecate: __webpack_require__(/*! util-deprecate */ "./node_modules/util-deprecate/browser.js")
+};
+/*</replacement>*/
+
+/*<replacement>*/
+var Stream = __webpack_require__(/*! ./internal/streams/stream */ "./node_modules/readable-stream/lib/internal/streams/stream-browser.js");
+/*</replacement>*/
+
+/*<replacement>*/
+
+var Buffer = __webpack_require__(/*! safe-buffer */ "./node_modules/safe-buffer/index.js").Buffer;
+var OurUint8Array = global.Uint8Array || function () {};
+function _uint8ArrayToBuffer(chunk) {
+  return Buffer.from(chunk);
+}
+function _isUint8Array(obj) {
+  return Buffer.isBuffer(obj) || obj instanceof OurUint8Array;
+}
+
+/*</replacement>*/
+
+var destroyImpl = __webpack_require__(/*! ./internal/streams/destroy */ "./node_modules/readable-stream/lib/internal/streams/destroy.js");
+
+util.inherits(Writable, Stream);
+
+function nop() {}
+
+function WritableState(options, stream) {
+  Duplex = Duplex || __webpack_require__(/*! ./_stream_duplex */ "./node_modules/readable-stream/lib/_stream_duplex.js");
+
+  options = options || {};
+
+  // Duplex streams are both readable and writable, but share
+  // the same options object.
+  // However, some cases require setting options to different
+  // values for the readable and the writable sides of the duplex stream.
+  // These options can be provided separately as readableXXX and writableXXX.
+  var isDuplex = stream instanceof Duplex;
+
+  // object stream flag to indicate whether or not this stream
+  // contains buffers or objects.
+  this.objectMode = !!options.objectMode;
+
+  if (isDuplex) this.objectMode = this.objectMode || !!options.writableObjectMode;
+
+  // the point at which write() starts returning false
+  // Note: 0 is a valid value, means that we always return false if
+  // the entire buffer is not flushed immediately on write()
+  var hwm = options.highWaterMark;
+  var writableHwm = options.writableHighWaterMark;
+  var defaultHwm = this.objectMode ? 16 : 16 * 1024;
+
+  if (hwm || hwm === 0) this.highWaterMark = hwm;else if (isDuplex && (writableHwm || writableHwm === 0)) this.highWaterMark = writableHwm;else this.highWaterMark = defaultHwm;
+
+  // cast to ints.
+  this.highWaterMark = Math.floor(this.highWaterMark);
+
+  // if _final has been called
+  this.finalCalled = false;
+
+  // drain event flag.
+  this.needDrain = false;
+  // at the start of calling end()
+  this.ending = false;
+  // when end() has been called, and returned
+  this.ended = false;
+  // when 'finish' is emitted
+  this.finished = false;
+
+  // has it been destroyed
+  this.destroyed = false;
+
+  // should we decode strings into buffers before passing to _write?
+  // this is here so that some node-core streams can optimize string
+  // handling at a lower level.
+  var noDecode = options.decodeStrings === false;
+  this.decodeStrings = !noDecode;
+
+  // Crypto is kind of old and crusty.  Historically, its default string
+  // encoding is 'binary' so we have to make this configurable.
+  // Everything else in the universe uses 'utf8', though.
+  this.defaultEncoding = options.defaultEncoding || 'utf8';
+
+  // not an actual buffer we keep track of, but a measurement
+  // of how much we're waiting to get pushed to some underlying
+  // socket or file.
+  this.length = 0;
+
+  // a flag to see when we're in the middle of a write.
+  this.writing = false;
+
+  // when true all writes will be buffered until .uncork() call
+  this.corked = 0;
+
+  // a flag to be able to tell if the onwrite cb is called immediately,
+  // or on a later tick.  We set this to true at first, because any
+  // actions that shouldn't happen until "later" should generally also
+  // not happen before the first write call.
+  this.sync = true;
+
+  // a flag to know if we're processing previously buffered items, which
+  // may call the _write() callback in the same tick, so that we don't
+  // end up in an overlapped onwrite situation.
+  this.bufferProcessing = false;
+
+  // the callback that's passed to _write(chunk,cb)
+  this.onwrite = function (er) {
+    onwrite(stream, er);
+  };
+
+  // the callback that the user supplies to write(chunk,encoding,cb)
+  this.writecb = null;
+
+  // the amount that is being written when _write is called.
+  this.writelen = 0;
+
+  this.bufferedRequest = null;
+  this.lastBufferedRequest = null;
+
+  // number of pending user-supplied write callbacks
+  // this must be 0 before 'finish' can be emitted
+  this.pendingcb = 0;
+
+  // emit prefinish if the only thing we're waiting for is _write cbs
+  // This is relevant for synchronous Transform streams
+  this.prefinished = false;
+
+  // True if the error was already emitted and should not be thrown again
+  this.errorEmitted = false;
+
+  // count buffered requests
+  this.bufferedRequestCount = 0;
+
+  // allocate the first CorkedRequest, there is always
+  // one allocated and free to use, and we maintain at most two
+  this.corkedRequestsFree = new CorkedRequest(this);
+}
+
+WritableState.prototype.getBuffer = function getBuffer() {
+  var current = this.bufferedRequest;
+  var out = [];
+  while (current) {
+    out.push(current);
+    current = current.next;
+  }
+  return out;
+};
+
+(function () {
+  try {
+    Object.defineProperty(WritableState.prototype, 'buffer', {
+      get: internalUtil.deprecate(function () {
+        return this.getBuffer();
+      }, '_writableState.buffer is deprecated. Use _writableState.getBuffer ' + 'instead.', 'DEP0003')
+    });
+  } catch (_) {}
+})();
+
+// Test _writableState for inheritance to account for Duplex streams,
+// whose prototype chain only points to Readable.
+var realHasInstance;
+if (typeof Symbol === 'function' && Symbol.hasInstance && typeof Function.prototype[Symbol.hasInstance] === 'function') {
+  realHasInstance = Function.prototype[Symbol.hasInstance];
+  Object.defineProperty(Writable, Symbol.hasInstance, {
+    value: function (object) {
+      if (realHasInstance.call(this, object)) return true;
+      if (this !== Writable) return false;
+
+      return object && object._writableState instanceof WritableState;
+    }
+  });
+} else {
+  realHasInstance = function (object) {
+    return object instanceof this;
+  };
+}
+
+function Writable(options) {
+  Duplex = Duplex || __webpack_require__(/*! ./_stream_duplex */ "./node_modules/readable-stream/lib/_stream_duplex.js");
+
+  // Writable ctor is applied to Duplexes, too.
+  // `realHasInstance` is necessary because using plain `instanceof`
+  // would return false, as no `_writableState` property is attached.
+
+  // Trying to use the custom `instanceof` for Writable here will also break the
+  // Node.js LazyTransform implementation, which has a non-trivial getter for
+  // `_writableState` that would lead to infinite recursion.
+  if (!realHasInstance.call(Writable, this) && !(this instanceof Duplex)) {
+    return new Writable(options);
+  }
+
+  this._writableState = new WritableState(options, this);
+
+  // legacy.
+  this.writable = true;
+
+  if (options) {
+    if (typeof options.write === 'function') this._write = options.write;
+
+    if (typeof options.writev === 'function') this._writev = options.writev;
+
+    if (typeof options.destroy === 'function') this._destroy = options.destroy;
+
+    if (typeof options.final === 'function') this._final = options.final;
+  }
+
+  Stream.call(this);
+}
+
+// Otherwise people can pipe Writable streams, which is just wrong.
+Writable.prototype.pipe = function () {
+  this.emit('error', new Error('Cannot pipe, not readable'));
+};
+
+function writeAfterEnd(stream, cb) {
+  var er = new Error('write after end');
+  // TODO: defer error events consistently everywhere, not just the cb
+  stream.emit('error', er);
+  pna.nextTick(cb, er);
+}
+
+// Checks that a user-supplied chunk is valid, especially for the particular
+// mode the stream is in. Currently this means that `null` is never accepted
+// and undefined/non-string values are only allowed in object mode.
+function validChunk(stream, state, chunk, cb) {
+  var valid = true;
+  var er = false;
+
+  if (chunk === null) {
+    er = new TypeError('May not write null values to stream');
+  } else if (typeof chunk !== 'string' && chunk !== undefined && !state.objectMode) {
+    er = new TypeError('Invalid non-string/buffer chunk');
+  }
+  if (er) {
+    stream.emit('error', er);
+    pna.nextTick(cb, er);
+    valid = false;
+  }
+  return valid;
+}
+
+Writable.prototype.write = function (chunk, encoding, cb) {
+  var state = this._writableState;
+  var ret = false;
+  var isBuf = !state.objectMode && _isUint8Array(chunk);
+
+  if (isBuf && !Buffer.isBuffer(chunk)) {
+    chunk = _uint8ArrayToBuffer(chunk);
+  }
+
+  if (typeof encoding === 'function') {
+    cb = encoding;
+    encoding = null;
+  }
+
+  if (isBuf) encoding = 'buffer';else if (!encoding) encoding = state.defaultEncoding;
+
+  if (typeof cb !== 'function') cb = nop;
+
+  if (state.ended) writeAfterEnd(this, cb);else if (isBuf || validChunk(this, state, chunk, cb)) {
+    state.pendingcb++;
+    ret = writeOrBuffer(this, state, isBuf, chunk, encoding, cb);
+  }
+
+  return ret;
+};
+
+Writable.prototype.cork = function () {
+  var state = this._writableState;
+
+  state.corked++;
+};
+
+Writable.prototype.uncork = function () {
+  var state = this._writableState;
+
+  if (state.corked) {
+    state.corked--;
+
+    if (!state.writing && !state.corked && !state.finished && !state.bufferProcessing && state.bufferedRequest) clearBuffer(this, state);
+  }
+};
+
+Writable.prototype.setDefaultEncoding = function setDefaultEncoding(encoding) {
+  // node::ParseEncoding() requires lower case.
+  if (typeof encoding === 'string') encoding = encoding.toLowerCase();
+  if (!(['hex', 'utf8', 'utf-8', 'ascii', 'binary', 'base64', 'ucs2', 'ucs-2', 'utf16le', 'utf-16le', 'raw'].indexOf((encoding + '').toLowerCase()) > -1)) throw new TypeError('Unknown encoding: ' + encoding);
+  this._writableState.defaultEncoding = encoding;
+  return this;
+};
+
+function decodeChunk(state, chunk, encoding) {
+  if (!state.objectMode && state.decodeStrings !== false && typeof chunk === 'string') {
+    chunk = Buffer.from(chunk, encoding);
+  }
+  return chunk;
+}
+
+Object.defineProperty(Writable.prototype, 'writableHighWaterMark', {
+  // making it explicit this property is not enumerable
+  // because otherwise some prototype manipulation in
+  // userland will fail
+  enumerable: false,
+  get: function () {
+    return this._writableState.highWaterMark;
+  }
+});
+
+// if we're already writing something, then just put this
+// in the queue, and wait our turn.  Otherwise, call _write
+// If we return false, then we need a drain event, so set that flag.
+function writeOrBuffer(stream, state, isBuf, chunk, encoding, cb) {
+  if (!isBuf) {
+    var newChunk = decodeChunk(state, chunk, encoding);
+    if (chunk !== newChunk) {
+      isBuf = true;
+      encoding = 'buffer';
+      chunk = newChunk;
+    }
+  }
+  var len = state.objectMode ? 1 : chunk.length;
+
+  state.length += len;
+
+  var ret = state.length < state.highWaterMark;
+  // we must ensure that previous needDrain will not be reset to false.
+  if (!ret) state.needDrain = true;
+
+  if (state.writing || state.corked) {
+    var last = state.lastBufferedRequest;
+    state.lastBufferedRequest = {
+      chunk: chunk,
+      encoding: encoding,
+      isBuf: isBuf,
+      callback: cb,
+      next: null
+    };
+    if (last) {
+      last.next = state.lastBufferedRequest;
+    } else {
+      state.bufferedRequest = state.lastBufferedRequest;
+    }
+    state.bufferedRequestCount += 1;
+  } else {
+    doWrite(stream, state, false, len, chunk, encoding, cb);
+  }
+
+  return ret;
+}
+
+function doWrite(stream, state, writev, len, chunk, encoding, cb) {
+  state.writelen = len;
+  state.writecb = cb;
+  state.writing = true;
+  state.sync = true;
+  if (writev) stream._writev(chunk, state.onwrite);else stream._write(chunk, encoding, state.onwrite);
+  state.sync = false;
+}
+
+function onwriteError(stream, state, sync, er, cb) {
+  --state.pendingcb;
+
+  if (sync) {
+    // defer the callback if we are being called synchronously
+    // to avoid piling up things on the stack
+    pna.nextTick(cb, er);
+    // this can emit finish, and it will always happen
+    // after error
+    pna.nextTick(finishMaybe, stream, state);
+    stream._writableState.errorEmitted = true;
+    stream.emit('error', er);
+  } else {
+    // the caller expect this to happen before if
+    // it is async
+    cb(er);
+    stream._writableState.errorEmitted = true;
+    stream.emit('error', er);
+    // this can emit finish, but finish must
+    // always follow error
+    finishMaybe(stream, state);
+  }
+}
+
+function onwriteStateUpdate(state) {
+  state.writing = false;
+  state.writecb = null;
+  state.length -= state.writelen;
+  state.writelen = 0;
+}
+
+function onwrite(stream, er) {
+  var state = stream._writableState;
+  var sync = state.sync;
+  var cb = state.writecb;
+
+  onwriteStateUpdate(state);
+
+  if (er) onwriteError(stream, state, sync, er, cb);else {
+    // Check if we're actually ready to finish, but don't emit yet
+    var finished = needFinish(state);
+
+    if (!finished && !state.corked && !state.bufferProcessing && state.bufferedRequest) {
+      clearBuffer(stream, state);
+    }
+
+    if (sync) {
+      /*<replacement>*/
+      asyncWrite(afterWrite, stream, state, finished, cb);
+      /*</replacement>*/
+    } else {
+      afterWrite(stream, state, finished, cb);
+    }
+  }
+}
+
+function afterWrite(stream, state, finished, cb) {
+  if (!finished) onwriteDrain(stream, state);
+  state.pendingcb--;
+  cb();
+  finishMaybe(stream, state);
+}
+
+// Must force callback to be called on nextTick, so that we don't
+// emit 'drain' before the write() consumer gets the 'false' return
+// value, and has a chance to attach a 'drain' listener.
+function onwriteDrain(stream, state) {
+  if (state.length === 0 && state.needDrain) {
+    state.needDrain = false;
+    stream.emit('drain');
+  }
+}
+
+// if there's something in the buffer waiting, then process it
+function clearBuffer(stream, state) {
+  state.bufferProcessing = true;
+  var entry = state.bufferedRequest;
+
+  if (stream._writev && entry && entry.next) {
+    // Fast case, write everything using _writev()
+    var l = state.bufferedRequestCount;
+    var buffer = new Array(l);
+    var holder = state.corkedRequestsFree;
+    holder.entry = entry;
+
+    var count = 0;
+    var allBuffers = true;
+    while (entry) {
+      buffer[count] = entry;
+      if (!entry.isBuf) allBuffers = false;
+      entry = entry.next;
+      count += 1;
+    }
+    buffer.allBuffers = allBuffers;
+
+    doWrite(stream, state, true, state.length, buffer, '', holder.finish);
+
+    // doWrite is almost always async, defer these to save a bit of time
+    // as the hot path ends with doWrite
+    state.pendingcb++;
+    state.lastBufferedRequest = null;
+    if (holder.next) {
+      state.corkedRequestsFree = holder.next;
+      holder.next = null;
+    } else {
+      state.corkedRequestsFree = new CorkedRequest(state);
+    }
+    state.bufferedRequestCount = 0;
+  } else {
+    // Slow case, write chunks one-by-one
+    while (entry) {
+      var chunk = entry.chunk;
+      var encoding = entry.encoding;
+      var cb = entry.callback;
+      var len = state.objectMode ? 1 : chunk.length;
+
+      doWrite(stream, state, false, len, chunk, encoding, cb);
+      entry = entry.next;
+      state.bufferedRequestCount--;
+      // if we didn't call the onwrite immediately, then
+      // it means that we need to wait until it does.
+      // also, that means that the chunk and cb are currently
+      // being processed, so move the buffer counter past them.
+      if (state.writing) {
+        break;
+      }
+    }
+
+    if (entry === null) state.lastBufferedRequest = null;
+  }
+
+  state.bufferedRequest = entry;
+  state.bufferProcessing = false;
+}
+
+Writable.prototype._write = function (chunk, encoding, cb) {
+  cb(new Error('_write() is not implemented'));
+};
+
+Writable.prototype._writev = null;
+
+Writable.prototype.end = function (chunk, encoding, cb) {
+  var state = this._writableState;
+
+  if (typeof chunk === 'function') {
+    cb = chunk;
+    chunk = null;
+    encoding = null;
+  } else if (typeof encoding === 'function') {
+    cb = encoding;
+    encoding = null;
+  }
+
+  if (chunk !== null && chunk !== undefined) this.write(chunk, encoding);
+
+  // .end() fully uncorks
+  if (state.corked) {
+    state.corked = 1;
+    this.uncork();
+  }
+
+  // ignore unnecessary end() calls.
+  if (!state.ending && !state.finished) endWritable(this, state, cb);
+};
+
+function needFinish(state) {
+  return state.ending && state.length === 0 && state.bufferedRequest === null && !state.finished && !state.writing;
+}
+function callFinal(stream, state) {
+  stream._final(function (err) {
+    state.pendingcb--;
+    if (err) {
+      stream.emit('error', err);
+    }
+    state.prefinished = true;
+    stream.emit('prefinish');
+    finishMaybe(stream, state);
+  });
+}
+function prefinish(stream, state) {
+  if (!state.prefinished && !state.finalCalled) {
+    if (typeof stream._final === 'function') {
+      state.pendingcb++;
+      state.finalCalled = true;
+      pna.nextTick(callFinal, stream, state);
+    } else {
+      state.prefinished = true;
+      stream.emit('prefinish');
+    }
+  }
+}
+
+function finishMaybe(stream, state) {
+  var need = needFinish(state);
+  if (need) {
+    prefinish(stream, state);
+    if (state.pendingcb === 0) {
+      state.finished = true;
+      stream.emit('finish');
+    }
+  }
+  return need;
+}
+
+function endWritable(stream, state, cb) {
+  state.ending = true;
+  finishMaybe(stream, state);
+  if (cb) {
+    if (state.finished) pna.nextTick(cb);else stream.once('finish', cb);
+  }
+  state.ended = true;
+  stream.writable = false;
+}
+
+function onCorkedFinish(corkReq, state, err) {
+  var entry = corkReq.entry;
+  corkReq.entry = null;
+  while (entry) {
+    var cb = entry.callback;
+    state.pendingcb--;
+    cb(err);
+    entry = entry.next;
+  }
+  if (state.corkedRequestsFree) {
+    state.corkedRequestsFree.next = corkReq;
+  } else {
+    state.corkedRequestsFree = corkReq;
+  }
+}
+
+Object.defineProperty(Writable.prototype, 'destroyed', {
+  get: function () {
+    if (this._writableState === undefined) {
+      return false;
+    }
+    return this._writableState.destroyed;
+  },
+  set: function (value) {
+    // we ignore the value if the stream
+    // has not been initialized yet
+    if (!this._writableState) {
+      return;
+    }
+
+    // backward compatibility, the user is explicitly
+    // managing destroyed
+    this._writableState.destroyed = value;
+  }
+});
+
+Writable.prototype.destroy = destroyImpl.destroy;
+Writable.prototype._undestroy = destroyImpl.undestroy;
+Writable.prototype._destroy = function (err, cb) {
+  this.end();
+  cb(err);
+};
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../../process/browser.js */ "./node_modules/process/browser.js"), __webpack_require__(/*! ./../../timers-browserify/main.js */ "./node_modules/timers-browserify/main.js").setImmediate, __webpack_require__(/*! ./../../webpack/buildin/global.js */ "./node_modules/webpack/buildin/global.js")))
+
+/***/ }),
+
+/***/ "./node_modules/readable-stream/lib/internal/streams/BufferList.js":
+/*!*************************************************************************!*\
+  !*** ./node_modules/readable-stream/lib/internal/streams/BufferList.js ***!
+  \*************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var Buffer = __webpack_require__(/*! safe-buffer */ "./node_modules/safe-buffer/index.js").Buffer;
+var util = __webpack_require__(/*! util */ 2);
+
+function copyBuffer(src, target, offset) {
+  src.copy(target, offset);
+}
+
+module.exports = function () {
+  function BufferList() {
+    _classCallCheck(this, BufferList);
+
+    this.head = null;
+    this.tail = null;
+    this.length = 0;
+  }
+
+  BufferList.prototype.push = function push(v) {
+    var entry = { data: v, next: null };
+    if (this.length > 0) this.tail.next = entry;else this.head = entry;
+    this.tail = entry;
+    ++this.length;
+  };
+
+  BufferList.prototype.unshift = function unshift(v) {
+    var entry = { data: v, next: this.head };
+    if (this.length === 0) this.tail = entry;
+    this.head = entry;
+    ++this.length;
+  };
+
+  BufferList.prototype.shift = function shift() {
+    if (this.length === 0) return;
+    var ret = this.head.data;
+    if (this.length === 1) this.head = this.tail = null;else this.head = this.head.next;
+    --this.length;
+    return ret;
+  };
+
+  BufferList.prototype.clear = function clear() {
+    this.head = this.tail = null;
+    this.length = 0;
+  };
+
+  BufferList.prototype.join = function join(s) {
+    if (this.length === 0) return '';
+    var p = this.head;
+    var ret = '' + p.data;
+    while (p = p.next) {
+      ret += s + p.data;
+    }return ret;
+  };
+
+  BufferList.prototype.concat = function concat(n) {
+    if (this.length === 0) return Buffer.alloc(0);
+    if (this.length === 1) return this.head.data;
+    var ret = Buffer.allocUnsafe(n >>> 0);
+    var p = this.head;
+    var i = 0;
+    while (p) {
+      copyBuffer(p.data, ret, i);
+      i += p.data.length;
+      p = p.next;
+    }
+    return ret;
+  };
+
+  return BufferList;
+}();
+
+if (util && util.inspect && util.inspect.custom) {
+  module.exports.prototype[util.inspect.custom] = function () {
+    var obj = util.inspect({ length: this.length });
+    return this.constructor.name + ' ' + obj;
+  };
+}
+
+/***/ }),
+
+/***/ "./node_modules/readable-stream/lib/internal/streams/destroy.js":
+/*!**********************************************************************!*\
+  !*** ./node_modules/readable-stream/lib/internal/streams/destroy.js ***!
+  \**********************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+/*<replacement>*/
+
+var pna = __webpack_require__(/*! process-nextick-args */ "./node_modules/process-nextick-args/index.js");
+/*</replacement>*/
+
+// undocumented cb() API, needed for core, not for public API
+function destroy(err, cb) {
+  var _this = this;
+
+  var readableDestroyed = this._readableState && this._readableState.destroyed;
+  var writableDestroyed = this._writableState && this._writableState.destroyed;
+
+  if (readableDestroyed || writableDestroyed) {
+    if (cb) {
+      cb(err);
+    } else if (err && (!this._writableState || !this._writableState.errorEmitted)) {
+      pna.nextTick(emitErrorNT, this, err);
+    }
+    return this;
+  }
+
+  // we set destroyed to true before firing error callbacks in order
+  // to make it re-entrance safe in case destroy() is called within callbacks
+
+  if (this._readableState) {
+    this._readableState.destroyed = true;
+  }
+
+  // if this is a duplex stream mark the writable part as destroyed as well
+  if (this._writableState) {
+    this._writableState.destroyed = true;
+  }
+
+  this._destroy(err || null, function (err) {
+    if (!cb && err) {
+      pna.nextTick(emitErrorNT, _this, err);
+      if (_this._writableState) {
+        _this._writableState.errorEmitted = true;
+      }
+    } else if (cb) {
+      cb(err);
+    }
+  });
+
+  return this;
+}
+
+function undestroy() {
+  if (this._readableState) {
+    this._readableState.destroyed = false;
+    this._readableState.reading = false;
+    this._readableState.ended = false;
+    this._readableState.endEmitted = false;
+  }
+
+  if (this._writableState) {
+    this._writableState.destroyed = false;
+    this._writableState.ended = false;
+    this._writableState.ending = false;
+    this._writableState.finished = false;
+    this._writableState.errorEmitted = false;
+  }
+}
+
+function emitErrorNT(self, err) {
+  self.emit('error', err);
+}
+
+module.exports = {
+  destroy: destroy,
+  undestroy: undestroy
+};
+
+/***/ }),
+
+/***/ "./node_modules/readable-stream/lib/internal/streams/stream-browser.js":
+/*!*****************************************************************************!*\
+  !*** ./node_modules/readable-stream/lib/internal/streams/stream-browser.js ***!
+  \*****************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__(/*! events */ "./node_modules/events/events.js").EventEmitter;
+
+
+/***/ }),
+
+/***/ "./node_modules/readable-stream/passthrough.js":
+/*!*****************************************************!*\
+  !*** ./node_modules/readable-stream/passthrough.js ***!
+  \*****************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__(/*! ./readable */ "./node_modules/readable-stream/readable-browser.js").PassThrough
+
+
+/***/ }),
+
+/***/ "./node_modules/readable-stream/readable-browser.js":
+/*!**********************************************************!*\
+  !*** ./node_modules/readable-stream/readable-browser.js ***!
+  \**********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(/*! ./lib/_stream_readable.js */ "./node_modules/readable-stream/lib/_stream_readable.js");
+exports.Stream = exports;
+exports.Readable = exports;
+exports.Writable = __webpack_require__(/*! ./lib/_stream_writable.js */ "./node_modules/readable-stream/lib/_stream_writable.js");
+exports.Duplex = __webpack_require__(/*! ./lib/_stream_duplex.js */ "./node_modules/readable-stream/lib/_stream_duplex.js");
+exports.Transform = __webpack_require__(/*! ./lib/_stream_transform.js */ "./node_modules/readable-stream/lib/_stream_transform.js");
+exports.PassThrough = __webpack_require__(/*! ./lib/_stream_passthrough.js */ "./node_modules/readable-stream/lib/_stream_passthrough.js");
+
+
+/***/ }),
+
+/***/ "./node_modules/readable-stream/transform.js":
+/*!***************************************************!*\
+  !*** ./node_modules/readable-stream/transform.js ***!
+  \***************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__(/*! ./readable */ "./node_modules/readable-stream/readable-browser.js").Transform
+
+
+/***/ }),
+
+/***/ "./node_modules/readable-stream/writable-browser.js":
+/*!**********************************************************!*\
+  !*** ./node_modules/readable-stream/writable-browser.js ***!
+  \**********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__(/*! ./lib/_stream_writable.js */ "./node_modules/readable-stream/lib/_stream_writable.js");
 
 
 /***/ }),
@@ -73465,6 +72094,79 @@ try {
 
 /***/ }),
 
+/***/ "./node_modules/safe-buffer/index.js":
+/*!*******************************************!*\
+  !*** ./node_modules/safe-buffer/index.js ***!
+  \*******************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/* eslint-disable node/no-deprecated-api */
+var buffer = __webpack_require__(/*! buffer */ "./node_modules/buffer/index.js")
+var Buffer = buffer.Buffer
+
+// alternative to using Object.keys for old browsers
+function copyProps (src, dst) {
+  for (var key in src) {
+    dst[key] = src[key]
+  }
+}
+if (Buffer.from && Buffer.alloc && Buffer.allocUnsafe && Buffer.allocUnsafeSlow) {
+  module.exports = buffer
+} else {
+  // Copy properties from require('buffer')
+  copyProps(buffer, exports)
+  exports.Buffer = SafeBuffer
+}
+
+function SafeBuffer (arg, encodingOrOffset, length) {
+  return Buffer(arg, encodingOrOffset, length)
+}
+
+// Copy static methods from Buffer
+copyProps(Buffer, SafeBuffer)
+
+SafeBuffer.from = function (arg, encodingOrOffset, length) {
+  if (typeof arg === 'number') {
+    throw new TypeError('Argument must not be a number')
+  }
+  return Buffer(arg, encodingOrOffset, length)
+}
+
+SafeBuffer.alloc = function (size, fill, encoding) {
+  if (typeof size !== 'number') {
+    throw new TypeError('Argument must be a number')
+  }
+  var buf = Buffer(size)
+  if (fill !== undefined) {
+    if (typeof encoding === 'string') {
+      buf.fill(fill, encoding)
+    } else {
+      buf.fill(fill)
+    }
+  } else {
+    buf.fill(0)
+  }
+  return buf
+}
+
+SafeBuffer.allocUnsafe = function (size) {
+  if (typeof size !== 'number') {
+    throw new TypeError('Argument must be a number')
+  }
+  return Buffer(size)
+}
+
+SafeBuffer.allocUnsafeSlow = function (size) {
+  if (typeof size !== 'number') {
+    throw new TypeError('Argument must be a number')
+  }
+  return buffer.SlowBuffer(size)
+}
+
+
+/***/ }),
+
 /***/ "./node_modules/setimmediate/setImmediate.js":
 /*!***************************************************!*\
   !*** ./node_modules/setimmediate/setImmediate.js ***!
@@ -73660,6 +72362,451 @@ try {
 }(typeof self === "undefined" ? typeof global === "undefined" ? this : global : self));
 
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../webpack/buildin/global.js */ "./node_modules/webpack/buildin/global.js"), __webpack_require__(/*! ./../process/browser.js */ "./node_modules/process/browser.js")))
+
+/***/ }),
+
+/***/ "./node_modules/stream-browserify/index.js":
+/*!*************************************************!*\
+  !*** ./node_modules/stream-browserify/index.js ***!
+  \*************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+// Copyright Joyent, Inc. and other Node contributors.
+//
+// Permission is hereby granted, free of charge, to any person obtaining a
+// copy of this software and associated documentation files (the
+// "Software"), to deal in the Software without restriction, including
+// without limitation the rights to use, copy, modify, merge, publish,
+// distribute, sublicense, and/or sell copies of the Software, and to permit
+// persons to whom the Software is furnished to do so, subject to the
+// following conditions:
+//
+// The above copyright notice and this permission notice shall be included
+// in all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+// OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN
+// NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+// DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+// OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
+// USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+module.exports = Stream;
+
+var EE = __webpack_require__(/*! events */ "./node_modules/events/events.js").EventEmitter;
+var inherits = __webpack_require__(/*! inherits */ "./node_modules/inherits/inherits_browser.js");
+
+inherits(Stream, EE);
+Stream.Readable = __webpack_require__(/*! readable-stream/readable.js */ "./node_modules/readable-stream/readable-browser.js");
+Stream.Writable = __webpack_require__(/*! readable-stream/writable.js */ "./node_modules/readable-stream/writable-browser.js");
+Stream.Duplex = __webpack_require__(/*! readable-stream/duplex.js */ "./node_modules/readable-stream/duplex-browser.js");
+Stream.Transform = __webpack_require__(/*! readable-stream/transform.js */ "./node_modules/readable-stream/transform.js");
+Stream.PassThrough = __webpack_require__(/*! readable-stream/passthrough.js */ "./node_modules/readable-stream/passthrough.js");
+
+// Backwards-compat with node 0.4.x
+Stream.Stream = Stream;
+
+
+
+// old-style streams.  Note that the pipe method (the only relevant
+// part of this class) is overridden in the Readable class.
+
+function Stream() {
+  EE.call(this);
+}
+
+Stream.prototype.pipe = function(dest, options) {
+  var source = this;
+
+  function ondata(chunk) {
+    if (dest.writable) {
+      if (false === dest.write(chunk) && source.pause) {
+        source.pause();
+      }
+    }
+  }
+
+  source.on('data', ondata);
+
+  function ondrain() {
+    if (source.readable && source.resume) {
+      source.resume();
+    }
+  }
+
+  dest.on('drain', ondrain);
+
+  // If the 'end' option is not supplied, dest.end() will be called when
+  // source gets the 'end' or 'close' events.  Only dest.end() once.
+  if (!dest._isStdio && (!options || options.end !== false)) {
+    source.on('end', onend);
+    source.on('close', onclose);
+  }
+
+  var didOnEnd = false;
+  function onend() {
+    if (didOnEnd) return;
+    didOnEnd = true;
+
+    dest.end();
+  }
+
+
+  function onclose() {
+    if (didOnEnd) return;
+    didOnEnd = true;
+
+    if (typeof dest.destroy === 'function') dest.destroy();
+  }
+
+  // don't leave dangling pipes when there are errors.
+  function onerror(er) {
+    cleanup();
+    if (EE.listenerCount(this, 'error') === 0) {
+      throw er; // Unhandled stream error in pipe.
+    }
+  }
+
+  source.on('error', onerror);
+  dest.on('error', onerror);
+
+  // remove all the event listeners that were added.
+  function cleanup() {
+    source.removeListener('data', ondata);
+    dest.removeListener('drain', ondrain);
+
+    source.removeListener('end', onend);
+    source.removeListener('close', onclose);
+
+    source.removeListener('error', onerror);
+    dest.removeListener('error', onerror);
+
+    source.removeListener('end', cleanup);
+    source.removeListener('close', cleanup);
+
+    dest.removeListener('close', cleanup);
+  }
+
+  source.on('end', cleanup);
+  source.on('close', cleanup);
+
+  dest.on('close', cleanup);
+
+  dest.emit('pipe', source);
+
+  // Allow for unix-like usage: A.pipe(B).pipe(C)
+  return dest;
+};
+
+
+/***/ }),
+
+/***/ "./node_modules/string_decoder/lib/string_decoder.js":
+/*!***********************************************************!*\
+  !*** ./node_modules/string_decoder/lib/string_decoder.js ***!
+  \***********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+// Copyright Joyent, Inc. and other Node contributors.
+//
+// Permission is hereby granted, free of charge, to any person obtaining a
+// copy of this software and associated documentation files (the
+// "Software"), to deal in the Software without restriction, including
+// without limitation the rights to use, copy, modify, merge, publish,
+// distribute, sublicense, and/or sell copies of the Software, and to permit
+// persons to whom the Software is furnished to do so, subject to the
+// following conditions:
+//
+// The above copyright notice and this permission notice shall be included
+// in all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+// OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN
+// NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+// DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+// OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
+// USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+
+
+/*<replacement>*/
+
+var Buffer = __webpack_require__(/*! safe-buffer */ "./node_modules/safe-buffer/index.js").Buffer;
+/*</replacement>*/
+
+var isEncoding = Buffer.isEncoding || function (encoding) {
+  encoding = '' + encoding;
+  switch (encoding && encoding.toLowerCase()) {
+    case 'hex':case 'utf8':case 'utf-8':case 'ascii':case 'binary':case 'base64':case 'ucs2':case 'ucs-2':case 'utf16le':case 'utf-16le':case 'raw':
+      return true;
+    default:
+      return false;
+  }
+};
+
+function _normalizeEncoding(enc) {
+  if (!enc) return 'utf8';
+  var retried;
+  while (true) {
+    switch (enc) {
+      case 'utf8':
+      case 'utf-8':
+        return 'utf8';
+      case 'ucs2':
+      case 'ucs-2':
+      case 'utf16le':
+      case 'utf-16le':
+        return 'utf16le';
+      case 'latin1':
+      case 'binary':
+        return 'latin1';
+      case 'base64':
+      case 'ascii':
+      case 'hex':
+        return enc;
+      default:
+        if (retried) return; // undefined
+        enc = ('' + enc).toLowerCase();
+        retried = true;
+    }
+  }
+};
+
+// Do not cache `Buffer.isEncoding` when checking encoding names as some
+// modules monkey-patch it to support additional encodings
+function normalizeEncoding(enc) {
+  var nenc = _normalizeEncoding(enc);
+  if (typeof nenc !== 'string' && (Buffer.isEncoding === isEncoding || !isEncoding(enc))) throw new Error('Unknown encoding: ' + enc);
+  return nenc || enc;
+}
+
+// StringDecoder provides an interface for efficiently splitting a series of
+// buffers into a series of JS strings without breaking apart multi-byte
+// characters.
+exports.StringDecoder = StringDecoder;
+function StringDecoder(encoding) {
+  this.encoding = normalizeEncoding(encoding);
+  var nb;
+  switch (this.encoding) {
+    case 'utf16le':
+      this.text = utf16Text;
+      this.end = utf16End;
+      nb = 4;
+      break;
+    case 'utf8':
+      this.fillLast = utf8FillLast;
+      nb = 4;
+      break;
+    case 'base64':
+      this.text = base64Text;
+      this.end = base64End;
+      nb = 3;
+      break;
+    default:
+      this.write = simpleWrite;
+      this.end = simpleEnd;
+      return;
+  }
+  this.lastNeed = 0;
+  this.lastTotal = 0;
+  this.lastChar = Buffer.allocUnsafe(nb);
+}
+
+StringDecoder.prototype.write = function (buf) {
+  if (buf.length === 0) return '';
+  var r;
+  var i;
+  if (this.lastNeed) {
+    r = this.fillLast(buf);
+    if (r === undefined) return '';
+    i = this.lastNeed;
+    this.lastNeed = 0;
+  } else {
+    i = 0;
+  }
+  if (i < buf.length) return r ? r + this.text(buf, i) : this.text(buf, i);
+  return r || '';
+};
+
+StringDecoder.prototype.end = utf8End;
+
+// Returns only complete characters in a Buffer
+StringDecoder.prototype.text = utf8Text;
+
+// Attempts to complete a partial non-UTF-8 character using bytes from a Buffer
+StringDecoder.prototype.fillLast = function (buf) {
+  if (this.lastNeed <= buf.length) {
+    buf.copy(this.lastChar, this.lastTotal - this.lastNeed, 0, this.lastNeed);
+    return this.lastChar.toString(this.encoding, 0, this.lastTotal);
+  }
+  buf.copy(this.lastChar, this.lastTotal - this.lastNeed, 0, buf.length);
+  this.lastNeed -= buf.length;
+};
+
+// Checks the type of a UTF-8 byte, whether it's ASCII, a leading byte, or a
+// continuation byte. If an invalid byte is detected, -2 is returned.
+function utf8CheckByte(byte) {
+  if (byte <= 0x7F) return 0;else if (byte >> 5 === 0x06) return 2;else if (byte >> 4 === 0x0E) return 3;else if (byte >> 3 === 0x1E) return 4;
+  return byte >> 6 === 0x02 ? -1 : -2;
+}
+
+// Checks at most 3 bytes at the end of a Buffer in order to detect an
+// incomplete multi-byte UTF-8 character. The total number of bytes (2, 3, or 4)
+// needed to complete the UTF-8 character (if applicable) are returned.
+function utf8CheckIncomplete(self, buf, i) {
+  var j = buf.length - 1;
+  if (j < i) return 0;
+  var nb = utf8CheckByte(buf[j]);
+  if (nb >= 0) {
+    if (nb > 0) self.lastNeed = nb - 1;
+    return nb;
+  }
+  if (--j < i || nb === -2) return 0;
+  nb = utf8CheckByte(buf[j]);
+  if (nb >= 0) {
+    if (nb > 0) self.lastNeed = nb - 2;
+    return nb;
+  }
+  if (--j < i || nb === -2) return 0;
+  nb = utf8CheckByte(buf[j]);
+  if (nb >= 0) {
+    if (nb > 0) {
+      if (nb === 2) nb = 0;else self.lastNeed = nb - 3;
+    }
+    return nb;
+  }
+  return 0;
+}
+
+// Validates as many continuation bytes for a multi-byte UTF-8 character as
+// needed or are available. If we see a non-continuation byte where we expect
+// one, we "replace" the validated continuation bytes we've seen so far with
+// a single UTF-8 replacement character ('\ufffd'), to match v8's UTF-8 decoding
+// behavior. The continuation byte check is included three times in the case
+// where all of the continuation bytes for a character exist in the same buffer.
+// It is also done this way as a slight performance increase instead of using a
+// loop.
+function utf8CheckExtraBytes(self, buf, p) {
+  if ((buf[0] & 0xC0) !== 0x80) {
+    self.lastNeed = 0;
+    return '\ufffd';
+  }
+  if (self.lastNeed > 1 && buf.length > 1) {
+    if ((buf[1] & 0xC0) !== 0x80) {
+      self.lastNeed = 1;
+      return '\ufffd';
+    }
+    if (self.lastNeed > 2 && buf.length > 2) {
+      if ((buf[2] & 0xC0) !== 0x80) {
+        self.lastNeed = 2;
+        return '\ufffd';
+      }
+    }
+  }
+}
+
+// Attempts to complete a multi-byte UTF-8 character using bytes from a Buffer.
+function utf8FillLast(buf) {
+  var p = this.lastTotal - this.lastNeed;
+  var r = utf8CheckExtraBytes(this, buf, p);
+  if (r !== undefined) return r;
+  if (this.lastNeed <= buf.length) {
+    buf.copy(this.lastChar, p, 0, this.lastNeed);
+    return this.lastChar.toString(this.encoding, 0, this.lastTotal);
+  }
+  buf.copy(this.lastChar, p, 0, buf.length);
+  this.lastNeed -= buf.length;
+}
+
+// Returns all complete UTF-8 characters in a Buffer. If the Buffer ended on a
+// partial character, the character's bytes are buffered until the required
+// number of bytes are available.
+function utf8Text(buf, i) {
+  var total = utf8CheckIncomplete(this, buf, i);
+  if (!this.lastNeed) return buf.toString('utf8', i);
+  this.lastTotal = total;
+  var end = buf.length - (total - this.lastNeed);
+  buf.copy(this.lastChar, 0, end);
+  return buf.toString('utf8', i, end);
+}
+
+// For UTF-8, a replacement character is added when ending on a partial
+// character.
+function utf8End(buf) {
+  var r = buf && buf.length ? this.write(buf) : '';
+  if (this.lastNeed) return r + '\ufffd';
+  return r;
+}
+
+// UTF-16LE typically needs two bytes per character, but even if we have an even
+// number of bytes available, we need to check if we end on a leading/high
+// surrogate. In that case, we need to wait for the next two bytes in order to
+// decode the last character properly.
+function utf16Text(buf, i) {
+  if ((buf.length - i) % 2 === 0) {
+    var r = buf.toString('utf16le', i);
+    if (r) {
+      var c = r.charCodeAt(r.length - 1);
+      if (c >= 0xD800 && c <= 0xDBFF) {
+        this.lastNeed = 2;
+        this.lastTotal = 4;
+        this.lastChar[0] = buf[buf.length - 2];
+        this.lastChar[1] = buf[buf.length - 1];
+        return r.slice(0, -1);
+      }
+    }
+    return r;
+  }
+  this.lastNeed = 1;
+  this.lastTotal = 2;
+  this.lastChar[0] = buf[buf.length - 1];
+  return buf.toString('utf16le', i, buf.length - 1);
+}
+
+// For UTF-16LE we do not explicitly append special replacement characters if we
+// end on a partial character, we simply let v8 handle that.
+function utf16End(buf) {
+  var r = buf && buf.length ? this.write(buf) : '';
+  if (this.lastNeed) {
+    var end = this.lastTotal - this.lastNeed;
+    return r + this.lastChar.toString('utf16le', 0, end);
+  }
+  return r;
+}
+
+function base64Text(buf, i) {
+  var n = (buf.length - i) % 3;
+  if (n === 0) return buf.toString('base64', i);
+  this.lastNeed = 3 - n;
+  this.lastTotal = 3;
+  if (n === 1) {
+    this.lastChar[0] = buf[buf.length - 1];
+  } else {
+    this.lastChar[0] = buf[buf.length - 2];
+    this.lastChar[1] = buf[buf.length - 1];
+  }
+  return buf.toString('base64', i, buf.length - n);
+}
+
+function base64End(buf) {
+  var r = buf && buf.length ? this.write(buf) : '';
+  if (this.lastNeed) return r + this.lastChar.toString('base64', 0, 3 - this.lastNeed);
+  return r;
+}
+
+// Pass bytes on through for single-byte encodings (e.g. ascii, latin1, hex)
+function simpleWrite(buf) {
+  return buf.toString(this.encoding);
+}
+
+function simpleEnd(buf) {
+  return buf && buf.length ? this.write(buf) : '';
+}
 
 /***/ }),
 
@@ -74307,251 +73454,104 @@ exports.clearImmediate = (typeof self !== "undefined" && self.clearImmediate) ||
 
 /***/ }),
 
-/***/ "./node_modules/tslib/tslib.es6.js":
-/*!*****************************************!*\
-  !*** ./node_modules/tslib/tslib.es6.js ***!
-  \*****************************************/
-/*! exports provided: __extends, __assign, __rest, __decorate, __param, __metadata, __awaiter, __generator, __exportStar, __values, __read, __spread, __spreadArrays, __await, __asyncGenerator, __asyncDelegator, __asyncValues, __makeTemplateObject, __importStar, __importDefault, __classPrivateFieldGet, __classPrivateFieldSet */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
+/***/ "./node_modules/tty-browserify/index.js":
+/*!**********************************************!*\
+  !*** ./node_modules/tty-browserify/index.js ***!
+  \**********************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
 
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "__extends", function() { return __extends; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "__assign", function() { return __assign; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "__rest", function() { return __rest; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "__decorate", function() { return __decorate; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "__param", function() { return __param; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "__metadata", function() { return __metadata; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "__awaiter", function() { return __awaiter; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "__generator", function() { return __generator; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "__exportStar", function() { return __exportStar; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "__values", function() { return __values; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "__read", function() { return __read; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "__spread", function() { return __spread; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "__spreadArrays", function() { return __spreadArrays; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "__await", function() { return __await; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "__asyncGenerator", function() { return __asyncGenerator; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "__asyncDelegator", function() { return __asyncDelegator; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "__asyncValues", function() { return __asyncValues; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "__makeTemplateObject", function() { return __makeTemplateObject; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "__importStar", function() { return __importStar; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "__importDefault", function() { return __importDefault; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "__classPrivateFieldGet", function() { return __classPrivateFieldGet; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "__classPrivateFieldSet", function() { return __classPrivateFieldSet; });
-/*! *****************************************************************************
-Copyright (c) Microsoft Corporation. All rights reserved.
-Licensed under the Apache License, Version 2.0 (the "License"); you may not use
-this file except in compliance with the License. You may obtain a copy of the
-License at http://www.apache.org/licenses/LICENSE-2.0
+exports.isatty = function () { return false; };
 
-THIS CODE IS PROVIDED ON AN *AS IS* BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, EITHER EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION ANY IMPLIED
-WARRANTIES OR CONDITIONS OF TITLE, FITNESS FOR A PARTICULAR PURPOSE,
-MERCHANTABLITY OR NON-INFRINGEMENT.
-
-See the Apache Version 2.0 License for specific language governing permissions
-and limitations under the License.
-***************************************************************************** */
-/* global Reflect, Promise */
-
-var extendStatics = function(d, b) {
-    extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-    return extendStatics(d, b);
-};
-
-function __extends(d, b) {
-    extendStatics(d, b);
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+function ReadStream() {
+  throw new Error('tty.ReadStream is not implemented');
 }
+exports.ReadStream = ReadStream;
 
-var __assign = function() {
-    __assign = Object.assign || function __assign(t) {
-        for (var s, i = 1, n = arguments.length; i < n; i++) {
-            s = arguments[i];
-            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
-        }
-        return t;
+function WriteStream() {
+  throw new Error('tty.ReadStream is not implemented');
+}
+exports.WriteStream = WriteStream;
+
+
+/***/ }),
+
+/***/ "./node_modules/util-deprecate/browser.js":
+/*!************************************************!*\
+  !*** ./node_modules/util-deprecate/browser.js ***!
+  \************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/* WEBPACK VAR INJECTION */(function(global) {
+/**
+ * Module exports.
+ */
+
+module.exports = deprecate;
+
+/**
+ * Mark that a method should not be used.
+ * Returns a modified function which warns once by default.
+ *
+ * If `localStorage.noDeprecation = true` is set, then it is a no-op.
+ *
+ * If `localStorage.throwDeprecation = true` is set, then deprecated functions
+ * will throw an Error when invoked.
+ *
+ * If `localStorage.traceDeprecation = true` is set, then deprecated functions
+ * will invoke `console.trace()` instead of `console.error()`.
+ *
+ * @param {Function} fn - the function to deprecate
+ * @param {String} msg - the string to print to the console when `fn` is invoked
+ * @returns {Function} a new "deprecated" version of `fn`
+ * @api public
+ */
+
+function deprecate (fn, msg) {
+  if (config('noDeprecation')) {
+    return fn;
+  }
+
+  var warned = false;
+  function deprecated() {
+    if (!warned) {
+      if (config('throwDeprecation')) {
+        throw new Error(msg);
+      } else if (config('traceDeprecation')) {
+        console.trace(msg);
+      } else {
+        console.warn(msg);
+      }
+      warned = true;
     }
-    return __assign.apply(this, arguments);
+    return fn.apply(this, arguments);
+  }
+
+  return deprecated;
 }
 
-function __rest(s, e) {
-    var t = {};
-    for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
-        t[p] = s[p];
-    if (s != null && typeof Object.getOwnPropertySymbols === "function")
-        for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
-            if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i]))
-                t[p[i]] = s[p[i]];
-        }
-    return t;
+/**
+ * Checks `localStorage` for boolean values for the given `name`.
+ *
+ * @param {String} name
+ * @returns {Boolean}
+ * @api private
+ */
+
+function config (name) {
+  // accessing global.localStorage can trigger a DOMException in sandboxed iframes
+  try {
+    if (!global.localStorage) return false;
+  } catch (_) {
+    return false;
+  }
+  var val = global.localStorage[name];
+  if (null == val) return false;
+  return String(val).toLowerCase() === 'true';
 }
 
-function __decorate(decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-}
-
-function __param(paramIndex, decorator) {
-    return function (target, key) { decorator(target, key, paramIndex); }
-}
-
-function __metadata(metadataKey, metadataValue) {
-    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(metadataKey, metadataValue);
-}
-
-function __awaiter(thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-}
-
-function __generator(thisArg, body) {
-    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
-    return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
-    function verb(n) { return function (v) { return step([n, v]); }; }
-    function step(op) {
-        if (f) throw new TypeError("Generator is already executing.");
-        while (_) try {
-            if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
-            if (y = 0, t) op = [op[0] & 2, t.value];
-            switch (op[0]) {
-                case 0: case 1: t = op; break;
-                case 4: _.label++; return { value: op[1], done: false };
-                case 5: _.label++; y = op[1]; op = [0]; continue;
-                case 7: op = _.ops.pop(); _.trys.pop(); continue;
-                default:
-                    if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) { _ = 0; continue; }
-                    if (op[0] === 3 && (!t || (op[1] > t[0] && op[1] < t[3]))) { _.label = op[1]; break; }
-                    if (op[0] === 6 && _.label < t[1]) { _.label = t[1]; t = op; break; }
-                    if (t && _.label < t[2]) { _.label = t[2]; _.ops.push(op); break; }
-                    if (t[2]) _.ops.pop();
-                    _.trys.pop(); continue;
-            }
-            op = body.call(thisArg, _);
-        } catch (e) { op = [6, e]; y = 0; } finally { f = t = 0; }
-        if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
-    }
-}
-
-function __exportStar(m, exports) {
-    for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
-}
-
-function __values(o) {
-    var s = typeof Symbol === "function" && Symbol.iterator, m = s && o[s], i = 0;
-    if (m) return m.call(o);
-    if (o && typeof o.length === "number") return {
-        next: function () {
-            if (o && i >= o.length) o = void 0;
-            return { value: o && o[i++], done: !o };
-        }
-    };
-    throw new TypeError(s ? "Object is not iterable." : "Symbol.iterator is not defined.");
-}
-
-function __read(o, n) {
-    var m = typeof Symbol === "function" && o[Symbol.iterator];
-    if (!m) return o;
-    var i = m.call(o), r, ar = [], e;
-    try {
-        while ((n === void 0 || n-- > 0) && !(r = i.next()).done) ar.push(r.value);
-    }
-    catch (error) { e = { error: error }; }
-    finally {
-        try {
-            if (r && !r.done && (m = i["return"])) m.call(i);
-        }
-        finally { if (e) throw e.error; }
-    }
-    return ar;
-}
-
-function __spread() {
-    for (var ar = [], i = 0; i < arguments.length; i++)
-        ar = ar.concat(__read(arguments[i]));
-    return ar;
-}
-
-function __spreadArrays() {
-    for (var s = 0, i = 0, il = arguments.length; i < il; i++) s += arguments[i].length;
-    for (var r = Array(s), k = 0, i = 0; i < il; i++)
-        for (var a = arguments[i], j = 0, jl = a.length; j < jl; j++, k++)
-            r[k] = a[j];
-    return r;
-};
-
-function __await(v) {
-    return this instanceof __await ? (this.v = v, this) : new __await(v);
-}
-
-function __asyncGenerator(thisArg, _arguments, generator) {
-    if (!Symbol.asyncIterator) throw new TypeError("Symbol.asyncIterator is not defined.");
-    var g = generator.apply(thisArg, _arguments || []), i, q = [];
-    return i = {}, verb("next"), verb("throw"), verb("return"), i[Symbol.asyncIterator] = function () { return this; }, i;
-    function verb(n) { if (g[n]) i[n] = function (v) { return new Promise(function (a, b) { q.push([n, v, a, b]) > 1 || resume(n, v); }); }; }
-    function resume(n, v) { try { step(g[n](v)); } catch (e) { settle(q[0][3], e); } }
-    function step(r) { r.value instanceof __await ? Promise.resolve(r.value.v).then(fulfill, reject) : settle(q[0][2], r); }
-    function fulfill(value) { resume("next", value); }
-    function reject(value) { resume("throw", value); }
-    function settle(f, v) { if (f(v), q.shift(), q.length) resume(q[0][0], q[0][1]); }
-}
-
-function __asyncDelegator(o) {
-    var i, p;
-    return i = {}, verb("next"), verb("throw", function (e) { throw e; }), verb("return"), i[Symbol.iterator] = function () { return this; }, i;
-    function verb(n, f) { i[n] = o[n] ? function (v) { return (p = !p) ? { value: __await(o[n](v)), done: n === "return" } : f ? f(v) : v; } : f; }
-}
-
-function __asyncValues(o) {
-    if (!Symbol.asyncIterator) throw new TypeError("Symbol.asyncIterator is not defined.");
-    var m = o[Symbol.asyncIterator], i;
-    return m ? m.call(o) : (o = typeof __values === "function" ? __values(o) : o[Symbol.iterator](), i = {}, verb("next"), verb("throw"), verb("return"), i[Symbol.asyncIterator] = function () { return this; }, i);
-    function verb(n) { i[n] = o[n] && function (v) { return new Promise(function (resolve, reject) { v = o[n](v), settle(resolve, reject, v.done, v.value); }); }; }
-    function settle(resolve, reject, d, v) { Promise.resolve(v).then(function(v) { resolve({ value: v, done: d }); }, reject); }
-}
-
-function __makeTemplateObject(cooked, raw) {
-    if (Object.defineProperty) { Object.defineProperty(cooked, "raw", { value: raw }); } else { cooked.raw = raw; }
-    return cooked;
-};
-
-function __importStar(mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
-    result.default = mod;
-    return result;
-}
-
-function __importDefault(mod) {
-    return (mod && mod.__esModule) ? mod : { default: mod };
-}
-
-function __classPrivateFieldGet(receiver, privateMap) {
-    if (!privateMap.has(receiver)) {
-        throw new TypeError("attempted to get private field on non-instance");
-    }
-    return privateMap.get(receiver);
-}
-
-function __classPrivateFieldSet(receiver, privateMap, value) {
-    if (!privateMap.has(receiver)) {
-        throw new TypeError("attempted to set private field on non-instance");
-    }
-    privateMap.set(receiver, value);
-    return value;
-}
-
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../webpack/buildin/global.js */ "./node_modules/webpack/buildin/global.js")))
 
 /***/ }),
 
@@ -75494,41 +74494,6 @@ render._withStripped = true
 
 /***/ }),
 
-/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Spinner.vue?vue&type=template&id=7ae326fe&scoped=true&":
-/*!**********************************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/Spinner.vue?vue&type=template&id=7ae326fe&scoped=true& ***!
-  \**********************************************************************************************************************************************************************************************************************/
-/*! exports provided: render, staticRenderFns */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _vm._m(0)
-}
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "sk-spinner sk-spinner-double-bounce" }, [
-      _c("div", { staticClass: "sk-double-bounce1" }),
-      _vm._v(" "),
-      _c("div", { staticClass: "sk-double-bounce2" })
-    ])
-  }
-]
-render._withStripped = true
-
-
-
-/***/ }),
-
 /***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/modules/dashboard/views/components/LeaveDashboard.vue?vue&type=template&id=2a0705e4&scoped=true&":
 /*!*****************************************************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/modules/dashboard/views/components/LeaveDashboard.vue?vue&type=template&id=2a0705e4&scoped=true& ***!
@@ -75746,7 +74711,9 @@ var render = function() {
                     [
                       _vm._l(_vm.allocations, function(allocation, index) {
                         return _c("tr", { key: index }, [
-                          _c("td", [_vm._v(_vm._s(_vm.meta.from + index))]),
+                          _c("td", [
+                            _vm._v(_vm._s(_vm.paginator.meta.from + index))
+                          ]),
                           _vm._v(" "),
                           _c("td", [_vm._v(_vm._s(allocation.Leave_Code))]),
                           _vm._v(" "),
@@ -75774,7 +74741,7 @@ var render = function() {
               )
             ]),
             _vm._v(" "),
-            _c("pagination", { attrs: { meta: _vm.meta } })
+            _c("pagination")
           ],
           1
         )
@@ -75879,7 +74846,9 @@ var render = function() {
                             }
                           },
                           [
-                            _c("td", [_vm._v(_vm._s(_vm.meta.from + index))]),
+                            _c("td", [
+                              _vm._v(_vm._s(_vm.paginator.meta.from + index))
+                            ]),
                             _vm._v(" "),
                             _c("td", [
                               _vm._v(_vm._s(application.Application_Date))
@@ -75957,7 +74926,7 @@ var render = function() {
               )
             ]),
             _vm._v(" "),
-            _c("pagination", { attrs: { meta: _vm.meta } })
+            _c("pagination")
           ],
           1
         )
@@ -76752,7 +75721,7 @@ var render = function() {
               )
             ]),
             _vm._v(" "),
-            _c("pagination", { attrs: { meta: _vm.meta } })
+            _c("pagination")
           ],
           1
         )
@@ -76952,7 +75921,7 @@ var render = function() {
               )
             ]),
             _vm._v(" "),
-            _c("pagination", { attrs: { meta: _vm.meta } })
+            _c("pagination")
           ],
           1
         )
@@ -77512,7 +76481,9 @@ var render = function() {
             class: { "sk-loading": _vm.loading }
           },
           [
-            _vm.loading ? _c("spinner") : _vm._e(),
+            _vm.loading
+              ? _c("loader", { attrs: { name: "circle" } })
+              : _vm._e(),
             _vm._v(" "),
             _c("div", { staticClass: "table-responsive m-b-md" }, [
               _c(
@@ -78759,7 +77730,7 @@ var render = function() {
                 )
               ]),
               _vm._v(" "),
-              _c("pagination", { attrs: { meta: _vm.meta } })
+              _c("pagination")
             ],
             1
           )
@@ -79387,6 +78358,420 @@ render._withStripped = true
 
 /***/ }),
 
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/plugins/loader/views/Bounce.vue?vue&type=template&id=8e123230&scoped=true&":
+/*!*******************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/plugins/loader/views/Bounce.vue?vue&type=template&id=8e123230&scoped=true& ***!
+  \*******************************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _vm._m(0)
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "sk-spinner sk-spinner-double-bounce" }, [
+      _c("div", { staticClass: "sk-double-bounce1" }),
+      _vm._v(" "),
+      _c("div", { staticClass: "sk-double-bounce2" })
+    ])
+  }
+]
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/plugins/loader/views/ChasingDots.vue?vue&type=template&id=4fb51136&scoped=true&":
+/*!************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/plugins/loader/views/ChasingDots.vue?vue&type=template&id=4fb51136&scoped=true& ***!
+  \************************************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _vm._m(0)
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "sk-spinner sk-spinner-chasing-dots" }, [
+      _c("div", { staticClass: "sk-dot1" }),
+      _vm._v(" "),
+      _c("div", { staticClass: "sk-dot2" })
+    ])
+  }
+]
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/plugins/loader/views/Circle.vue?vue&type=template&id=750d6da0&scoped=true&":
+/*!*******************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/plugins/loader/views/Circle.vue?vue&type=template&id=750d6da0&scoped=true& ***!
+  \*******************************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _vm._m(0)
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "sk-spinner sk-spinner-circle" }, [
+      _c("div", { staticClass: "sk-circle1 sk-circle" }),
+      _vm._v(" "),
+      _c("div", { staticClass: "sk-circle2 sk-circle" }),
+      _vm._v(" "),
+      _c("div", { staticClass: "sk-circle3 sk-circle" }),
+      _vm._v(" "),
+      _c("div", { staticClass: "sk-circle4 sk-circle" }),
+      _vm._v(" "),
+      _c("div", { staticClass: "sk-circle5 sk-circle" }),
+      _vm._v(" "),
+      _c("div", { staticClass: "sk-circle6 sk-circle" }),
+      _vm._v(" "),
+      _c("div", { staticClass: "sk-circle7 sk-circle" }),
+      _vm._v(" "),
+      _c("div", { staticClass: "sk-circle8 sk-circle" }),
+      _vm._v(" "),
+      _c("div", { staticClass: "sk-circle9 sk-circle" }),
+      _vm._v(" "),
+      _c("div", { staticClass: "sk-circle10 sk-circle" }),
+      _vm._v(" "),
+      _c("div", { staticClass: "sk-circle11 sk-circle" }),
+      _vm._v(" "),
+      _c("div", { staticClass: "sk-circle12 sk-circle" })
+    ])
+  }
+]
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/plugins/loader/views/CubicGrid.vue?vue&type=template&id=cfd81d00&scoped=true&":
+/*!**********************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/plugins/loader/views/CubicGrid.vue?vue&type=template&id=cfd81d00&scoped=true& ***!
+  \**********************************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _vm._m(0)
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "sk-spinner sk-spinner-cube-grid" }, [
+      _c("div", { staticClass: "sk-cube" }),
+      _vm._v(" "),
+      _c("div", { staticClass: "sk-cube" }),
+      _vm._v(" "),
+      _c("div", { staticClass: "sk-cube" }),
+      _vm._v(" "),
+      _c("div", { staticClass: "sk-cube" }),
+      _vm._v(" "),
+      _c("div", { staticClass: "sk-cube" }),
+      _vm._v(" "),
+      _c("div", { staticClass: "sk-cube" }),
+      _vm._v(" "),
+      _c("div", { staticClass: "sk-cube" }),
+      _vm._v(" "),
+      _c("div", { staticClass: "sk-cube" }),
+      _vm._v(" "),
+      _c("div", { staticClass: "sk-cube" })
+    ])
+  }
+]
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/plugins/loader/views/FadingCircle.vue?vue&type=template&id=f8607f6e&scoped=true&":
+/*!*************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/plugins/loader/views/FadingCircle.vue?vue&type=template&id=f8607f6e&scoped=true& ***!
+  \*************************************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _vm._m(0)
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "sk-spinner sk-spinner-circle" }, [
+      _c("div", { staticClass: "sk-circle1 sk-circle" }),
+      _vm._v(" "),
+      _c("div", { staticClass: "sk-circle2 sk-circle" }),
+      _vm._v(" "),
+      _c("div", { staticClass: "sk-circle3 sk-circle" }),
+      _vm._v(" "),
+      _c("div", { staticClass: "sk-circle4 sk-circle" }),
+      _vm._v(" "),
+      _c("div", { staticClass: "sk-circle5 sk-circle" }),
+      _vm._v(" "),
+      _c("div", { staticClass: "sk-circle6 sk-circle" }),
+      _vm._v(" "),
+      _c("div", { staticClass: "sk-circle7 sk-circle" }),
+      _vm._v(" "),
+      _c("div", { staticClass: "sk-circle8 sk-circle" }),
+      _vm._v(" "),
+      _c("div", { staticClass: "sk-circle9 sk-circle" }),
+      _vm._v(" "),
+      _c("div", { staticClass: "sk-circle10 sk-circle" }),
+      _vm._v(" "),
+      _c("div", { staticClass: "sk-circle11 sk-circle" }),
+      _vm._v(" "),
+      _c("div", { staticClass: "sk-circle12 sk-circle" })
+    ])
+  }
+]
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/plugins/loader/views/Pulse.vue?vue&type=template&id=629a3ee9&scoped=true&":
+/*!******************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/plugins/loader/views/Pulse.vue?vue&type=template&id=629a3ee9&scoped=true& ***!
+  \******************************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", { staticClass: "sk-spinner sk-spinner-pulse" })
+}
+var staticRenderFns = []
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/plugins/loader/views/RotatingPlane.vue?vue&type=template&id=255effb4&scoped=true&":
+/*!**************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/plugins/loader/views/RotatingPlane.vue?vue&type=template&id=255effb4&scoped=true& ***!
+  \**************************************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", { staticClass: "sk-spinner sk-spinner-rotating-plane" })
+}
+var staticRenderFns = []
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/plugins/loader/views/Spinner.vue?vue&type=template&id=d8a7b12e&scoped=true&":
+/*!********************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/plugins/loader/views/Spinner.vue?vue&type=template&id=d8a7b12e&scoped=true& ***!
+  \********************************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(_vm.spinner, { tag: "component" })
+}
+var staticRenderFns = []
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/plugins/loader/views/ThreeBounce.vue?vue&type=template&id=1c10d496&scoped=true&":
+/*!************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/plugins/loader/views/ThreeBounce.vue?vue&type=template&id=1c10d496&scoped=true& ***!
+  \************************************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _vm._m(0)
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "sk-spinner sk-spinner-three-bounce" }, [
+      _c("div", { staticClass: "sk-bounce1" }),
+      _vm._v(" "),
+      _c("div", { staticClass: "sk-bounce2" }),
+      _vm._v(" "),
+      _c("div", { staticClass: "sk-bounce3" })
+    ])
+  }
+]
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/plugins/loader/views/WanderingCubes.vue?vue&type=template&id=b68fccae&scoped=true&":
+/*!***************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/plugins/loader/views/WanderingCubes.vue?vue&type=template&id=b68fccae&scoped=true& ***!
+  \***************************************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _vm._m(0)
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "sk-spinner sk-spinner-wandering-cubes" }, [
+      _c("div", { staticClass: "sk-cube1" }),
+      _vm._v(" "),
+      _c("div", { staticClass: "sk-cube2" })
+    ])
+  }
+]
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/plugins/loader/views/Wave.vue?vue&type=template&id=d1fe964e&scoped=true&":
+/*!*****************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/plugins/loader/views/Wave.vue?vue&type=template&id=d1fe964e&scoped=true& ***!
+  \*****************************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _vm._m(0)
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "sk-spinner sk-spinner-wave" }, [
+      _c("div", { staticClass: "sk-rect1" }),
+      _vm._v(" "),
+      _c("div", { staticClass: "sk-rect2" }),
+      _vm._v(" "),
+      _c("div", { staticClass: "sk-rect3" }),
+      _vm._v(" "),
+      _c("div", { staticClass: "sk-rect4" }),
+      _vm._v(" "),
+      _c("div", { staticClass: "sk-rect5" })
+    ])
+  }
+]
+render._withStripped = true
+
+
+
+/***/ }),
+
 /***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/plugins/paginator/paginate.vue?vue&type=template&id=3385e2fc&scoped=true&":
 /*!******************************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/plugins/paginator/paginate.vue?vue&type=template&id=3385e2fc&scoped=true& ***!
@@ -79402,18 +78787,20 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _vm.meta
+  return _vm.paginator.meta
     ? _c("div", { staticClass: "row" }, [
         _c("div", { staticClass: "col-sm-4 m-b-sm" }, [
           _vm._v("\n        Page :  "),
           _c("span", { staticClass: "label label-default" }, [
             _vm._v(
-              _vm._s(_vm.meta.current_page) + " / " + _vm._s(_vm.meta.last_page)
+              _vm._s(_vm.paginator.meta.current_page) +
+                " /\n            " +
+                _vm._s(_vm.paginator.meta.last_page)
             )
           ]),
           _vm._v("    Total records :  \n        "),
           _c("span", { staticClass: "label label-default text-left" }, [
-            _vm._v(_vm._s(_vm.meta.total))
+            _vm._v(_vm._s(_vm.paginator.meta.total))
           ])
         ]),
         _vm._v(" "),
@@ -79423,7 +78810,7 @@ var render = function() {
             {
               staticClass: "form-group",
               class:
-                (_vm.page > _vm.meta.last_page || _vm.page <= 0) &&
+                (_vm.page > _vm.paginator.meta.last_page || _vm.page <= 0) &&
                 _vm.page !== ""
                   ? "has-error"
                   : ""
@@ -79442,7 +78829,13 @@ var render = function() {
                         }
                       ],
                       staticClass: "form-control",
-                      attrs: { type: "number", placeholder: "Go to Page" },
+                      attrs: {
+                        type: "number",
+                        placeholder: "Go to Page",
+                        disabled:
+                          _vm.page > _vm.paginator.meta.last_page ||
+                          _vm.page <= 0
+                      },
                       domProps: { value: _vm.page },
                       on: {
                         input: function($event) {
@@ -79461,12 +78854,15 @@ var render = function() {
                           staticClass: "btn btn-default",
                           attrs: {
                             disabled:
-                              _vm.page > _vm.meta.last_page || _vm.page <= 0,
+                              _vm.page > _vm.paginator.meta.last_page ||
+                              _vm.page <= 0,
                             type: "button"
                           },
                           on: {
                             click: function($event) {
-                              return _vm.$paginate.jumpToPage(_vm.page)
+                              return _vm.navigate(
+                                _vm.paginator.meta.path + "?page=" + _vm.page
+                              )
                             }
                           }
                         },
@@ -79497,11 +78893,11 @@ var render = function() {
                 staticClass: "btn btn-default",
                 attrs: {
                   title: "First",
-                  disabled: _vm.meta.current_page === 1
+                  disabled: _vm.paginator.meta.current_page === 1
                 },
                 on: {
                   click: function($event) {
-                    return _vm.$paginate.on("first")
+                    return _vm.navigate(_vm.paginator.links.first)
                   }
                 }
               },
@@ -79514,11 +78910,11 @@ var render = function() {
                 staticClass: "btn btn-default",
                 attrs: {
                   title: "Previous",
-                  disabled: _vm.meta.current_page === 1
+                  disabled: _vm.paginator.meta.current_page === 1
                 },
                 on: {
                   click: function($event) {
-                    return _vm.$paginate.on("prev")
+                    return _vm.navigate(_vm.paginator.links.prev)
                   }
                 }
               },
@@ -79531,11 +78927,13 @@ var render = function() {
                 staticClass: "btn btn-default",
                 attrs: {
                   title: "Next",
-                  disabled: _vm.meta.current_page === _vm.meta.last_page
+                  disabled:
+                    _vm.paginator.meta.current_page ===
+                    _vm.paginator.meta.last_page
                 },
                 on: {
                   click: function($event) {
-                    return _vm.$paginate.on("next")
+                    return _vm.navigate(_vm.paginator.links.next)
                   }
                 }
               },
@@ -79548,11 +78946,13 @@ var render = function() {
                 staticClass: "btn btn-default",
                 attrs: {
                   title: "Last",
-                  disabled: _vm.meta.current_page === _vm.meta.last_page
+                  disabled:
+                    _vm.paginator.meta.current_page ===
+                    _vm.paginator.meta.last_page
                 },
                 on: {
                   click: function($event) {
-                    return _vm.$paginate.on("last")
+                    return _vm.navigate(_vm.paginator.links.last)
                   }
                 }
               },
@@ -98582,41 +97982,6 @@ module.exports = g;
 
 /***/ }),
 
-/***/ "./node_modules/webpack/buildin/harmony-module.js":
-/*!*******************************************!*\
-  !*** (webpack)/buildin/harmony-module.js ***!
-  \*******************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-module.exports = function(originalModule) {
-	if (!originalModule.webpackPolyfill) {
-		var module = Object.create(originalModule);
-		// module.parent = undefined by default
-		if (!module.children) module.children = [];
-		Object.defineProperty(module, "loaded", {
-			enumerable: true,
-			get: function() {
-				return module.l;
-			}
-		});
-		Object.defineProperty(module, "id", {
-			enumerable: true,
-			get: function() {
-				return module.i;
-			}
-		});
-		Object.defineProperty(module, "exports", {
-			enumerable: true
-		});
-		module.webpackPolyfill = 1;
-	}
-	return module;
-};
-
-
-/***/ }),
-
 /***/ "./node_modules/webpack/buildin/module.js":
 /*!***********************************!*\
   !*** (webpack)/buildin/module.js ***!
@@ -98663,16 +98028,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _bootstrap__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_bootstrap__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.common.js");
 /* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(vue__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _router__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./router */ "./resources/js/router/index.js");
-/* harmony import */ var _store__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./store */ "./resources/js/store/index.js");
-/* harmony import */ var _utilities__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./utilities */ "./resources/js/utilities/index.js");
-/* harmony import */ var _mixins__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./mixins */ "./resources/js/mixins/index.js");
-/* harmony import */ var _sentry_browser__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @sentry/browser */ "./node_modules/@sentry/browser/esm/index.js");
-/* harmony import */ var _sentry_integrations__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @sentry/integrations */ "./node_modules/@sentry/integrations/esm/index.js");
-/* harmony import */ var _app_layout_AppDashboard__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./app/layout/AppDashboard */ "./resources/js/app/layout/AppDashboard.vue");
-/* harmony import */ var vue_breadcrumbs__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! vue-breadcrumbs */ "./node_modules/vue-breadcrumbs/dist/vue-breadcrumbs.common.js");
-/* harmony import */ var vue_breadcrumbs__WEBPACK_IMPORTED_MODULE_9___default = /*#__PURE__*/__webpack_require__.n(vue_breadcrumbs__WEBPACK_IMPORTED_MODULE_9__);
-/* harmony import */ var _plugins__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./plugins */ "./resources/js/plugins.js");
+/* harmony import */ var pace_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! pace-js */ "./node_modules/pace-js/pace.js");
+/* harmony import */ var pace_js__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(pace_js__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _router__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./router */ "./resources/js/router/index.js");
+/* harmony import */ var _store__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./store */ "./resources/js/store/index.js");
+/* harmony import */ var _utilities__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./utilities */ "./resources/js/utilities/index.js");
+/* harmony import */ var _mixins__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./mixins */ "./resources/js/mixins/index.js");
+/* harmony import */ var _plugin_loader__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./plugin-loader */ "./resources/js/plugin-loader.js");
 
 
 
@@ -98681,36 +98043,21 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-
-
-
-_sentry_browser__WEBPACK_IMPORTED_MODULE_6__["init"]({
-  dsn: "https://763982db792b4a178c4f376211cbb364@sentry.io/5169173",
-  integrations: [new _sentry_integrations__WEBPACK_IMPORTED_MODULE_7__["Vue"]({
-    Vue: vue__WEBPACK_IMPORTED_MODULE_1___default.a,
-    attachProps: true
-  })]
-});
-Object(_plugins__WEBPACK_IMPORTED_MODULE_10__["default"])({
-  router: _router__WEBPACK_IMPORTED_MODULE_2__["router"],
-  store: _store__WEBPACK_IMPORTED_MODULE_3__["default"]
-});
-vue__WEBPACK_IMPORTED_MODULE_1___default.a.use(vue_breadcrumbs__WEBPACK_IMPORTED_MODULE_9___default.a, {
-  template: " <ol class=\"breadcrumb m-t\" style=\"cursor: pointer\" v-if=\"$breadcrumbs.length\"><li v-for=\"(crumb, key) in $breadcrumbs\"><small class=\"text-muted\"><a  :key=\"key\">{{ crumb | crumbText | capitalize }}</a></small></li></ol>"
+_plugin_loader__WEBPACK_IMPORTED_MODULE_7__["default"].boot({
+  router: _router__WEBPACK_IMPORTED_MODULE_3__["router"],
+  store: _store__WEBPACK_IMPORTED_MODULE_4__["default"]
 }); // eslint-disable-next-line no-global-assign
 
 Event = new vue__WEBPACK_IMPORTED_MODULE_1___default.a();
 vue__WEBPACK_IMPORTED_MODULE_1___default.a.prototype.appName = "BANTAM";
-_utilities__WEBPACK_IMPORTED_MODULE_4__["filters"].forEach(function (f) {
+_utilities__WEBPACK_IMPORTED_MODULE_5__["filters"].forEach(function (f) {
   vue__WEBPACK_IMPORTED_MODULE_1___default.a.filter(f.name, f.execute);
 });
-vue__WEBPACK_IMPORTED_MODULE_1___default.a.component("app", _app_layout_AppDashboard__WEBPACK_IMPORTED_MODULE_8__["default"]["default"]); // eslint-disable-next-line no-unused-vars
-
-var vueApp = new vue__WEBPACK_IMPORTED_MODULE_1___default.a({
+new vue__WEBPACK_IMPORTED_MODULE_1___default.a({
   el: "#app",
-  router: _router__WEBPACK_IMPORTED_MODULE_2__["router"],
-  store: _store__WEBPACK_IMPORTED_MODULE_3__["default"],
-  mixins: [_mixins__WEBPACK_IMPORTED_MODULE_5__["status"], _mixins__WEBPACK_IMPORTED_MODULE_5__["listener"]]
+  router: _router__WEBPACK_IMPORTED_MODULE_3__["router"],
+  store: _store__WEBPACK_IMPORTED_MODULE_4__["default"],
+  mixins: [_mixins__WEBPACK_IMPORTED_MODULE_6__["status"], _mixins__WEBPACK_IMPORTED_MODULE_6__["listener"]]
 });
 
 /***/ }),
@@ -99662,75 +99009,6 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ "./resources/js/components/Spinner.vue":
-/*!*********************************************!*\
-  !*** ./resources/js/components/Spinner.vue ***!
-  \*********************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _Spinner_vue_vue_type_template_id_7ae326fe_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Spinner.vue?vue&type=template&id=7ae326fe&scoped=true& */ "./resources/js/components/Spinner.vue?vue&type=template&id=7ae326fe&scoped=true&");
-/* harmony import */ var _Spinner_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Spinner.vue?vue&type=script&lang=js& */ "./resources/js/components/Spinner.vue?vue&type=script&lang=js&");
-/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
-
-
-
-
-
-/* normalize component */
-
-var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
-  _Spinner_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
-  _Spinner_vue_vue_type_template_id_7ae326fe_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"],
-  _Spinner_vue_vue_type_template_id_7ae326fe_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
-  false,
-  null,
-  "7ae326fe",
-  null
-  
-)
-
-/* hot reload */
-if (false) { var api; }
-component.options.__file = "resources/js/components/Spinner.vue"
-/* harmony default export */ __webpack_exports__["default"] = (component.exports);
-
-/***/ }),
-
-/***/ "./resources/js/components/Spinner.vue?vue&type=script&lang=js&":
-/*!**********************************************************************!*\
-  !*** ./resources/js/components/Spinner.vue?vue&type=script&lang=js& ***!
-  \**********************************************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_Spinner_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib??ref--4-0!../../../node_modules/vue-loader/lib??vue-loader-options!./Spinner.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Spinner.vue?vue&type=script&lang=js&");
-/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_Spinner_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
-
-/***/ }),
-
-/***/ "./resources/js/components/Spinner.vue?vue&type=template&id=7ae326fe&scoped=true&":
-/*!****************************************************************************************!*\
-  !*** ./resources/js/components/Spinner.vue?vue&type=template&id=7ae326fe&scoped=true& ***!
-  \****************************************************************************************/
-/*! exports provided: render, staticRenderFns */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Spinner_vue_vue_type_template_id_7ae326fe_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib??vue-loader-options!./Spinner.vue?vue&type=template&id=7ae326fe&scoped=true& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Spinner.vue?vue&type=template&id=7ae326fe&scoped=true&");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Spinner_vue_vue_type_template_id_7ae326fe_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Spinner_vue_vue_type_template_id_7ae326fe_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
-
-
-
-/***/ }),
-
 /***/ "./resources/js/environment/environment.js":
 /*!*************************************************!*\
   !*** ./resources/js/environment/environment.js ***!
@@ -99814,48 +99092,6 @@ var listener = {
   }
 };
 /* harmony default export */ __webpack_exports__["default"] = (listener);
-
-/***/ }),
-
-/***/ "./resources/js/mixins/loader/loader.js":
-/*!**********************************************!*\
-  !*** ./resources/js/mixins/loader/loader.js ***!
-  \**********************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-var LoadingMixin = {
-  data: function data() {
-    return {
-      loading: false
-    };
-  },
-  mounted: function mounted() {
-    var _this = this;
-
-    window.Pace.on("start", function () {
-      Event.$emit("loading", true);
-    });
-    window.Pace.on("stop", function () {
-      Event.$emit("loading", false);
-    });
-    window.Pace.on("done", function () {
-      Event.$emit("loading", false);
-    });
-    window.Pace.on("hide", function () {
-      Event.$emit("loading", false);
-    });
-    window.Pace.on("restart", function () {
-      Event.$emit("loading", true);
-    });
-    Event.$on("loading", function (state) {
-      _this.loading = state;
-    });
-  }
-};
-/* harmony default export */ __webpack_exports__["default"] = (LoadingMixin);
 
 /***/ }),
 
@@ -102073,31 +101309,40 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ "./resources/js/plugins.js":
-/*!*********************************!*\
-  !*** ./resources/js/plugins.js ***!
-  \*********************************/
+/***/ "./resources/js/plugin-loader.js":
+/*!***************************************!*\
+  !*** ./resources/js/plugin-loader.js ***!
+  \***************************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return init; });
 /* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.common.js");
 /* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(vue__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _plugins_auth__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./plugins/auth */ "./resources/js/plugins/auth/index.js");
 /* harmony import */ var _modules_dashboard___WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./modules/dashboard/ */ "./resources/js/modules/dashboard/index.js");
-/* harmony import */ var _modules_profile___WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./modules/profile/ */ "./resources/js/modules/profile/index.js");
-/* harmony import */ var _modules_leave__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./modules/leave */ "./resources/js/modules/leave/index.js");
-/* harmony import */ var _modules_payslip__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./modules/payslip */ "./resources/js/modules/payslip/index.js");
-/* harmony import */ var _modules_timesheet__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./modules/timesheet */ "./resources/js/modules/timesheet/index.js");
-/* harmony import */ var _modules_setup__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./modules/setup */ "./resources/js/modules/setup/index.js");
-/* harmony import */ var _plugins_status_filter__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./plugins/status-filter */ "./resources/js/plugins/status-filter/index.js");
-/* harmony import */ var vue_toasted__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! vue-toasted */ "./node_modules/vue-toasted/dist/vue-toasted.min.js");
-/* harmony import */ var vue_toasted__WEBPACK_IMPORTED_MODULE_9___default = /*#__PURE__*/__webpack_require__.n(vue_toasted__WEBPACK_IMPORTED_MODULE_9__);
-/* harmony import */ var _plugins_search__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./plugins/search */ "./resources/js/plugins/search/index.js");
-/* harmony import */ var _plugins_paginator__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./plugins/paginator */ "./resources/js/plugins/paginator/index.js");
-/* harmony import */ var _plugins_confirmation__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./plugins/confirmation */ "./resources/js/plugins/confirmation/index.js");
+/* harmony import */ var _plugins_loader___WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./plugins/loader/ */ "./resources/js/plugins/loader/index.js");
+/* harmony import */ var _modules_profile___WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./modules/profile/ */ "./resources/js/modules/profile/index.js");
+/* harmony import */ var _modules_leave__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./modules/leave */ "./resources/js/modules/leave/index.js");
+/* harmony import */ var _modules_payslip__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./modules/payslip */ "./resources/js/modules/payslip/index.js");
+/* harmony import */ var _modules_timesheet__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./modules/timesheet */ "./resources/js/modules/timesheet/index.js");
+/* harmony import */ var _modules_setup__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./modules/setup */ "./resources/js/modules/setup/index.js");
+/* harmony import */ var _plugins_status_filter__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./plugins/status-filter */ "./resources/js/plugins/status-filter/index.js");
+/* harmony import */ var vue_toasted__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! vue-toasted */ "./node_modules/vue-toasted/dist/vue-toasted.min.js");
+/* harmony import */ var vue_toasted__WEBPACK_IMPORTED_MODULE_10___default = /*#__PURE__*/__webpack_require__.n(vue_toasted__WEBPACK_IMPORTED_MODULE_10__);
+/* harmony import */ var _plugins_search__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./plugins/search */ "./resources/js/plugins/search/index.js");
+/* harmony import */ var _plugins_paginator__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./plugins/paginator */ "./resources/js/plugins/paginator/index.js");
+/* harmony import */ var _plugins_confirmation__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./plugins/confirmation */ "./resources/js/plugins/confirmation/index.js");
+/* harmony import */ var vue_breadcrumbs__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! vue-breadcrumbs */ "./node_modules/vue-breadcrumbs/dist/vue-breadcrumbs.common.js");
+/* harmony import */ var vue_breadcrumbs__WEBPACK_IMPORTED_MODULE_14___default = /*#__PURE__*/__webpack_require__.n(vue_breadcrumbs__WEBPACK_IMPORTED_MODULE_14__);
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 
 
@@ -102111,17 +101356,30 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-var plugins = [_plugins_auth__WEBPACK_IMPORTED_MODULE_1__["default"], _modules_dashboard___WEBPACK_IMPORTED_MODULE_2__["default"], _modules_profile___WEBPACK_IMPORTED_MODULE_3__["default"], _modules_leave__WEBPACK_IMPORTED_MODULE_4__["default"], _modules_payslip__WEBPACK_IMPORTED_MODULE_5__["default"], _modules_timesheet__WEBPACK_IMPORTED_MODULE_6__["default"], _modules_setup__WEBPACK_IMPORTED_MODULE_7__["default"], _plugins_status_filter__WEBPACK_IMPORTED_MODULE_8__["default"], vue_toasted__WEBPACK_IMPORTED_MODULE_9___default.a, _plugins_search__WEBPACK_IMPORTED_MODULE_10__["default"], _plugins_paginator__WEBPACK_IMPORTED_MODULE_11__["default"], _plugins_confirmation__WEBPACK_IMPORTED_MODULE_12__["default"]];
-function init(_ref) {
-  var store = _ref.store,
-      router = _ref.router;
-  plugins.forEach(function (plugin) {
-    vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(plugin, {
-      store: store,
-      router: router
+
+
+
+var plugins = [_plugins_loader___WEBPACK_IMPORTED_MODULE_3__["default"], [_plugins_auth__WEBPACK_IMPORTED_MODULE_1__["default"], {
+  name: "auth module"
+}], _modules_dashboard___WEBPACK_IMPORTED_MODULE_2__["default"], _modules_profile___WEBPACK_IMPORTED_MODULE_4__["default"], _modules_leave__WEBPACK_IMPORTED_MODULE_5__["default"], _modules_payslip__WEBPACK_IMPORTED_MODULE_6__["default"], _modules_timesheet__WEBPACK_IMPORTED_MODULE_7__["default"], _modules_setup__WEBPACK_IMPORTED_MODULE_8__["default"], _plugins_status_filter__WEBPACK_IMPORTED_MODULE_9__["default"], vue_toasted__WEBPACK_IMPORTED_MODULE_10___default.a, _plugins_search__WEBPACK_IMPORTED_MODULE_11__["default"], _plugins_paginator__WEBPACK_IMPORTED_MODULE_12__["default"], _plugins_confirmation__WEBPACK_IMPORTED_MODULE_13__["default"], [vue_breadcrumbs__WEBPACK_IMPORTED_MODULE_14___default.a, {
+  template: " <ol class=\"breadcrumb m-t\" style=\"cursor: pointer\" v-if=\"$breadcrumbs.length\"><li v-for=\"(crumb, key) in $breadcrumbs\"><small class=\"text-muted\"><a  :key=\"key\">{{ crumb | crumbText | capitalize }}</a></small></li></ol>"
+}]];
+var pluginLoader = {
+  boot: function boot(args) {
+    var options;
+    plugins.forEach(function (plugin) {
+      try {
+        options = {};
+        plugin = Array.isArray(plugin) ? plugin : [plugin, options];
+        options = _typeof(plugin[1]) === "object" ? plugin[1] : {};
+        vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(plugin.shift(), _objectSpread({}, args, {}, options));
+      } catch (e) {
+        console.log(e);
+      }
     });
-  });
-}
+  }
+};
+/* harmony default export */ __webpack_exports__["default"] = (pluginLoader);
 
 /***/ }),
 
@@ -102878,6 +102136,844 @@ var ConfirmPlugin = {
 
 /***/ }),
 
+/***/ "./resources/js/plugins/loader/index.js":
+/*!**********************************************!*\
+  !*** ./resources/js/plugins/loader/index.js ***!
+  \**********************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _views_Spinner__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./views/Spinner */ "./resources/js/plugins/loader/views/Spinner.vue");
+/* harmony import */ var _store__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./store */ "./resources/js/plugins/loader/store.js");
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  install: function install(Vue, options) {
+    options.store.registerModule("loader", _store__WEBPACK_IMPORTED_MODULE_1__["default"]);
+    Vue.component("loader", _views_Spinner__WEBPACK_IMPORTED_MODULE_0__["default"]);
+    Vue.mixin({
+      computed: {
+        loading: function loading() {
+          return this.$store.getters["loader/loading"];
+        }
+      },
+      mounted: function mounted() {
+        var _this = this;
+
+        window.Pace.on("start", function () {
+          Event.$emit("loading", true);
+        });
+        window.Pace.on("stop", function () {
+          Event.$emit("loading", false);
+        });
+        window.Pace.on("done", function () {
+          Event.$emit("loading", false);
+        });
+        window.Pace.on("hide", function () {
+          Event.$emit("loading", false);
+        });
+        window.Pace.on("restart", function () {
+          Event.$emit("loading", true);
+        });
+        Event.$on("loading", function (state) {
+          _this.$store.commit("loader/SET_LOADING", state);
+        });
+      }
+    });
+  }
+});
+
+/***/ }),
+
+/***/ "./resources/js/plugins/loader/store.js":
+/*!**********************************************!*\
+  !*** ./resources/js/plugins/loader/store.js ***!
+  \**********************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony default export */ __webpack_exports__["default"] = ({
+  namespaced: true,
+  state: {
+    loading: false
+  },
+  mutations: {
+    SET_LOADING: function SET_LOADING(state, payload) {
+      state.loading = payload;
+    }
+  },
+  getters: {
+    loading: function loading(state) {
+      return state.loading;
+    }
+  }
+});
+
+/***/ }),
+
+/***/ "./resources/js/plugins/loader/views/Bounce.vue":
+/*!******************************************************!*\
+  !*** ./resources/js/plugins/loader/views/Bounce.vue ***!
+  \******************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _Bounce_vue_vue_type_template_id_8e123230_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Bounce.vue?vue&type=template&id=8e123230&scoped=true& */ "./resources/js/plugins/loader/views/Bounce.vue?vue&type=template&id=8e123230&scoped=true&");
+/* harmony import */ var _Bounce_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Bounce.vue?vue&type=script&lang=js& */ "./resources/js/plugins/loader/views/Bounce.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _Bounce_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _Bounce_vue_vue_type_template_id_8e123230_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _Bounce_vue_vue_type_template_id_8e123230_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  "8e123230",
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/plugins/loader/views/Bounce.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/plugins/loader/views/Bounce.vue?vue&type=script&lang=js&":
+/*!*******************************************************************************!*\
+  !*** ./resources/js/plugins/loader/views/Bounce.vue?vue&type=script&lang=js& ***!
+  \*******************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_Bounce_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/babel-loader/lib??ref--4-0!../../../../../node_modules/vue-loader/lib??vue-loader-options!./Bounce.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/plugins/loader/views/Bounce.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_Bounce_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/plugins/loader/views/Bounce.vue?vue&type=template&id=8e123230&scoped=true&":
+/*!*************************************************************************************************!*\
+  !*** ./resources/js/plugins/loader/views/Bounce.vue?vue&type=template&id=8e123230&scoped=true& ***!
+  \*************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Bounce_vue_vue_type_template_id_8e123230_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../../node_modules/vue-loader/lib??vue-loader-options!./Bounce.vue?vue&type=template&id=8e123230&scoped=true& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/plugins/loader/views/Bounce.vue?vue&type=template&id=8e123230&scoped=true&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Bounce_vue_vue_type_template_id_8e123230_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Bounce_vue_vue_type_template_id_8e123230_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
+/***/ "./resources/js/plugins/loader/views/ChasingDots.vue":
+/*!***********************************************************!*\
+  !*** ./resources/js/plugins/loader/views/ChasingDots.vue ***!
+  \***********************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _ChasingDots_vue_vue_type_template_id_4fb51136_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ChasingDots.vue?vue&type=template&id=4fb51136&scoped=true& */ "./resources/js/plugins/loader/views/ChasingDots.vue?vue&type=template&id=4fb51136&scoped=true&");
+/* harmony import */ var _ChasingDots_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ChasingDots.vue?vue&type=script&lang=js& */ "./resources/js/plugins/loader/views/ChasingDots.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _ChasingDots_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _ChasingDots_vue_vue_type_template_id_4fb51136_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _ChasingDots_vue_vue_type_template_id_4fb51136_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  "4fb51136",
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/plugins/loader/views/ChasingDots.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/plugins/loader/views/ChasingDots.vue?vue&type=script&lang=js&":
+/*!************************************************************************************!*\
+  !*** ./resources/js/plugins/loader/views/ChasingDots.vue?vue&type=script&lang=js& ***!
+  \************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_ChasingDots_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/babel-loader/lib??ref--4-0!../../../../../node_modules/vue-loader/lib??vue-loader-options!./ChasingDots.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/plugins/loader/views/ChasingDots.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_ChasingDots_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/plugins/loader/views/ChasingDots.vue?vue&type=template&id=4fb51136&scoped=true&":
+/*!******************************************************************************************************!*\
+  !*** ./resources/js/plugins/loader/views/ChasingDots.vue?vue&type=template&id=4fb51136&scoped=true& ***!
+  \******************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ChasingDots_vue_vue_type_template_id_4fb51136_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../../node_modules/vue-loader/lib??vue-loader-options!./ChasingDots.vue?vue&type=template&id=4fb51136&scoped=true& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/plugins/loader/views/ChasingDots.vue?vue&type=template&id=4fb51136&scoped=true&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ChasingDots_vue_vue_type_template_id_4fb51136_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ChasingDots_vue_vue_type_template_id_4fb51136_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
+/***/ "./resources/js/plugins/loader/views/Circle.vue":
+/*!******************************************************!*\
+  !*** ./resources/js/plugins/loader/views/Circle.vue ***!
+  \******************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _Circle_vue_vue_type_template_id_750d6da0_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Circle.vue?vue&type=template&id=750d6da0&scoped=true& */ "./resources/js/plugins/loader/views/Circle.vue?vue&type=template&id=750d6da0&scoped=true&");
+/* harmony import */ var _Circle_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Circle.vue?vue&type=script&lang=js& */ "./resources/js/plugins/loader/views/Circle.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _Circle_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _Circle_vue_vue_type_template_id_750d6da0_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _Circle_vue_vue_type_template_id_750d6da0_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  "750d6da0",
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/plugins/loader/views/Circle.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/plugins/loader/views/Circle.vue?vue&type=script&lang=js&":
+/*!*******************************************************************************!*\
+  !*** ./resources/js/plugins/loader/views/Circle.vue?vue&type=script&lang=js& ***!
+  \*******************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_Circle_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/babel-loader/lib??ref--4-0!../../../../../node_modules/vue-loader/lib??vue-loader-options!./Circle.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/plugins/loader/views/Circle.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_Circle_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/plugins/loader/views/Circle.vue?vue&type=template&id=750d6da0&scoped=true&":
+/*!*************************************************************************************************!*\
+  !*** ./resources/js/plugins/loader/views/Circle.vue?vue&type=template&id=750d6da0&scoped=true& ***!
+  \*************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Circle_vue_vue_type_template_id_750d6da0_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../../node_modules/vue-loader/lib??vue-loader-options!./Circle.vue?vue&type=template&id=750d6da0&scoped=true& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/plugins/loader/views/Circle.vue?vue&type=template&id=750d6da0&scoped=true&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Circle_vue_vue_type_template_id_750d6da0_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Circle_vue_vue_type_template_id_750d6da0_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
+/***/ "./resources/js/plugins/loader/views/CubicGrid.vue":
+/*!*********************************************************!*\
+  !*** ./resources/js/plugins/loader/views/CubicGrid.vue ***!
+  \*********************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _CubicGrid_vue_vue_type_template_id_cfd81d00_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./CubicGrid.vue?vue&type=template&id=cfd81d00&scoped=true& */ "./resources/js/plugins/loader/views/CubicGrid.vue?vue&type=template&id=cfd81d00&scoped=true&");
+/* harmony import */ var _CubicGrid_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./CubicGrid.vue?vue&type=script&lang=js& */ "./resources/js/plugins/loader/views/CubicGrid.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _CubicGrid_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _CubicGrid_vue_vue_type_template_id_cfd81d00_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _CubicGrid_vue_vue_type_template_id_cfd81d00_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  "cfd81d00",
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/plugins/loader/views/CubicGrid.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/plugins/loader/views/CubicGrid.vue?vue&type=script&lang=js&":
+/*!**********************************************************************************!*\
+  !*** ./resources/js/plugins/loader/views/CubicGrid.vue?vue&type=script&lang=js& ***!
+  \**********************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_CubicGrid_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/babel-loader/lib??ref--4-0!../../../../../node_modules/vue-loader/lib??vue-loader-options!./CubicGrid.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/plugins/loader/views/CubicGrid.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_CubicGrid_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/plugins/loader/views/CubicGrid.vue?vue&type=template&id=cfd81d00&scoped=true&":
+/*!****************************************************************************************************!*\
+  !*** ./resources/js/plugins/loader/views/CubicGrid.vue?vue&type=template&id=cfd81d00&scoped=true& ***!
+  \****************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_CubicGrid_vue_vue_type_template_id_cfd81d00_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../../node_modules/vue-loader/lib??vue-loader-options!./CubicGrid.vue?vue&type=template&id=cfd81d00&scoped=true& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/plugins/loader/views/CubicGrid.vue?vue&type=template&id=cfd81d00&scoped=true&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_CubicGrid_vue_vue_type_template_id_cfd81d00_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_CubicGrid_vue_vue_type_template_id_cfd81d00_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
+/***/ "./resources/js/plugins/loader/views/FadingCircle.vue":
+/*!************************************************************!*\
+  !*** ./resources/js/plugins/loader/views/FadingCircle.vue ***!
+  \************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _FadingCircle_vue_vue_type_template_id_f8607f6e_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./FadingCircle.vue?vue&type=template&id=f8607f6e&scoped=true& */ "./resources/js/plugins/loader/views/FadingCircle.vue?vue&type=template&id=f8607f6e&scoped=true&");
+/* harmony import */ var _FadingCircle_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./FadingCircle.vue?vue&type=script&lang=js& */ "./resources/js/plugins/loader/views/FadingCircle.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _FadingCircle_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _FadingCircle_vue_vue_type_template_id_f8607f6e_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _FadingCircle_vue_vue_type_template_id_f8607f6e_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  "f8607f6e",
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/plugins/loader/views/FadingCircle.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/plugins/loader/views/FadingCircle.vue?vue&type=script&lang=js&":
+/*!*************************************************************************************!*\
+  !*** ./resources/js/plugins/loader/views/FadingCircle.vue?vue&type=script&lang=js& ***!
+  \*************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_FadingCircle_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/babel-loader/lib??ref--4-0!../../../../../node_modules/vue-loader/lib??vue-loader-options!./FadingCircle.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/plugins/loader/views/FadingCircle.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_FadingCircle_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/plugins/loader/views/FadingCircle.vue?vue&type=template&id=f8607f6e&scoped=true&":
+/*!*******************************************************************************************************!*\
+  !*** ./resources/js/plugins/loader/views/FadingCircle.vue?vue&type=template&id=f8607f6e&scoped=true& ***!
+  \*******************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_FadingCircle_vue_vue_type_template_id_f8607f6e_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../../node_modules/vue-loader/lib??vue-loader-options!./FadingCircle.vue?vue&type=template&id=f8607f6e&scoped=true& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/plugins/loader/views/FadingCircle.vue?vue&type=template&id=f8607f6e&scoped=true&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_FadingCircle_vue_vue_type_template_id_f8607f6e_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_FadingCircle_vue_vue_type_template_id_f8607f6e_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
+/***/ "./resources/js/plugins/loader/views/Pulse.vue":
+/*!*****************************************************!*\
+  !*** ./resources/js/plugins/loader/views/Pulse.vue ***!
+  \*****************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _Pulse_vue_vue_type_template_id_629a3ee9_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Pulse.vue?vue&type=template&id=629a3ee9&scoped=true& */ "./resources/js/plugins/loader/views/Pulse.vue?vue&type=template&id=629a3ee9&scoped=true&");
+/* harmony import */ var _Pulse_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Pulse.vue?vue&type=script&lang=js& */ "./resources/js/plugins/loader/views/Pulse.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _Pulse_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _Pulse_vue_vue_type_template_id_629a3ee9_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _Pulse_vue_vue_type_template_id_629a3ee9_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  "629a3ee9",
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/plugins/loader/views/Pulse.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/plugins/loader/views/Pulse.vue?vue&type=script&lang=js&":
+/*!******************************************************************************!*\
+  !*** ./resources/js/plugins/loader/views/Pulse.vue?vue&type=script&lang=js& ***!
+  \******************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_Pulse_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/babel-loader/lib??ref--4-0!../../../../../node_modules/vue-loader/lib??vue-loader-options!./Pulse.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/plugins/loader/views/Pulse.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_Pulse_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/plugins/loader/views/Pulse.vue?vue&type=template&id=629a3ee9&scoped=true&":
+/*!************************************************************************************************!*\
+  !*** ./resources/js/plugins/loader/views/Pulse.vue?vue&type=template&id=629a3ee9&scoped=true& ***!
+  \************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Pulse_vue_vue_type_template_id_629a3ee9_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../../node_modules/vue-loader/lib??vue-loader-options!./Pulse.vue?vue&type=template&id=629a3ee9&scoped=true& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/plugins/loader/views/Pulse.vue?vue&type=template&id=629a3ee9&scoped=true&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Pulse_vue_vue_type_template_id_629a3ee9_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Pulse_vue_vue_type_template_id_629a3ee9_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
+/***/ "./resources/js/plugins/loader/views/RotatingPlane.vue":
+/*!*************************************************************!*\
+  !*** ./resources/js/plugins/loader/views/RotatingPlane.vue ***!
+  \*************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _RotatingPlane_vue_vue_type_template_id_255effb4_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./RotatingPlane.vue?vue&type=template&id=255effb4&scoped=true& */ "./resources/js/plugins/loader/views/RotatingPlane.vue?vue&type=template&id=255effb4&scoped=true&");
+/* harmony import */ var _RotatingPlane_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./RotatingPlane.vue?vue&type=script&lang=js& */ "./resources/js/plugins/loader/views/RotatingPlane.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _RotatingPlane_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _RotatingPlane_vue_vue_type_template_id_255effb4_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _RotatingPlane_vue_vue_type_template_id_255effb4_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  "255effb4",
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/plugins/loader/views/RotatingPlane.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/plugins/loader/views/RotatingPlane.vue?vue&type=script&lang=js&":
+/*!**************************************************************************************!*\
+  !*** ./resources/js/plugins/loader/views/RotatingPlane.vue?vue&type=script&lang=js& ***!
+  \**************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_RotatingPlane_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/babel-loader/lib??ref--4-0!../../../../../node_modules/vue-loader/lib??vue-loader-options!./RotatingPlane.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/plugins/loader/views/RotatingPlane.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_RotatingPlane_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/plugins/loader/views/RotatingPlane.vue?vue&type=template&id=255effb4&scoped=true&":
+/*!********************************************************************************************************!*\
+  !*** ./resources/js/plugins/loader/views/RotatingPlane.vue?vue&type=template&id=255effb4&scoped=true& ***!
+  \********************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_RotatingPlane_vue_vue_type_template_id_255effb4_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../../node_modules/vue-loader/lib??vue-loader-options!./RotatingPlane.vue?vue&type=template&id=255effb4&scoped=true& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/plugins/loader/views/RotatingPlane.vue?vue&type=template&id=255effb4&scoped=true&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_RotatingPlane_vue_vue_type_template_id_255effb4_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_RotatingPlane_vue_vue_type_template_id_255effb4_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
+/***/ "./resources/js/plugins/loader/views/Spinner.vue":
+/*!*******************************************************!*\
+  !*** ./resources/js/plugins/loader/views/Spinner.vue ***!
+  \*******************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _Spinner_vue_vue_type_template_id_d8a7b12e_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Spinner.vue?vue&type=template&id=d8a7b12e&scoped=true& */ "./resources/js/plugins/loader/views/Spinner.vue?vue&type=template&id=d8a7b12e&scoped=true&");
+/* harmony import */ var _Spinner_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Spinner.vue?vue&type=script&lang=js& */ "./resources/js/plugins/loader/views/Spinner.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _Spinner_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _Spinner_vue_vue_type_template_id_d8a7b12e_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _Spinner_vue_vue_type_template_id_d8a7b12e_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  "d8a7b12e",
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/plugins/loader/views/Spinner.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/plugins/loader/views/Spinner.vue?vue&type=script&lang=js&":
+/*!********************************************************************************!*\
+  !*** ./resources/js/plugins/loader/views/Spinner.vue?vue&type=script&lang=js& ***!
+  \********************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_Spinner_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/babel-loader/lib??ref--4-0!../../../../../node_modules/vue-loader/lib??vue-loader-options!./Spinner.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/plugins/loader/views/Spinner.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_Spinner_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/plugins/loader/views/Spinner.vue?vue&type=template&id=d8a7b12e&scoped=true&":
+/*!**************************************************************************************************!*\
+  !*** ./resources/js/plugins/loader/views/Spinner.vue?vue&type=template&id=d8a7b12e&scoped=true& ***!
+  \**************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Spinner_vue_vue_type_template_id_d8a7b12e_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../../node_modules/vue-loader/lib??vue-loader-options!./Spinner.vue?vue&type=template&id=d8a7b12e&scoped=true& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/plugins/loader/views/Spinner.vue?vue&type=template&id=d8a7b12e&scoped=true&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Spinner_vue_vue_type_template_id_d8a7b12e_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Spinner_vue_vue_type_template_id_d8a7b12e_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
+/***/ "./resources/js/plugins/loader/views/ThreeBounce.vue":
+/*!***********************************************************!*\
+  !*** ./resources/js/plugins/loader/views/ThreeBounce.vue ***!
+  \***********************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _ThreeBounce_vue_vue_type_template_id_1c10d496_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ThreeBounce.vue?vue&type=template&id=1c10d496&scoped=true& */ "./resources/js/plugins/loader/views/ThreeBounce.vue?vue&type=template&id=1c10d496&scoped=true&");
+/* harmony import */ var _ThreeBounce_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ThreeBounce.vue?vue&type=script&lang=js& */ "./resources/js/plugins/loader/views/ThreeBounce.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _ThreeBounce_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _ThreeBounce_vue_vue_type_template_id_1c10d496_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _ThreeBounce_vue_vue_type_template_id_1c10d496_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  "1c10d496",
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/plugins/loader/views/ThreeBounce.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/plugins/loader/views/ThreeBounce.vue?vue&type=script&lang=js&":
+/*!************************************************************************************!*\
+  !*** ./resources/js/plugins/loader/views/ThreeBounce.vue?vue&type=script&lang=js& ***!
+  \************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_ThreeBounce_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/babel-loader/lib??ref--4-0!../../../../../node_modules/vue-loader/lib??vue-loader-options!./ThreeBounce.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/plugins/loader/views/ThreeBounce.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_ThreeBounce_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/plugins/loader/views/ThreeBounce.vue?vue&type=template&id=1c10d496&scoped=true&":
+/*!******************************************************************************************************!*\
+  !*** ./resources/js/plugins/loader/views/ThreeBounce.vue?vue&type=template&id=1c10d496&scoped=true& ***!
+  \******************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ThreeBounce_vue_vue_type_template_id_1c10d496_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../../node_modules/vue-loader/lib??vue-loader-options!./ThreeBounce.vue?vue&type=template&id=1c10d496&scoped=true& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/plugins/loader/views/ThreeBounce.vue?vue&type=template&id=1c10d496&scoped=true&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ThreeBounce_vue_vue_type_template_id_1c10d496_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ThreeBounce_vue_vue_type_template_id_1c10d496_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
+/***/ "./resources/js/plugins/loader/views/WanderingCubes.vue":
+/*!**************************************************************!*\
+  !*** ./resources/js/plugins/loader/views/WanderingCubes.vue ***!
+  \**************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _WanderingCubes_vue_vue_type_template_id_b68fccae_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./WanderingCubes.vue?vue&type=template&id=b68fccae&scoped=true& */ "./resources/js/plugins/loader/views/WanderingCubes.vue?vue&type=template&id=b68fccae&scoped=true&");
+/* harmony import */ var _WanderingCubes_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./WanderingCubes.vue?vue&type=script&lang=js& */ "./resources/js/plugins/loader/views/WanderingCubes.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _WanderingCubes_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _WanderingCubes_vue_vue_type_template_id_b68fccae_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _WanderingCubes_vue_vue_type_template_id_b68fccae_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  "b68fccae",
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/plugins/loader/views/WanderingCubes.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/plugins/loader/views/WanderingCubes.vue?vue&type=script&lang=js&":
+/*!***************************************************************************************!*\
+  !*** ./resources/js/plugins/loader/views/WanderingCubes.vue?vue&type=script&lang=js& ***!
+  \***************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_WanderingCubes_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/babel-loader/lib??ref--4-0!../../../../../node_modules/vue-loader/lib??vue-loader-options!./WanderingCubes.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/plugins/loader/views/WanderingCubes.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_WanderingCubes_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/plugins/loader/views/WanderingCubes.vue?vue&type=template&id=b68fccae&scoped=true&":
+/*!*********************************************************************************************************!*\
+  !*** ./resources/js/plugins/loader/views/WanderingCubes.vue?vue&type=template&id=b68fccae&scoped=true& ***!
+  \*********************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_WanderingCubes_vue_vue_type_template_id_b68fccae_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../../node_modules/vue-loader/lib??vue-loader-options!./WanderingCubes.vue?vue&type=template&id=b68fccae&scoped=true& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/plugins/loader/views/WanderingCubes.vue?vue&type=template&id=b68fccae&scoped=true&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_WanderingCubes_vue_vue_type_template_id_b68fccae_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_WanderingCubes_vue_vue_type_template_id_b68fccae_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
+/***/ "./resources/js/plugins/loader/views/Wave.vue":
+/*!****************************************************!*\
+  !*** ./resources/js/plugins/loader/views/Wave.vue ***!
+  \****************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _Wave_vue_vue_type_template_id_d1fe964e_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Wave.vue?vue&type=template&id=d1fe964e&scoped=true& */ "./resources/js/plugins/loader/views/Wave.vue?vue&type=template&id=d1fe964e&scoped=true&");
+/* harmony import */ var _Wave_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Wave.vue?vue&type=script&lang=js& */ "./resources/js/plugins/loader/views/Wave.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _Wave_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _Wave_vue_vue_type_template_id_d1fe964e_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _Wave_vue_vue_type_template_id_d1fe964e_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  "d1fe964e",
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/plugins/loader/views/Wave.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/plugins/loader/views/Wave.vue?vue&type=script&lang=js&":
+/*!*****************************************************************************!*\
+  !*** ./resources/js/plugins/loader/views/Wave.vue?vue&type=script&lang=js& ***!
+  \*****************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_Wave_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/babel-loader/lib??ref--4-0!../../../../../node_modules/vue-loader/lib??vue-loader-options!./Wave.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/plugins/loader/views/Wave.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_Wave_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/plugins/loader/views/Wave.vue?vue&type=template&id=d1fe964e&scoped=true&":
+/*!***********************************************************************************************!*\
+  !*** ./resources/js/plugins/loader/views/Wave.vue?vue&type=template&id=d1fe964e&scoped=true& ***!
+  \***********************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Wave_vue_vue_type_template_id_d1fe964e_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../../node_modules/vue-loader/lib??vue-loader-options!./Wave.vue?vue&type=template&id=d1fe964e&scoped=true& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/plugins/loader/views/Wave.vue?vue&type=template&id=d1fe964e&scoped=true&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Wave_vue_vue_type_template_id_d1fe964e_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Wave_vue_vue_type_template_id_d1fe964e_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
 /***/ "./resources/js/plugins/paginator/index.js":
 /*!*************************************************!*\
   !*** ./resources/js/plugins/paginator/index.js ***!
@@ -102888,19 +102984,27 @@ var ConfirmPlugin = {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _paginate__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./paginate */ "./resources/js/plugins/paginator/paginate.vue");
+/* harmony import */ var _store__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./store */ "./resources/js/plugins/paginator/store.js");
+
 
 var Paginator = {
-  install: function install(Vue) {
+  install: function install(Vue, options) {
+    options.store.registerModule("paginator", _store__WEBPACK_IMPORTED_MODULE_1__["default"]);
     this.onPaginate = new Vue();
     Vue.component("pagination", _paginate__WEBPACK_IMPORTED_MODULE_0__["default"]);
-    Vue.prototype.$paginate = {
-      on: function on(param) {
-        Paginator.onPaginate.$emit("paginate", param);
+    Vue.mixin({
+      computed: {
+        paginator: function paginator() {
+          return this.$store.getters["paginator/paginator"];
+        }
       },
-      jumpToPage: function jumpToPage(page) {
-        Paginator.onPaginate.$emit("jump-to", page);
+      methods: {
+        paginate: function paginate(data) {
+          this.$store.commit("paginator/SET_PAGINATOR", data);
+          return data.data || data;
+        }
       }
-    };
+    });
   }
 };
 /* harmony default export */ __webpack_exports__["default"] = (Paginator);
@@ -103016,6 +103120,34 @@ var PaginationMixin = {
   }
 };
 /* harmony default export */ __webpack_exports__["default"] = (PaginationMixin);
+
+/***/ }),
+
+/***/ "./resources/js/plugins/paginator/store.js":
+/*!*************************************************!*\
+  !*** ./resources/js/plugins/paginator/store.js ***!
+  \*************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony default export */ __webpack_exports__["default"] = ({
+  namespaced: true,
+  state: {
+    paginator: {}
+  },
+  mutations: {
+    SET_PAGINATOR: function SET_PAGINATOR(state, payload) {
+      state.paginator = payload;
+    }
+  },
+  getters: {
+    paginator: function paginator(state) {
+      return state.paginator;
+    }
+  }
+});
 
 /***/ }),
 
@@ -103298,9 +103430,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(vue__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var vue_router__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vue-router */ "./node_modules/vue-router/dist/vue-router.esm.js");
 /* harmony import */ var _middleware_MiddlewareFactory__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./middleware/MiddlewareFactory */ "./resources/js/router/middleware/MiddlewareFactory.js");
-/* harmony import */ var _app_layout_AppDashboard__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../app/layout/AppDashboard */ "./resources/js/app/layout/AppDashboard.vue");
-/* harmony import */ var _app_components_AppFallback__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../app/components/AppFallback */ "./resources/js/app/components/AppFallback.vue");
-/* harmony import */ var _middleware_Auth__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./middleware/Auth */ "./resources/js/router/middleware/Auth.js");
+/* harmony import */ var _app_components_AppFallback__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../app/components/AppFallback */ "./resources/js/app/components/AppFallback.vue");
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
@@ -103311,20 +103441,13 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
 
 
-
-
 vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vue_router__WEBPACK_IMPORTED_MODULE_1__["default"]);
 var routes = [{
   path: "/",
-  component: _app_layout_AppDashboard__WEBPACK_IMPORTED_MODULE_3__["default"],
-  children: [],
-  meta: {
-    middleware: _middleware_Auth__WEBPACK_IMPORTED_MODULE_5__["default"],
-    breadcrumb: "dashboard"
-  }
+  redirect: "/dashboard"
 }, {
   path: "*",
-  component: _app_components_AppFallback__WEBPACK_IMPORTED_MODULE_4__["default"]
+  component: _app_components_AppFallback__WEBPACK_IMPORTED_MODULE_3__["default"]
 }];
 var router = new vue_router__WEBPACK_IMPORTED_MODULE_1__["default"]({
   mode: "history",
@@ -104024,6 +104147,28 @@ var Validator = /*#__PURE__*/function () {
 __webpack_require__(/*! D:\BIGLIFE\ESS\bantam\resources\js\app.js */"./resources/js/app.js");
 module.exports = __webpack_require__(/*! D:\BIGLIFE\ESS\bantam\resources\sass\app.scss */"./resources/sass/app.scss");
 
+
+/***/ }),
+
+/***/ 1:
+/*!**********************!*\
+  !*** util (ignored) ***!
+  \**********************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/* (ignored) */
+
+/***/ }),
+
+/***/ 2:
+/*!**********************!*\
+  !*** util (ignored) ***!
+  \**********************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/* (ignored) */
 
 /***/ })
 

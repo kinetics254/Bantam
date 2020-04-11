@@ -62,8 +62,8 @@
                         </table>
                     </div>
 
-                    <!--Pagination component expects a prop meta-->
-                    <pagination :meta="meta" />
+                    <!--Pagination component -->
+                    <pagination />
                 </div>
             </div>
         </div>
@@ -71,13 +71,10 @@
 </template>
 
 <script>
-import Spinner from "../../../components/Spinner";
-import LoadingMixin from "../../../mixins/loader/loader";
-import PaginationMixin from "../../../plugins/paginator/paginator";
+import Spinner from "../../../plugins/loader/views/Spinner";
 export default {
     name: "PayslipList",
     components: { Spinner },
-    mixins: [LoadingMixin, PaginationMixin],
     beforeRouteEnter(to, from, next) {
         next(v => {
             v.getData();

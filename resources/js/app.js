@@ -1,25 +1,13 @@
 import "./bootstrap";
 import Vue from "vue";
+import "pace-js";
 import { router } from "./router";
 import store from "./store";
 import { filters } from "./utilities";
 import { listener, status } from "./mixins";
-import * as Sentry from "@sentry/browser";
-import * as Integrations from "@sentry/integrations";
-import app from "./app/layout/AppDashboard";
-import breadCrumb from "vue-breadcrumbs";
-import init from "./plugins";
+import loader from "./plugin-loader";
 
-Sentry.init({
-    dsn: "https://763982db792b4a178c4f376211cbb364@sentry.io/5169173",
-    integrations: [new Integrations.Vue({ Vue, attachProps: true })]
-});
-
-init({ router, store });
-
-Vue.use(breadCrumb, {
-    template: ` <ol class="breadcrumb m-t" style="cursor: pointer" v-if="$breadcrumbs.length"><li v-for="(crumb, key) in $breadcrumbs"><small class="text-muted"><a  :key="key">{{ crumb | crumbText | capitalize }}</a></small></li></ol>`
-});
+loader.boot({ router, store });
 
 // eslint-disable-next-line no-global-assign
 Event = new Vue();
@@ -30,10 +18,7 @@ filters.forEach(f => {
     Vue.filter(f.name, f.execute);
 });
 
-Vue.component("app", app.default);
-
-// eslint-disable-next-line no-unused-vars
-const vueApp = new Vue({
+new Vue({
     el: "#app",
     router,
     store,

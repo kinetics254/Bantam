@@ -7,8 +7,8 @@
 
 <script>
 export default {
-    name: "Spinner"
+    name: "Bounce"
 };
 </script>
 
-<style scoped />
+<style scoped></style>

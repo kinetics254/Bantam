@@ -62,13 +62,11 @@
 <script>
 import { validator } from "../../../../utilities";
 import Logo from "../../../../components/Logo";
-import LoadingMixin from "../../../../mixins/loader/loader";
 import AuthFooter from "./partials/AuthFooter";
-import Spinner from "../../../../components/Spinner";
+import Spinner from "../../../loader/views/Spinner";
 export default {
     name: "Login",
     components: { Spinner, AuthFooter, Logo },
-    mixins: [LoadingMixin],
     data: function() {
         return {
             formData: {

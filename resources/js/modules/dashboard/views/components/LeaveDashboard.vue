@@ -33,13 +33,12 @@
 
 <script>
 import { BarChart, DoughnutChart, LinerChart } from "../../../../charts";
-import LoadingMixin from "../../../../mixins/loader/loader";
-import Spinner from "../../../../components/Spinner";
 import PaginationMixin from "../../../../plugins/paginator/paginator";
+import Spinner from "../../../../plugins/loader/views/Spinner";
 export default {
     name: "LeaveDashboard",
     components: { Spinner, BarChart, DoughnutChart, LinerChart },
-    mixins: [LoadingMixin, PaginationMixin],
+    mixins: [PaginationMixin],
     data: function() {
         return {
             datasets: [

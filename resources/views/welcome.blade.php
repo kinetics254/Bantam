@@ -31,6 +31,13 @@
                 display: none;
             }
         </style>
+        <script>
+            window.paceOptions = {
+                "ajax": {
+                    trackMethods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH']
+                }
+            }
+        </script>
     </head>
     <body>
     <div id="app">
@@ -38,19 +45,12 @@
             <router-view />
         </main>
     </div>
-    <script>
-        window.paceOptions = {
-            "ajax": {
-                trackMethods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH']
-            }
-        }
-    </script>
-    <script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
+{{--    <script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>--}}
     <script src="{{ asset('js/jquery.js') }}"></script>
-    <script src="{{ asset('js/app.js') .'?random='.uniqid() }}"></script>
+    <script src="{{ asset('js/app.js').'?random='.uniqid() }}"></script>
+{{--    <script src="{{ asset('js/app.js') .'?random='.uniqid() }}"></script>--}}
     <script src="{{ asset('js/plugins/metisMenu/jquery.metisMenu.js') }}"></script>
     <script src="{{ asset('js/plugins/slimscroll/jquery.slimscroll.min.js') }}"></script>
-
-    <script src="{{ asset('js/inspinia.js') }}"></script>
+    <script src="{{ asset('js/inspinia.js') }}" defer></script>
     </body>
 </html>

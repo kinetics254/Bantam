@@ -43,7 +43,7 @@
                                         getApplicationDetails(application.id)
                                     "
                                 >
-                                    <td>{{ meta.from + index }}</td>
+                                    <td>{{ paginator.meta.from + index }}</td>
                                     <td>{{ application.Application_Date }}</td>
                                     <td>{{ application.Days_Applied }}</td>
                                     <td>{{ application.Leave_Code }}</td>
@@ -97,8 +97,8 @@
                         </table>
                     </div>
 
-                    <!--Pagination component expects a prop meta-->
-                    <pagination :meta="meta" />
+                    <!--Pagination component -->
+                    <pagination />
                 </div>
             </div>
         </div>
@@ -431,15 +431,12 @@
 </template>
 
 <script>
-import Spinner from "../../../components/Spinner";
-import LoadingMixin from "../../../mixins/loader/loader";
-import PaginationMixin from "../../../plugins/paginator/paginator";
 import Datepicker from "vue2-datepicker";
 import { helper, validator } from "../../../utilities";
+import Spinner from "../../../plugins/loader/views/Spinner";
 export default {
     name: "LeaveApplication",
     components: { Spinner, Datepicker },
-    mixins: [LoadingMixin, PaginationMixin],
     data: function() {
         return {
             dateRange: [],
@@ -514,6 +511,9 @@ export default {
                 this.calculate();
             }
         },
+        myMethod: function() {
+            alert("here I am");
+        },
         leaveDates: {
             handler: function(n) {
                 this.formData.no_of_days = n.lDays;
@@ -529,6 +529,10 @@ export default {
     methods: {
         getData: function(url = null) {
             this.$store.dispatch("leave/getApplications", url || "");
+        },
+
+        test: function() {
+            alert("navigating");
         },
 
         getApplicationDetails: function(id) {

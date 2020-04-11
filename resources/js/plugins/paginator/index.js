@@ -1,19 +1,27 @@
 import Pagination from "./paginate";
+import store from "./store";
 
 const Paginator = {
-    install(Vue) {
+    install(Vue, options) {
+        options.store.registerModule("paginator", store);
+
         this.onPaginate = new Vue();
 
         Vue.component("pagination", Pagination);
 
-        Vue.prototype.$paginate = {
-            on(param) {
-                Paginator.onPaginate.$emit("paginate", param);
+        Vue.mixin({
+            computed: {
+                paginator() {
+                    return this.$store.getters["paginator/paginator"];
+                }
             },
-            jumpToPage(page) {
-                Paginator.onPaginate.$emit("jump-to", page);
+            methods: {
+                paginate: function(data) {
+                    this.$store.commit("paginator/SET_PAGINATOR", data);
+                    return data.data || data;
+                }
             }
-        };
+        });
     }
 };
 

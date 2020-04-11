@@ -336,8 +336,8 @@
                         </table>
                     </div>
 
-                    <!--Pagination component expects a prop meta-->
-                    <pagination :meta="meta" />
+                    <!--Pagination component -->
+                    <pagination />
                 </div>
             </div>
         </div>
@@ -398,16 +398,13 @@
 </template>
 
 <script>
-import Spinner from "../../../components/Spinner";
-import LoadingMixin from "../../../mixins/loader/loader";
-import PaginationMixin from "../../../plugins/paginator/paginator";
 import Datepicker from "vuejs-datepicker";
 import { helper, validator } from "../../../utilities";
+import Spinner from "../../../plugins/loader/views/Spinner";
 
 export default {
     name: "TimesheetList",
     components: { Spinner, Datepicker },
-    mixins: [LoadingMixin, PaginationMixin],
     data: function() {
         return {
             filter: "",

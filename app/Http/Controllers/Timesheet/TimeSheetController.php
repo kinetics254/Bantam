@@ -16,6 +16,7 @@ class TimeSheetController extends BaseController
 
     public function index()
     {
+
         try{
             return JsonResource::collection($this->model::orderBy('id', 'DESC')->paginate(20));
         }catch (\Exception $exception){

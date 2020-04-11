@@ -1,18 +1,14 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
 import nextFactory from "./middleware/MiddlewareFactory";
-import AppDashboard from "../app/layout/AppDashboard";
 import AppFallback from "../app/components/AppFallback";
-import Auth from "./middleware/Auth";
 
 Vue.use(VueRouter);
 
 const routes = [
     {
         path: "/",
-        component: AppDashboard,
-        children: [],
-        meta: { middleware: Auth, breadcrumb: "dashboard" }
+        redirect: "/dashboard"
     },
     {
         path: "*",

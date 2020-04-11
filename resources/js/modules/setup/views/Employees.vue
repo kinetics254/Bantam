@@ -6,8 +6,7 @@
                     <h5>Activities</h5>
                 </div>
                 <div class="ibox-content " :class="{ 'sk-loading': loading }">
-                    <spinner v-if="loading" />
-
+                    <loader v-if="loading" name="circle" />
                     <div class="table-responsive m-b-md">
                         <table class="table table-hover table-condensed">
                             <thead>
@@ -57,12 +56,8 @@
 </template>
 
 <script>
-import LoadingMixin from "../../../mixins/loader/loader";
-import Spinner from "../../../components/Spinner";
 export default {
     name: "Employees",
-    components: { Spinner },
-    mixins: [LoadingMixin],
     beforeRouteEnter(to, from, next) {
         next(v => {
             v.$store.dispatch("setup/getEmployees");

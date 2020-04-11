@@ -27,7 +27,7 @@
                                     v-for="(allocation, index) in allocations"
                                     :key="index"
                                 >
-                                    <td>{{ meta.from + index }}</td>
+                                    <td>{{ paginator.meta.from + index }}</td>
                                     <td>{{ allocation.Leave_Code }}</td>
                                     <td>{{ allocation.Maturity_Date }}</td>
                                     <td>{{ allocation.Balance }}</td>
@@ -47,8 +47,8 @@
                         </table>
                     </div>
 
-                    <!--Pagination component expects a prop meta-->
-                    <pagination :meta="meta" />
+                    <!--Pagination component -->
+                    <pagination />
                 </div>
             </div>
         </div>
@@ -56,14 +56,8 @@
 </template>
 
 <script>
-import Spinner from "../../../components/Spinner";
-import LoadingMixin from "../../../mixins/loader/loader";
-import PaginationMixin from "../../../plugins/paginator/paginator";
-
 export default {
     name: "LeaveAllocation",
-    components: { Spinner },
-    mixins: [LoadingMixin, PaginationMixin],
     beforeRouteEnter(to, from, next) {
         next(v => {
             v.$store.dispatch("profile/getEmployee", v.$auth.user().id);

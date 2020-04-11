@@ -38,6 +38,8 @@ export default {
                 l.hasSubs = l.subs && l.subs.length !== 0;
             });
 
+            /* function to execute to determine if link should show*/
+
             return sideLinks;
         }
     }
