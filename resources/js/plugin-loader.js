@@ -39,7 +39,6 @@ const plugins = [
 const pluginLoader = {
     boot: args => {
         let options;
-
         plugins.forEach(plugin => {
             try {
                 options = {};

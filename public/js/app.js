@@ -2346,6 +2346,18 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _charts__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../../charts */ "./resources/js/charts/index.js");
 /* harmony import */ var _plugins_paginator_paginator__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../../plugins/paginator/paginator */ "./resources/js/plugins/paginator/paginator.js");
 /* harmony import */ var _plugins_loader_views_Spinner__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../plugins/loader/views/Spinner */ "./resources/js/plugins/loader/views/Spinner.vue");
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread(); }
+
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance"); }
+
+function _iterableToArray(iter) { if (Symbol.iterator in Object(iter) || Object.prototype.toString.call(iter) === "[object Arguments]") return Array.from(iter); }
+
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = new Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } }
+
+//
+//
+//
+//
 //
 //
 //
@@ -2388,67 +2400,81 @@ __webpack_require__.r(__webpack_exports__);
     Spinner: _plugins_loader_views_Spinner__WEBPACK_IMPORTED_MODULE_2__["default"],
     BarChart: _charts__WEBPACK_IMPORTED_MODULE_0__["BarChart"],
     DoughnutChart: _charts__WEBPACK_IMPORTED_MODULE_0__["DoughnutChart"],
-    LinerChart: _charts__WEBPACK_IMPORTED_MODULE_0__["LinerChart"]
+    PieChart: _charts__WEBPACK_IMPORTED_MODULE_0__["PieChart"]
   },
   mixins: [_plugins_paginator_paginator__WEBPACK_IMPORTED_MODULE_1__["default"]],
   data: function data() {
     return {
-      datasets: [{
-        label: "Days Taken",
-        backgroundColor: ["rgb(255,99,132)", "rgb(255,99,132)", "rgb(255,99,132)", "rgb(255,99,132)", "rgb(255,99,132)", "rgb(255,99,132)"],
-        borderColor: [],
-        borderWidth: 1,
-        data: []
-      }, {
-        label: "Accrued Days",
-        backgroundColor: ["rgb(54,162,235)", "rgb(54,162,235)", "rgb(54,162,235)", "rgb(54,162,235)", "rgb(54,162,235)", "rgb(54,162,235)"],
-        borderColor: [],
-        borderWidth: 1,
-        data: []
-      }, {
-        label: "Balance",
-        backgroundColor: ["rgb(0,166,0)", "rgb(0,166,0)", "rgb(0,166,0)", "rgb(0,166,0)", "rgb(0,166,0)", "rgb(0,166,0)"],
-        borderColor: [],
-        borderWidth: 1,
-        data: []
-      }, {
-        label: "Allocated Days",
-        backgroundColor: ["rgb(255,206,86)", "rgb(255,206,86)", "rgb(255,206,86)", "rgb(255,206,86)", "rgb(255,206,86)", "rgb(255,206,86)"],
-        borderColor: [],
-        borderWidth: 1,
-        data: []
-      }],
-      doughnutData: [],
-      options: {
-        responsive: true,
-        maintainAspectRatio: true,
-        title: {
-          display: true,
-          position: "bottom",
-          text: "Custom Chart Title"
-        },
-        scales: {
-          xAxes: [{
-            // stacked: true,
-            gridLines: {
-              display: false
-            }
-          }],
-          yAxes: [{// stacked: true
-          }]
+      barChart: {
+        chart: {},
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          title: {
+            display: true,
+            position: "top",
+            text: "Leave summary"
+          },
+          scales: {
+            xAxes: [{
+              stacked: false,
+              gridLines: {
+                display: false
+              },
+              ticks: {
+                beginAtZero: true
+              }
+            }],
+            yAxes: [{
+              stacked: false,
+              ticks: {
+                beginAtZero: true
+              }
+            }]
+          }
+        }
+      },
+      doughnutChart: {
+        chart: {},
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          pieceLabel: {
+            mode: "percentage",
+            precision: 1
+          },
+          title: {
+            display: true,
+            position: "top",
+            text: "Leave Taken summary"
+          }
+        }
+      },
+      pieChart: {
+        chart: {},
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          pieceLabel: {
+            mode: "percentage",
+            precision: 1
+          },
+          title: {
+            display: true,
+            position: "top",
+            text: "Annual Leave Summary"
+          }
         }
       }
     };
   },
   beforeRouteEnter: function beforeRouteEnter(to, from, next) {
-    var _this = this;
-
     next(function (v) {
-      v.$store.dispatch("dashboard/getLeaveTypes");
-      v.$store.dispatch("dashboard/getEmployee", v.$auth.user().id);
-      v.$store.dispatch("dashboard/getLeaveAllocation", v.$auth.user().id);
-      v.initBarCharts(_this.leaveAllocations);
-      v.initDoughnutChart(_this.leaveAllocations);
+      v.$store.dispatch("leave/getLeaveTypes");
+      v.$store.dispatch("profile/getEmployee", v.$auth.user().id);
+      v.$store.dispatch("leave/getAllocations", {
+        id: v.$auth.user().id
+      });
     });
   },
   computed: {
@@ -2463,7 +2489,7 @@ __webpack_require__.r(__webpack_exports__);
         Balance_B_F: "0.00",
         Accrued_Days: "7.00",
         Allocated_Days: "7.00",
-        Taken: "0.00",
+        Taken: "10.00",
         Balance: "7.00",
         Comments: null,
         Nav_Sync: 1,
@@ -2482,7 +2508,7 @@ __webpack_require__.r(__webpack_exports__);
         Balance_B_F: "0.00",
         Accrued_Days: "5.00",
         Allocated_Days: "5.00",
-        Taken: "0.00",
+        Taken: "5.00",
         Balance: "5.00",
         Comments: null,
         Nav_Sync: 1,
@@ -2501,7 +2527,7 @@ __webpack_require__.r(__webpack_exports__);
         Balance_B_F: "5.00",
         Accrued_Days: "26.00",
         Allocated_Days: "21.00",
-        Taken: "0.00",
+        Taken: "1.00",
         Balance: "26.00",
         Comments: null,
         Nav_Sync: 1,
@@ -2611,42 +2637,90 @@ __webpack_require__.r(__webpack_exports__);
       }];
     }
   },
+  mounted: function mounted() {
+    this.initBarCharts();
+    this.initDoughnutChart();
+    this.initPieChart();
+  },
   methods: {
-    initBarCharts: function initBarCharts(val) {
-      this.initChartLabels(val);
+    initBarCharts: function initBarCharts() {
+      var chart = {
+        labels: [],
+        datasets: [{
+          label: "Allocated_Days",
+          backgroundColor: "rgba(255,177,193,0.56)",
+          borderColor: "#FFB1C1",
+          borderWidth: "1",
+          data: []
+        }, {
+          label: "Accrued_Days",
+          backgroundColor: "rgba(255,159,64,0.57)",
+          borderColor: "#ff9f40",
+          borderWidth: "1",
+          data: []
+        }, {
+          label: "Taken",
+          backgroundColor: "rgba(255,225,153,0.57)",
+          borderColor: "#ffe199",
+          borderWidth: "1",
+          data: []
+        }, {
+          label: "Balance",
+          backgroundColor: "rgba(147,217,217,0.56)",
+          borderColor: "#93d9d9",
+          borderWidth: "1",
+          data: []
+        }]
+      };
 
-      for (var dataset in this.datasets) {
-        // loop through each data set
-        for (var label in this.labels) {
-          // loop through the set labels
-          for (var v in val) {
-            // loop through leave allocations
-            if (this.labels[label] === val[v].LTypes_Description) {
-              // if leave matches the label
-              this.datasets[dataset].data.push(val[v][this.leaveStats[dataset]]);
-            }
+      var allocations = _toConsumableArray(this.leaveAllocations);
+      /* set labels */
+
+
+      allocations.forEach(function (allocation) {
+        chart.labels.push(allocation.LTypes_Description);
+      });
+      chart.labels.forEach(function (label) {
+        allocations.forEach(function (allocation) {
+          if (allocation.LTypes_Description === label) {
+            chart.datasets.forEach(function (set) {
+              set.data.push(parseInt(allocation[set.label]));
+            });
           }
-        }
-      }
+        });
+      });
+      this.barChart.chart = chart;
     },
-    initDoughnutChart: function initDoughnutChart(val) {
-      for (var label in this.labels) {
-        this.doughnutData[label] = 0;
+    initDoughnutChart: function initDoughnutChart() {
+      var chart = {
+        labels: [],
+        datasets: [{
+          backgroundColor: ["rgba(255,177,193,0.56)", "rgba(255,159,64,0.57)", "rgba(255,225,153,0.57)", "rgba(147,217,217,0.56)"],
+          data: []
+        }]
+      };
 
-        for (var v in val) {
-          if (this.labels[label] === val[v].LTypes_Description) {
-            this.doughnutData[label] = parseInt(val[v][this.leaveStats[2]]) + this.doughnutData[label];
-          }
-        }
-      }
+      var allocations = _toConsumableArray(this.leaveAllocations);
+
+      allocations.forEach(function (allocation) {
+        chart.labels.push(allocation.LTypes_Description);
+        chart.datasets[0].data.push(parseInt(allocation.Taken));
+      });
+      this.doughnutChart.chart = chart;
     },
-    initChartLabels: function initChartLabels(val) {
-      // reset the labels array
-      this.labels = [];
+    initPieChart: function initPieChart() {
+      var allocation = _toConsumableArray(this.leaveAllocations).filter(function (aloc) {
+        return aloc.Leave_Code === "ANNUAL";
+      }).shift();
 
-      for (var i in val) {
-        this.labels.push(val[i].LTypes_Description);
-      }
+      var chart = {
+        labels: ["Accrued_Days", "Allocated_Days", "Taken", "Balance"],
+        datasets: [{
+          backgroundColor: ["rgba(255,177,193,0.56)", "rgba(255,159,64,0.57)", "rgba(255,225,153,0.57)", "rgba(147,217,217,0.56)"],
+          data: [allocation.Accrued_Days, allocation.Allocated_Days, allocation.Taken, allocation.Balance]
+        }]
+      };
+      this.pieChart.chart = chart;
     }
   }
 });
@@ -30140,7 +30214,7 @@ module.exports = merge;
   var undefined;
 
   /** Used as the semantic version number. */
-  var VERSION = '4.17.15';
+  var VERSION = '4.17.19';
 
   /** Used as the size to enable large array optimizations. */
   var LARGE_ARRAY_SIZE = 200;
@@ -33847,8 +33921,21 @@ module.exports = merge;
      * @returns {Array} Returns the new sorted array.
      */
     function baseOrderBy(collection, iteratees, orders) {
+      if (iteratees.length) {
+        iteratees = arrayMap(iteratees, function(iteratee) {
+          if (isArray(iteratee)) {
+            return function(value) {
+              return baseGet(value, iteratee.length === 1 ? iteratee[0] : iteratee);
+            }
+          }
+          return iteratee;
+        });
+      } else {
+        iteratees = [identity];
+      }
+
       var index = -1;
-      iteratees = arrayMap(iteratees.length ? iteratees : [identity], baseUnary(getIteratee()));
+      iteratees = arrayMap(iteratees, baseUnary(getIteratee()));
 
       var result = baseMap(collection, function(value, key, collection) {
         var criteria = arrayMap(iteratees, function(iteratee) {
@@ -34105,6 +34192,10 @@ module.exports = merge;
         var key = toKey(path[index]),
             newValue = value;
 
+        if (key === '__proto__' || key === 'constructor' || key === 'prototype') {
+          return object;
+        }
+
         if (index != lastIndex) {
           var objValue = nested[key];
           newValue = customizer ? customizer(objValue, key, nested) : undefined;
@@ -34257,11 +34348,14 @@ module.exports = merge;
      *  into `array`.
      */
     function baseSortedIndexBy(array, value, iteratee, retHighest) {
-      value = iteratee(value);
-
       var low = 0,
-          high = array == null ? 0 : array.length,
-          valIsNaN = value !== value,
+          high = array == null ? 0 : array.length;
+      if (high === 0) {
+        return 0;
+      }
+
+      value = iteratee(value);
+      var valIsNaN = value !== value,
           valIsNull = value === null,
           valIsSymbol = isSymbol(value),
           valIsUndefined = value === undefined;
@@ -35746,10 +35840,11 @@ module.exports = merge;
       if (arrLength != othLength && !(isPartial && othLength > arrLength)) {
         return false;
       }
-      // Assume cyclic values are equal.
-      var stacked = stack.get(array);
-      if (stacked && stack.get(other)) {
-        return stacked == other;
+      // Check that cyclic values are equal.
+      var arrStacked = stack.get(array);
+      var othStacked = stack.get(other);
+      if (arrStacked && othStacked) {
+        return arrStacked == other && othStacked == array;
       }
       var index = -1,
           result = true,
@@ -35911,10 +36006,11 @@ module.exports = merge;
           return false;
         }
       }
-      // Assume cyclic values are equal.
-      var stacked = stack.get(object);
-      if (stacked && stack.get(other)) {
-        return stacked == other;
+      // Check that cyclic values are equal.
+      var objStacked = stack.get(object);
+      var othStacked = stack.get(other);
+      if (objStacked && othStacked) {
+        return objStacked == other && othStacked == object;
       }
       var result = true;
       stack.set(object, other);
@@ -39295,6 +39391,10 @@ module.exports = merge;
      * // The `_.property` iteratee shorthand.
      * _.filter(users, 'active');
      * // => objects for ['barney']
+     *
+     * // Combining several predicates using `_.overEvery` or `_.overSome`.
+     * _.filter(users, _.overSome([{ 'age': 36 }, ['age', 40]]));
+     * // => objects for ['fred', 'barney']
      */
     function filter(collection, predicate) {
       var func = isArray(collection) ? arrayFilter : baseFilter;
@@ -40044,15 +40144,15 @@ module.exports = merge;
      * var users = [
      *   { 'user': 'fred',   'age': 48 },
      *   { 'user': 'barney', 'age': 36 },
-     *   { 'user': 'fred',   'age': 40 },
+     *   { 'user': 'fred',   'age': 30 },
      *   { 'user': 'barney', 'age': 34 }
      * ];
      *
      * _.sortBy(users, [function(o) { return o.user; }]);
-     * // => objects for [['barney', 36], ['barney', 34], ['fred', 48], ['fred', 40]]
+     * // => objects for [['barney', 36], ['barney', 34], ['fred', 48], ['fred', 30]]
      *
      * _.sortBy(users, ['user', 'age']);
-     * // => objects for [['barney', 34], ['barney', 36], ['fred', 40], ['fred', 48]]
+     * // => objects for [['barney', 34], ['barney', 36], ['fred', 30], ['fred', 48]]
      */
     var sortBy = baseRest(function(collection, iteratees) {
       if (collection == null) {
@@ -44927,11 +45027,11 @@ module.exports = merge;
 
       // Use a sourceURL for easier debugging.
       // The sourceURL gets injected into the source that's eval-ed, so be careful
-      // with lookup (in case of e.g. prototype pollution), and strip newlines if any.
-      // A newline wouldn't be a valid sourceURL anyway, and it'd enable code injection.
+      // to normalize all kinds of whitespace, so e.g. newlines (and unicode versions of it) can't sneak in
+      // and escape the comment, thus injecting code that gets evaled.
       var sourceURL = '//# sourceURL=' +
         (hasOwnProperty.call(options, 'sourceURL')
-          ? (options.sourceURL + '').replace(/[\r\n]/g, ' ')
+          ? (options.sourceURL + '').replace(/\s/g, ' ')
           : ('lodash.templateSources[' + (++templateCounter) + ']')
         ) + '\n';
 
@@ -44964,8 +45064,6 @@ module.exports = merge;
 
       // If `variable` is not specified wrap a with-statement around the generated
       // code to add the data object to the top of the scope chain.
-      // Like with sourceURL, we take care to not check the option's prototype,
-      // as this configuration is a code injection vector.
       var variable = hasOwnProperty.call(options, 'variable') && options.variable;
       if (!variable) {
         source = 'with (obj) {\n' + source + '\n}\n';
@@ -45672,6 +45770,9 @@ module.exports = merge;
      * values against any array or object value, respectively. See `_.isEqual`
      * for a list of supported value comparisons.
      *
+     * **Note:** Multiple values can be checked by combining several matchers
+     * using `_.overSome`
+     *
      * @static
      * @memberOf _
      * @since 3.0.0
@@ -45687,6 +45788,10 @@ module.exports = merge;
      *
      * _.filter(objects, _.matches({ 'a': 4, 'c': 6 }));
      * // => [{ 'a': 4, 'b': 5, 'c': 6 }]
+     *
+     * // Checking for several possible values
+     * _.filter(users, _.overSome([_.matches({ 'a': 1 }), _.matches({ 'a': 4 })]));
+     * // => [{ 'a': 1, 'b': 2, 'c': 3 }, { 'a': 4, 'b': 5, 'c': 6 }]
      */
     function matches(source) {
       return baseMatches(baseClone(source, CLONE_DEEP_FLAG));
@@ -45700,6 +45805,9 @@ module.exports = merge;
      * **Note:** Partial comparisons will match empty array and empty object
      * `srcValue` values against any array or object value, respectively. See
      * `_.isEqual` for a list of supported value comparisons.
+     *
+     * **Note:** Multiple values can be checked by combining several matchers
+     * using `_.overSome`
      *
      * @static
      * @memberOf _
@@ -45717,6 +45825,10 @@ module.exports = merge;
      *
      * _.find(objects, _.matchesProperty('a', 4));
      * // => { 'a': 4, 'b': 5, 'c': 6 }
+     *
+     * // Checking for several possible values
+     * _.filter(users, _.overSome([_.matchesProperty('a', 1), _.matchesProperty('a', 4)]));
+     * // => [{ 'a': 1, 'b': 2, 'c': 3 }, { 'a': 4, 'b': 5, 'c': 6 }]
      */
     function matchesProperty(path, srcValue) {
       return baseMatchesProperty(path, baseClone(srcValue, CLONE_DEEP_FLAG));
@@ -45940,6 +46052,10 @@ module.exports = merge;
      * Creates a function that checks if **all** of the `predicates` return
      * truthy when invoked with the arguments it receives.
      *
+     * Following shorthands are possible for providing predicates.
+     * Pass an `Object` and it will be used as an parameter for `_.matches` to create the predicate.
+     * Pass an `Array` of parameters for `_.matchesProperty` and the predicate will be created using them.
+     *
      * @static
      * @memberOf _
      * @since 4.0.0
@@ -45966,6 +46082,10 @@ module.exports = merge;
      * Creates a function that checks if **any** of the `predicates` return
      * truthy when invoked with the arguments it receives.
      *
+     * Following shorthands are possible for providing predicates.
+     * Pass an `Object` and it will be used as an parameter for `_.matches` to create the predicate.
+     * Pass an `Array` of parameters for `_.matchesProperty` and the predicate will be created using them.
+     *
      * @static
      * @memberOf _
      * @since 4.0.0
@@ -45985,6 +46105,9 @@ module.exports = merge;
      *
      * func(NaN);
      * // => false
+     *
+     * var matchesFunc = _.overSome([{ 'a': 1 }, { 'a': 2 }])
+     * var matchesPropertyFunc = _.overSome([['a', 1], ['a', 2]])
      */
     var overSome = createOver(arraySome);
 
@@ -74525,10 +74648,12 @@ var render = function() {
                 "div",
                 { staticClass: "col-md-12 -right p-lg" },
                 [
-                  _c("h5", [_vm._v("Leave summary bar graph")]),
-                  _vm._v(" "),
                   _c("bar-chart", {
-                    attrs: { data: _vm.datasets, options: _vm.options }
+                    staticStyle: { height: "500px" },
+                    attrs: {
+                      "chart-data": _vm.barChart.chart,
+                      options: _vm.barChart.options
+                    }
                   })
                 ],
                 1
@@ -74538,10 +74663,11 @@ var render = function() {
                 "div",
                 { staticClass: "col-md-6 p-lg" },
                 [
-                  _c("h5", [_vm._v("Leave Taken Summary")]),
-                  _vm._v(" "),
                   _c("doughnut-chart", {
-                    attrs: { data: _vm.doughnutData, options: {} }
+                    attrs: {
+                      "chart-data": _vm.doughnutChart.chart,
+                      options: _vm.doughnutChart.options
+                    }
                   })
                 ],
                 1
@@ -74551,9 +74677,12 @@ var render = function() {
                 "div",
                 { staticClass: "col-md-6 p-lg" },
                 [
-                  _c("h5", [_vm._v("Annual Leave Summary")]),
-                  _vm._v(" "),
-                  _c("liner-chart")
+                  _c("pie-chart", {
+                    attrs: {
+                      "chart-data": _vm.pieChart.chart,
+                      options: _vm.pieChart.options
+                    }
+                  })
                 ],
                 1
               )
@@ -98024,7 +98153,7 @@ module.exports = function(module) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _bootstrap__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./bootstrap */ "./resources/js/bootstrap.js");
+/* WEBPACK VAR INJECTION */(function(process) {/* harmony import */ var _bootstrap__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./bootstrap */ "./resources/js/bootstrap.js");
 /* harmony import */ var _bootstrap__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_bootstrap__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.common.js");
 /* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(vue__WEBPACK_IMPORTED_MODULE_1__);
@@ -98049,7 +98178,7 @@ _plugin_loader__WEBPACK_IMPORTED_MODULE_7__["default"].boot({
 }); // eslint-disable-next-line no-global-assign
 
 Event = new vue__WEBPACK_IMPORTED_MODULE_1___default.a();
-vue__WEBPACK_IMPORTED_MODULE_1___default.a.prototype.appName = "BANTAM";
+vue__WEBPACK_IMPORTED_MODULE_1___default.a.prototype.appName = process.env.MIX_VUE_APP_NAME;
 _utilities__WEBPACK_IMPORTED_MODULE_5__["filters"].forEach(function (f) {
   vue__WEBPACK_IMPORTED_MODULE_1___default.a.filter(f.name, f.execute);
 });
@@ -98059,6 +98188,7 @@ new vue__WEBPACK_IMPORTED_MODULE_1___default.a({
   store: _store__WEBPACK_IMPORTED_MODULE_4__["default"],
   mixins: [_mixins__WEBPACK_IMPORTED_MODULE_6__["status"], _mixins__WEBPACK_IMPORTED_MODULE_6__["listener"]]
 });
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../../node_modules/process/browser.js */ "./node_modules/process/browser.js")))
 
 /***/ }),
 
@@ -98697,9 +98827,9 @@ var reactiveProp = vue_chartjs__WEBPACK_IMPORTED_MODULE_0__["mixins"].reactivePr
 /* harmony default export */ __webpack_exports__["default"] = ({
   "extends": vue_chartjs__WEBPACK_IMPORTED_MODULE_0__["Pie"],
   mixins: [reactiveProp],
-  props: ["data", "options"],
+  props: ["options"],
   mounted: function mounted() {
-    this.renderChart(this.data, this.options);
+    this.renderChart(this.chartData, this.options);
   }
 });
 
@@ -98720,9 +98850,9 @@ var reactiveProp = vue_chartjs__WEBPACK_IMPORTED_MODULE_0__["mixins"].reactivePr
 /* harmony default export */ __webpack_exports__["default"] = ({
   "extends": vue_chartjs__WEBPACK_IMPORTED_MODULE_0__["Bar"],
   mixins: [reactiveProp],
-  props: ["data", "options"],
+  props: ["options"],
   mounted: function mounted() {
-    this.renderChart(this.data, this.options);
+    this.renderChart(this.chartData, this.options);
   }
 });
 
@@ -98743,9 +98873,9 @@ var reactiveProp = vue_chartjs__WEBPACK_IMPORTED_MODULE_0__["mixins"].reactivePr
 /* harmony default export */ __webpack_exports__["default"] = ({
   "extends": vue_chartjs__WEBPACK_IMPORTED_MODULE_0__["Doughnut"],
   mixins: [reactiveProp],
-  props: ["data", "options"],
+  props: ["options"],
   mounted: function mounted() {
-    this.renderChart(this.data, this.options);
+    this.renderChart(this.chartData, this.options);
   }
 });
 
@@ -99021,7 +99151,7 @@ __webpack_require__.r(__webpack_exports__);
 /* WEBPACK VAR INJECTION */(function(process) {/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "apiBaseUrl", function() { return apiBaseUrl; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "appName", function() { return appName; });
 var apiBaseUrl = "http://localhost:8000/api/";
-var appName = process.env.VUE_APP_NAME;
+var appName = process.env.MIX_VUE_APP_NAME;
 
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../../../node_modules/process/browser.js */ "./node_modules/process/browser.js")))
 
@@ -104144,8 +104274,8 @@ var Validator = /*#__PURE__*/function () {
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! D:\BIGLIFE\ESS\bantam\resources\js\app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! D:\BIGLIFE\ESS\bantam\resources\sass\app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! C:\Users\USER\Documents\WORK\Bantam\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! C:\Users\USER\Documents\WORK\Bantam\resources\sass\app.scss */"./resources/sass/app.scss");
 
 
 /***/ }),

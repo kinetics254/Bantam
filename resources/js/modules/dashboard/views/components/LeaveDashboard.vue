@@ -10,19 +10,23 @@
 
                     <div class="row">
                         <div class="col-md-12 -right p-lg">
-                            <h5>Leave summary bar graph</h5>
-                            <bar-chart :data="datasets" :options="options" />
-                        </div>
-                        <div class="col-md-6 p-lg">
-                            <h5>Leave Taken Summary</h5>
-                            <doughnut-chart
-                                :data="doughnutData"
-                                :options="{}"
+                            <bar-chart
+                                style="height: 500px"
+                                :chart-data="barChart.chart"
+                                :options="barChart.options"
                             />
                         </div>
                         <div class="col-md-6 p-lg">
-                            <h5>Annual Leave Summary</h5>
-                            <liner-chart />
+                            <doughnut-chart
+                                :chart-data="doughnutChart.chart"
+                                :options="doughnutChart.options"
+                            />
+                        </div>
+                        <div class="col-md-6 p-lg">
+                            <pie-chart
+                                :chart-data="pieChart.chart"
+                                :options="pieChart.options"
+                            />
                         </div>
                     </div>
                 </div>
@@ -32,108 +36,88 @@
 </template>
 
 <script>
-import { BarChart, DoughnutChart, LinerChart } from "../../../../charts";
+import { BarChart, DoughnutChart, PieChart } from "../../../../charts";
 import PaginationMixin from "../../../../plugins/paginator/paginator";
 import Spinner from "../../../../plugins/loader/views/Spinner";
+
 export default {
     name: "LeaveDashboard",
-    components: { Spinner, BarChart, DoughnutChart, LinerChart },
+    components: { Spinner, BarChart, DoughnutChart, PieChart },
     mixins: [PaginationMixin],
     data: function() {
         return {
-            datasets: [
-                {
-                    label: "Days Taken",
-                    backgroundColor: [
-                        "rgb(255,99,132)",
-                        "rgb(255,99,132)",
-                        "rgb(255,99,132)",
-                        "rgb(255,99,132)",
-                        "rgb(255,99,132)",
-                        "rgb(255,99,132)"
-                    ],
-                    borderColor: [],
-                    borderWidth: 1,
-                    data: []
-                },
-                {
-                    label: "Accrued Days",
-                    backgroundColor: [
-                        "rgb(54,162,235)",
-                        "rgb(54,162,235)",
-                        "rgb(54,162,235)",
-                        "rgb(54,162,235)",
-                        "rgb(54,162,235)",
-                        "rgb(54,162,235)"
-                    ],
-                    borderColor: [],
-                    borderWidth: 1,
-                    data: []
-                },
-                {
-                    label: "Balance",
-                    backgroundColor: [
-                        "rgb(0,166,0)",
-                        "rgb(0,166,0)",
-                        "rgb(0,166,0)",
-                        "rgb(0,166,0)",
-                        "rgb(0,166,0)",
-                        "rgb(0,166,0)"
-                    ],
-                    borderColor: [],
-                    borderWidth: 1,
-                    data: []
-                },
-                {
-                    label: "Allocated Days",
-                    backgroundColor: [
-                        "rgb(255,206,86)",
-                        "rgb(255,206,86)",
-                        "rgb(255,206,86)",
-                        "rgb(255,206,86)",
-                        "rgb(255,206,86)",
-                        "rgb(255,206,86)"
-                    ],
-                    borderColor: [],
-                    borderWidth: 1,
-                    data: []
+            barChart: {
+                chart: {},
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    title: {
+                        display: true,
+                        position: "top",
+                        text: "Leave summary"
+                    },
+                    scales: {
+                        xAxes: [
+                            {
+                                stacked: false,
+                                gridLines: { display: false },
+                                ticks: {
+                                    beginAtZero: true
+                                }
+                            }
+                        ],
+                        yAxes: [
+                            {
+                                stacked: false,
+                                ticks: {
+                                    beginAtZero: true
+                                }
+                            }
+                        ]
+                    }
                 }
-            ],
-            doughnutData: [],
-            options: {
-                responsive: true,
-                maintainAspectRatio: true,
-                title: {
-                    display: true,
-                    position: "bottom",
-                    text: "Custom Chart Title"
-                },
-                scales: {
-                    xAxes: [
-                        {
-                            // stacked: true,
-                            gridLines: { display: false }
-                        }
-                    ],
-                    yAxes: [
-                        {
-                            // stacked: true
-                        }
-                    ]
+            },
+            doughnutChart: {
+                chart: {},
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    pieceLabel: {
+                        mode: "percentage",
+                        precision: 1
+                    },
+                    title: {
+                        display: true,
+                        position: "top",
+                        text: "Leave Taken summary"
+                    }
+                }
+            },
+            pieChart: {
+                chart: {},
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    pieceLabel: {
+                        mode: "percentage",
+                        precision: 1
+                    },
+                    title: {
+                        display: true,
+                        position: "top",
+                        text: "Annual Leave Summary"
+                    }
                 }
             }
         };
     },
     beforeRouteEnter(to, from, next) {
         next(v => {
-            v.$store.dispatch("dashboard/getLeaveTypes");
-            v.$store.dispatch("dashboard/getEmployee", v.$auth.user().id);
-            v.$store.dispatch(
-                "dashboard/getLeaveAllocation",
-                v.$auth.user().id
-            );
-            v.initBarCharts(this.leaveAllocations);
-            v.initDoughnutChart(this.leaveAllocations);
+            v.$store.dispatch("leave/getLeaveTypes");
+            v.$store.dispatch("profile/getEmployee", v.$auth.user().id);
+            v.$store.dispatch("leave/getAllocations", {
+                id: v.$auth.user().id
+            });
         });
     },
     computed: {
@@ -149,7 +133,7 @@ export default {
                     Balance_B_F: "0.00",
                     Accrued_Days: "7.00",
                     Allocated_Days: "7.00",
-                    Taken: "0.00",
+                    Taken: "10.00",
                     Balance: "7.00",
                     Comments: null,
                     Nav_Sync: 1,
@@ -169,7 +153,7 @@ export default {
                     Balance_B_F: "0.00",
                     Accrued_Days: "5.00",
                     Allocated_Days: "5.00",
-                    Taken: "0.00",
+                    Taken: "5.00",
                     Balance: "5.00",
                     Comments: null,
                     Nav_Sync: 1,
@@ -189,7 +173,7 @@ export default {
                     Balance_B_F: "5.00",
                     Accrued_Days: "26.00",
                     Allocated_Days: "21.00",
-                    Taken: "0.00",
+                    Taken: "1.00",
                     Balance: "26.00",
                     Comments: null,
                     Nav_Sync: 1,
@@ -306,44 +290,119 @@ export default {
             ];
         }
     },
+    mounted() {
+        this.initBarCharts();
+        this.initDoughnutChart();
+        this.initPieChart();
+    },
     methods: {
-        initBarCharts: function(val) {
-            this.initChartLabels(val);
+        initBarCharts: function() {
+            let chart = {
+                labels: [],
+                datasets: [
+                    {
+                        label: "Allocated_Days",
+                        backgroundColor: "rgba(255,177,193,0.56)",
+                        borderColor: "#FFB1C1",
+                        borderWidth: "1",
+                        data: []
+                    },
+                    {
+                        label: "Accrued_Days",
+                        backgroundColor: "rgba(255,159,64,0.57)",
+                        borderColor: "#ff9f40",
+                        borderWidth: "1",
+                        data: []
+                    },
+                    {
+                        label: "Taken",
+                        backgroundColor: "rgba(255,225,153,0.57)",
+                        borderColor: "#ffe199",
+                        borderWidth: "1",
+                        data: []
+                    },
+                    {
+                        label: "Balance",
+                        backgroundColor: "rgba(147,217,217,0.56)",
+                        borderColor: "#93d9d9",
+                        borderWidth: "1",
+                        data: []
+                    }
+                ]
+            };
 
-            for (let dataset in this.datasets) {
-                // loop through each data set
-                for (let label in this.labels) {
-                    // loop through the set labels
-                    for (let v in val) {
-                        // loop through leave allocations
-                        if (this.labels[label] === val[v].LTypes_Description) {
-                            // if leave matches the label
-                            this.datasets[dataset].data.push(
-                                val[v][this.leaveStats[dataset]]
-                            );
-                        }
+            let allocations = [...this.leaveAllocations];
+
+            /* set labels */
+            allocations.forEach(allocation => {
+                chart.labels.push(allocation.LTypes_Description);
+            });
+
+            chart.labels.forEach(label => {
+                allocations.forEach(allocation => {
+                    if (allocation.LTypes_Description === label) {
+                        chart.datasets.forEach(set => {
+                            set.data.push(parseInt(allocation[set.label]));
+                        });
                     }
-                }
-            }
+                });
+            });
+
+            this.barChart.chart = chart;
         },
-        initDoughnutChart: function(val) {
-            for (let label in this.labels) {
-                this.doughnutData[label] = 0;
-                for (let v in val) {
-                    if (this.labels[label] === val[v].LTypes_Description) {
-                        this.doughnutData[label] =
-                            parseInt(val[v][this.leaveStats[2]]) +
-                            this.doughnutData[label];
+        initDoughnutChart: function() {
+            let chart = {
+                labels: [],
+                datasets: [
+                    {
+                        backgroundColor: [
+                            "rgba(255,177,193,0.56)",
+                            "rgba(255,159,64,0.57)",
+                            "rgba(255,225,153,0.57)",
+                            "rgba(147,217,217,0.56)"
+                        ],
+                        data: []
                     }
-                }
-            }
+                ]
+            };
+
+            let allocations = [...this.leaveAllocations];
+
+            allocations.forEach(allocation => {
+                chart.labels.push(allocation.LTypes_Description);
+                chart.datasets[0].data.push(parseInt(allocation.Taken));
+            });
+
+            this.doughnutChart.chart = chart;
         },
-        initChartLabels: function(val) {
-            // reset the labels array
-            this.labels = [];
-            for (let i in val) {
-                this.labels.push(val[i].LTypes_Description);
-            }
+        initPieChart: function() {
+            let allocation = [...this.leaveAllocations]
+                .filter(aloc => {
+                    return aloc.Leave_Code === "ANNUAL";
+                })
+                .shift();
+
+            let chart = {
+                labels: ["Accrued_Days", "Allocated_Days", "Taken", "Balance"],
+                datasets: [
+                    {
+                        backgroundColor: [
+                            "rgba(255,177,193,0.56)",
+                            "rgba(255,159,64,0.57)",
+                            "rgba(255,225,153,0.57)",
+                            "rgba(147,217,217,0.56)"
+                        ],
+                        data: [
+                            allocation.Accrued_Days,
+                            allocation.Allocated_Days,
+                            allocation.Taken,
+                            allocation.Balance
+                        ]
+                    }
+                ]
+            };
+
+            this.pieChart.chart = chart;
         }
     }
 };
