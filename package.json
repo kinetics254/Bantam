@@ -40,7 +40,7 @@
         "vuex-persist": "^2.1.0"
     },
     "devDependencies": {
-        "axios": "^0.19",
+        "axios": "^0.21",
         "babel-eslint": "^10.1.0",
         "cross-env": "^7.0",
         "eslint": "^6.8.0",
